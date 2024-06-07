@@ -1,0 +1,61 @@
+{
+  "name": "zarpharo",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "type": "commonjs",
+  "scripts": {
+    "start": "nodemon server.ts",
+    "startjs": "nodemon dist/server.js",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^7.2.3",
+    "@types/multer": "^1.4.7",
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@admin-bro/express": "^3.1.0",
+    "@types/node": "^20.4.4",
+    "axios": "^1.6.2",
+    "bcrypt": "^5.0.1",
+    "better-npm-audit": "^3.7.3",
+    "body-parser": "^1.20.2",
+    "class-validator": "^0.14.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.3",
+    "flat": "^5.0.1",
+    "fs": "^0.0.1-security",
+    "json-web-token": "^3.2.0",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.2.1",
+    "multer": "^1.4.5-lts.1",
+    "path": "^0.12.7",
+    "pg": "^8.11.1",
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^2.5.2",
+    "typeorm": "^0.3.17",
+    "websocket": "^1.0.34"
+  },
+  "description": "",
+  "overrides": {
+    "chokidar": "3.5.3",
+    "glob-parent": "6.0.2"
+  }
+}

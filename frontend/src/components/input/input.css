@@ -1,0 +1,17 @@
+.custom-input{ 
+    transition: 100ms;
+    text-decoration: none;
+    border: 1px solid rgb(213, 213, 213) ;
+    
+    padding: .5rem 2rem;
+    outline: none;
+}
+/* .input-container{
+   
+    
+} */
+.custom-input:focus{
+    outline: 3px solid var(--bf-sky) !important;
+
+    
+}

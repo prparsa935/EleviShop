@@ -1,0 +1,20 @@
+.alert-progress-bar{
+   
+    width: 0%;
+    height: 1px;
+
+
+}
+.alert-close{
+    
+    opacity: 0;
+
+
+}
+@keyframes progress {
+    100%{
+        width: 100%;
+
+    }
+    
+}

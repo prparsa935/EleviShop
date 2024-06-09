@@ -2,7 +2,7 @@
 const Card=(props)=>{
     return(
 
-        <div className={" w-50 border flex flex-col justif-between"+" "+props.moreCss}>
+        <div className={" border flex flex-col justify-between"+" "+props.moreCss}>
             {props.header?(
                 <div className={'w-100 px-7 py-7'+" "+(props.headerBorder?'border-bottom':'')}>
                     {props.header}

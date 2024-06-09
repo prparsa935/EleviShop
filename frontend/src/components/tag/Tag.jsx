@@ -23,7 +23,7 @@ const Tag=(props)=>{
                 setSizeCss('px-3 py-1 text-sm')
             }
             else if(size==='xs'){
-                setSizeCss('px-2 py-1 text-sm')
+                setSizeCss('px-2 py-[2px]  text-xs')
             }
         }
         if(props.shape){

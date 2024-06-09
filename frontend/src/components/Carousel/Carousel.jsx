@@ -158,7 +158,7 @@ const CarouselItem = ({ className, ...props }) => {
       role="group"
       aria-roledescription="slide"
       className={
-        "min-w-0 shrink-0 grow-0 "+" "+(orientation === "horizontal" ? "pl-4" : "pt-4")+" "+className}
+        "min-w-0 shrink-0 grow-0 "+" "+(orientation === "horizontal" ? "ml-1" : "mt-1")+" "+className}
       {...props}
     />
   )

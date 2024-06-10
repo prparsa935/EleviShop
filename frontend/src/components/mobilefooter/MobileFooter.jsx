@@ -2,7 +2,7 @@ import Button from "../Button/Button"
 
 const MobileFooter=()=>{
     return(
-        <div className="w-100 fixed flex justify-around items-center  lg:hidden bottom-0 left-0 px-7 py-3 border-t-2">
+        <div className="w-100 fixed flex justify-around items-center  lg:hidden bottom-0 left-0 px-7 py-3 border-t-2 bg-white z-50">
 
             <Button col size='md' border='none ' icon={<i class="fa-light fa-house"></i>}>خانه</Button>
             <Button txtColor='text-slate-500' col size='md' border='none ' icon={<i class="fa-light fa-objects-column"></i>}>دسته بندی</Button>

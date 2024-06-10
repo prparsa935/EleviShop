@@ -6,8 +6,12 @@ import './assets/css/common.css'
 import './assets/css/var.css'
 
 import { Route, Router, Routes,BrowserRouter } from 'react-router-dom'
+import NavBar from './components/navbar/NavBar.jsx'
+import MobileFooter from './components/mobilefooter/MobileFooter.jsx'
+
 
 const Home = lazy(() => import('./pages/Home.jsx'));
+const Search = lazy(() => import('./pages/Search.jsx'));
 function App() {
   
 
@@ -15,11 +19,17 @@ function App() {
   return (
     <BrowserRouter>
 
-
+      <NavBar/>
+      <MobileFooter/>
       <Routes>
         <Route path='/' element={
         <Suspense>
           <Home></Home>
+ 
+        </Suspense>}/>
+        <Route path='/search' element={
+        <Suspense>
+          <Search></Search>
  
         </Suspense>}/>
     

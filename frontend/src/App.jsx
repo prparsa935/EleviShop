@@ -8,6 +8,7 @@ import './assets/css/var.css'
 import { Route, Router, Routes,BrowserRouter } from 'react-router-dom'
 import NavBar from './components/navbar/NavBar.jsx'
 import MobileFooter from './components/mobilefooter/MobileFooter.jsx'
+import Product from './pages/Product.jsx'
 
 
 const Home = lazy(() => import('./pages/Home.jsx'));
@@ -30,6 +31,11 @@ function App() {
         <Route path='/search' element={
         <Suspense>
           <Search></Search>
+ 
+        </Suspense>}/>
+        <Route path='/product/:id' element={
+        <Suspense>
+          <Product></Product>
  
         </Suspense>}/>
     

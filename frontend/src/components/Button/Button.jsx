@@ -24,6 +24,7 @@ const Button=(props)=>{
             else if(size==='xs'){
                 setSizeCss('px-4  py-1 text-xs font-normal ')
             }
+  
         }
         if(props.shape){
             setShapeCss(props.shape)
@@ -41,6 +42,7 @@ const Button=(props)=>{
             {props.icon?<div className={props.col?"mb-1":"ml-1"}>{props.icon}</div>:<></>}
             
             {props.children}
+            {props.leftIcon?<div className={props.col?"mb-1":"mr-1"}>{props.leftIcon}</div>:<></>}
 
         </button>
     )

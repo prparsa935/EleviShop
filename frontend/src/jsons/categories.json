@@ -1,0 +1,43 @@
+[{
+  "id": 1,
+  "name": "مردانه",
+  "childCategories": [
+    {
+      "id": 4,
+      "name": "شلوارک",
+      "childCategories": [
+        {
+          "id": 6,
+          "name": "شلوارک زمستانی",
+          "childCategories": [],
+          "categoryPath": ["winterShorts", "shorts", "men"]
+        }
+      ],
+      "categoryPath": ["shorts", "men"]
+    }
+  ],
+  "categoryPath": ["men"]
+},
+{
+    "id": 2,
+    "name": "زنانه ",
+    "childCategories": [
+      {
+        "id": 4,
+        "name": "شلوارک",
+        "childCategories": [
+          {
+            "id": 6,
+            "name": "شلوارک زمستانی",
+            "childCategories": [],
+            "categoryPath": ["winterShorts", "shorts", "men"]
+          }
+        ],
+        "categoryPath": ["shorts", "men"]
+      }
+    ],
+    "categoryPath": ["men"]
+  }
+]
+
+

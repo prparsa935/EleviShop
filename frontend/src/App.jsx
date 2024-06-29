@@ -8,9 +8,9 @@ import './assets/css/var.css'
 import { Route, Router, Routes,BrowserRouter } from 'react-router-dom'
 import NavBar from './components/navbar/NavBar.jsx'
 import MobileFooter from './components/mobilefooter/MobileFooter.jsx'
-import Product from './pages/Product.jsx'
 
 
+const Product = lazy(() => import('./pages/Product.jsx'));
 const Home = lazy(() => import('./pages/Home.jsx'));
 const Search = lazy(() => import('./pages/Search.jsx'));
 function App() {
@@ -20,8 +20,7 @@ function App() {
   return (
     <BrowserRouter>
 
-      <NavBar/>
-      <MobileFooter/>
+     
       <Routes>
         <Route path='/' element={
         <Suspense>

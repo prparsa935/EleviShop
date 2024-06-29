@@ -30,7 +30,7 @@ const Sheet=(props)=>{
 
     return(
         <div  data-state={props.state?props.state:'closed'}  ref={sheetRef}  className={"fixed flex  overflow-hidden flex-nowrap duration-500  border-2  "+props.className}>
-            <div  ref={sheetContent}  className={" w-100 h-100   p-12 relative w-0   "+props.borderType+" "+props.moreClass}>
+            <div  ref={sheetContent}  className={" w-100 h-100   p-3 relative w-0   "+props.borderType+" "+props.moreClass}>
                 <div onClick={()=>{props.setState('closed')}} role='button' className=' dialog-close-btn '><i class="fa fa-times" aria-hidden="true"></i></div>
                 {props.children}
                 

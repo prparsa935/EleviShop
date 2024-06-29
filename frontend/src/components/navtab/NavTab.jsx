@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import Border from "../border/Border"
 
 const NavTab=(props)=>{
-    const navEl=useRef()
+   
     const controlEnterTab=(el)=>{
         el.childNodes[0].setAttribute('data-active','true')
 

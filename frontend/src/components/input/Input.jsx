@@ -45,7 +45,7 @@ const Input=(props)=>{
                     }} />
 
                 ):(
-                    <input onBlur={props.onBlur} onChange={props.onChange} value={props.value} disabled={props.disabled} type={props.type} placeholder={props.placeHolder}  className={" flex-grow  custom-input    rounded w-100 "+(props.invalid?'border-bf-red  ':'')} style={{
+                    <input name={props.name} onBlur={props.onBlur} onChange={props.onChange} value={props.value} disabled={props.disabled} type={props.type} placeholder={props.placeHolder}  className={" flex-grow  custom-input    rounded w-100 "+(props.invalid?'border-bf-red  ':'')} style={{
                         height:props.height
                     }} />
     

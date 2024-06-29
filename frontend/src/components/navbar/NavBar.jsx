@@ -2,11 +2,12 @@
 import { useEffect, useRef } from "react";
 import Button from "../Button/Button"
 import Input from "../input/Input"
-
+import {useNavigate} from'react-router-dom'
 import NavTab from "../navtab/NavTab";
 import Separator from "../separator/Separator";
 const NavBar=()=>{
     const navEl=useRef()
+    const Navigate=useNavigate()
     const controlNavbar=()=>{
         console.log(window.scrollY)
         if(window.scrollY>200){
@@ -16,6 +17,13 @@ const NavBar=()=>{
             navEl.current.setAttribute('data-scrolled','false')
         }
     }
+    const searchHandler=(e)=>{
+        e.preventDefault()
+     
+        Navigate(`/search?q=${e.target.searchInput.value}`)
+        
+        
+    }
     useEffect(()=>{
        
 
@@ -24,6 +32,7 @@ const NavBar=()=>{
             window.removeEventListener('scroll', controlNavbar);
         }
     },[])
+    
 
 
     return(
@@ -48,9 +57,9 @@ const NavBar=()=>{
                             </svg>
 
                         </div>
-                        <div>
-                            <Input  placeHolder='جستجو'  inputclassName='text-slate-500 lg:w-96 md:w-90 '   preffix={<i className="fal fa-search"></i>} />
-                        </div>
+                        <form onSubmit={(e)=>searchHandler(e)}>
+                            <Input name='searchInput'   placeHolder='جستجو'  inputclassName='text-slate-500 lg:w-96 md:w-90 '   preffix={<i className="fal fa-search"></i>} />
+                        </form>
 
                     </div>
                     {/* left */}

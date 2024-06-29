@@ -1,0 +1,87 @@
+:root{
+    --skeleton-color:rgb(229 231 235 );
+    --border-color:rgb(209 213 219 );
+    --sub-text-color:rgb(107 114 128) ;
+    --bf-red:rgb(225 29 72 );
+    --bf-lighter-red:rgb(254 226 226);
+    --bf-orange:rgb(234 88 12 );
+    --bf-lighter-orange:rgb(255 247 237 );
+    --bf-green:rgb(5 150 105 );
+    --bf-lighter-green:rgb(236 253 245 );
+    --bf-sky:rgb(7 89 133);
+    --bf-lighter-sky:rgb(240 249 255 );
+    --font-family:'BYekan'!important;
+    --tp-b-color:#080808;
+    --color-lightblack-border:#0505052e;
+    --color-white:rgb(247, 247, 247);
+    --nav-b-color:linear-gradient(185deg, rgb(78 67 67) 0%, rgb(7 6 6) 51%, rgb(29 30 36) 100%);
+    --color-383946:rgb(38 39 46);
+    --color-gray707071:rgb(70 70 71);
+    --color-navyblue:#1f2027;
+    --color-darknavyblue:#171717;
+    --color-skyblue:#4ea5ff;
+    --color-Turquoiseblue:#037577;
+    --color-red-error:#f15454a6;
+    --color-green-success:#2f8946;
+    /* --color-green:#58ae6e; */
+    --color-green:#2fb96c;
+    --color-yellow:#ffff00fc;
+    --color-gray353030:#353030;
+    --color-main-dark:#171717;
+    --color-darkblue1:#3a48972b;
+    --color-productcolor:#212023;
+
+    --color-bordercolorwhite:#ffffff1c;
+    --color-lightblack:#000000bb;
+    --color-heavywhite:rgb(4, 2, 2);
+    --color-footernavydark:#171717;
+    --color-navbar:linear-gradient(185deg, rgb(0 0 0) 0%, rgb(7 6 6) 51%, rgb(29 30 36) 100%);
+    --color-lightpurple1:#7c4dff;
+    --color-light-black-footer:rgba(0, 0, 0, 0.2);
+    --color-profile-box:linear-gradient(187deg, rgb(0 0 0) 0%, rgb(21 20 20) 51%, rgb(15 15 15) 100%);
+    --bg-main:linear-gradient(185deg, rgb(37 37 37) 0%, rgb(7 6 6) 51%, rgb(60 60 60) 100%);
+    --product-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    --product-box-color:linear-gradient(185deg, rgb(40 40 40) 0%, rgb(26 26 26) 51%, rgb(29 30 36) 100%);
+}
+:root[data-theme="light"] {
+    --skeleton-color:rgb(44 52 67);
+    --tp-b-color:#ffffff;
+    --color-white:rgb(0, 0, 0);
+    --nav-b-color:linear-gradient(185deg, rgb(251, 251, 251) 0%, rgb(255, 255, 255) 51%, rgb(254, 254, 254) 100%);
+    --color-383946:rgb(239 238 238);
+    --color-gray707071:rgb(166, 166, 166);
+    --color-navyblue:#d5d5d58f;
+    --color-darknavyblue:#e2e2e2;
+    --color-skyblue:#4ea5ff;
+    --color-Turquoiseblue:#037577;
+    --color-red-error:#f15454a6;
+    --color-green-success:#2f8946;
+    /* --color-green:#58ae6e; */
+    --color-green:#2fb96c;
+    --color-yellow:#ffff00fc;
+    --color-gray353030:#cfcfcf;
+    --color-main-dark:#ffffff;
+    --color-darkblue1:#566be22b;
+    --color-productcolor:#ececec;
+    --color-bordercolorwhite:#0000001c;
+    --color-lightblack:#ffffffbb;
+    --color-heavywhite:rgb(255, 255, 255);
+    --color-footernavydark:#171717;
+    --color-navbar:linear-gradient(185deg, rgb(251, 251, 251) 0%, rgb(252, 252, 252) 51%, rgb(255, 255, 255) 100%);
+    --color-lightpurple1:#7c4dff;
+    --color-light-black-footer:rgba(255, 255, 255, 0.2);
+    --color-profile-box:rgb(204, 204, 204);
+    --color-b-purple:#999cff;
+    --bg-main:linear-gradient(185deg, rgb(255 255 255) 0%, rgb(255 255 255) 51%, rgb(255 255 255) 100%);
+    --product-box-shadow: 0px 0px 2rem 4px #000000;
+    --product-box-color:linear-gradient(185deg, rgb(40 40 40) 0%, rgb(26 26 26) 51%, rgb(29 30 36) 100%);
+  }
+
+@font-face {
+    font-family:'BYekan' ;
+    src: url('../BYekan/BYekan+.ttf');
+}
+@font-face {
+    font-family:'IranianSans';
+    src: url('../IRANSansRegular.ttf/IRANSansRegular.ttf');
+}

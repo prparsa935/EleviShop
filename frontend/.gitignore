@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-src/assets
+src/assets/FontAwesome.Pro.6.5.2
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

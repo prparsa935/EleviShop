@@ -17,16 +17,22 @@ import {
 } from "../components/Carousel/Carousel";
 import ProductImageShow from "../components/productimageshow/ProductImageShow";
 const Product = () => {
-    const [imageSiderActive,setImageSiderActive]=useState(false)
+  const [imageSiderActive, setImageSiderActive] = useState(false);
   return (
     <div className="product-page">
       <NavBar />
-      <ProductImageShow active={imageSiderActive} setActive={setImageSiderActive}></ProductImageShow>
+      <ProductImageShow
+        active={imageSiderActive}
+        setActive={setImageSiderActive}
+      ></ProductImageShow>
       <div className="flex flex-col gap-y-5  mt-7 mx-auto max-w-screen-2xl">
         {/* category path */}
         <CategoryPath />
         {/* unit product */}
-        <ProductUpperSection imageSiderActive={imageSiderActive} setImageSiderActive={setImageSiderActive}></ProductUpperSection>
+        <ProductUpperSection
+          imageSiderActive={imageSiderActive}
+          setImageSiderActive={setImageSiderActive}
+        ></ProductUpperSection>
       </div>
     </div>
   );

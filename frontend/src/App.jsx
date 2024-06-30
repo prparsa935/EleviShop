@@ -13,6 +13,7 @@ import MobileFooter from './components/mobilefooter/MobileFooter.jsx'
 const Product = lazy(() => import('./pages/Product.jsx'));
 const Home = lazy(() => import('./pages/Home.jsx'));
 const Search = lazy(() => import('./pages/Search.jsx'));
+const Login = lazy(() => import('./pages/Login.jsx'));
 function App() {
   
 
@@ -35,6 +36,11 @@ function App() {
         <Route path='/product/:id' element={
         <Suspense>
           <Product></Product>
+ 
+        </Suspense>}/>
+        <Route path='/login' element={
+        <Suspense>
+          <Login></Login>
  
         </Suspense>}/>
     

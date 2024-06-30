@@ -3,13 +3,13 @@ import { useState } from "react";
 import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
-const ProductUpperSection = ({setImageSiderActive}) => {
+const ProductUpperSection = ({ setImageSiderActive }) => {
   const [liked, setLiked] = useState(false);
   return (
     <div className="flex flex-col lg:flex-row justify-between">
       {/* right side */}
       <div className="lg:w-6/12 w-100 flex flex-col gap-y-3 lg:px-4">
-        <div className="p-3 bg-rose-100 text-rose-600 text-base font-semibold order-2 lg:order-1 ">
+        <div className="p-3 bg-rose-100 text-rose-600 text-base font-semibold order-3 lg:order-1 ">
           فروش ویژه
         </div>
         {/* main photo and stuff like favarite btn */}
@@ -30,11 +30,12 @@ const ProductUpperSection = ({setImageSiderActive}) => {
         </div>
         {/* other photoes */}
 
-        <div className="order-3 hidden lg:flex   ">
+        <div className="lg:order-3 order-2 flex   ">
           {Array.from({ length: 4 }).map((_, index) => (
-            <img onClick={()=>{
-                setImageSiderActive(true)
-            }}
+            <img
+              onClick={() => {
+                setImageSiderActive(true);
+              }}
               className="ml-2 w-[72px] border-2 p-1 cursor-pointer "
               src={productImageTest}
             />

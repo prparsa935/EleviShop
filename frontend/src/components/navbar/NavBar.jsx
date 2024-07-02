@@ -20,7 +20,7 @@ const NavBar=()=>{
     const searchHandler=(e)=>{
         e.preventDefault()
      
-        Navigate(`/search?q=${e.target.searchInput.value}`)
+        Navigate(`/search?name=${e.target.searchInput.value}`)
         
         
     }

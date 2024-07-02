@@ -26,7 +26,7 @@ const FilterCategory = ({ category }) => {
         )}
 
         <div onClick={()=>setSearchParam((prev)=>{
-            prev.set('category',category.id)
+            prev.set('categoryId',category.id)
             return prev
             
         })} className="grow flex justify-between items-center">

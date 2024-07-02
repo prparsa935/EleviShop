@@ -1,10 +1,17 @@
 import FilterCategoryList from "../filtercategorylist/FilterCategoryList";
 import Switch from "../switch/Switch";
-import categories from "../../jsons/categories.json";
+// import categories from "../../jsons/categories.json";
 import { Slider } from "../slider/Slider";
 import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAllCategories } from "../../api/category";
 const SearchFilter = () => {
+  const [categories,setCategories]=useState()
   const [searchParms, setSearchParam] = useSearchParams();
+  useEffect(()=>{
+    getAllCategories(setCategories)
+
+  },[])
   return (
     <div className="   w-100   flex-col gap-y-8 p-6 rounded-2xl flex">
       <div className="flex justify-between items-center cursor-pointer">

@@ -2,7 +2,7 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../Carousel/Carousel";
 const ProductImageShow = ({active,setActive}) => {
   return (
-    <div data-active={active} className="  absolute top-0 w-full h-screen bg-black  z-50 data-[active=false]:hidden">
+    <div data-active={active} className=" fixed top-0 w-full h-screen bg-black  z-50 data-[active=false]:hidden">
       <div className="relative flex items-center w-full h-100">
         <div onClick={()=>{
             setActive(false)
@@ -16,8 +16,8 @@ const ProductImageShow = ({active,setActive}) => {
         >
           <CarouselContent className={"h-100"}>
             {Array.from({ length: 5 }).map((_, index) => (
-              <CarouselItem key={index} className={"basis-full "}>
-                <img className="h-100 w-100" src={productImageTest}></img>
+              <CarouselItem key={index} className={"basis-full  "}>
+                <img className="h-100 w-100 " src={productImageTest}></img>
               </CarouselItem>
             ))}
           </CarouselContent>

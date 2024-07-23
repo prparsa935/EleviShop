@@ -57,8 +57,8 @@ const Input=(props)=>{
 
             </div>
             
-            <div  className={'text-bf-red  mt-1  transition-400 font-bold overflow-hidden  '+(props.invalid?'h-4':'h-0')}>
-                لطفا پسور را درست وارد کنید
+            <div  className={'text-bf-red  mt-1  transition-400 font-semibold overflow-hidden  '+(props.invalid?'h-5':'h-0')}>
+                {props.iMessage}
             </div>
         </div>
 

@@ -3,7 +3,7 @@ import Button from "../Button/Button"
 
 const AddToCart=({className})=>{
     return(
-        <div className={"lg:w-[333px] w-100 lg:static fixed bottom-0 bg-white "}>
+        <div className={"lg:w-[333px] w-100 lg:static fixed bottom-0 bg-white z-30 "}>
             {/* add to cart */}
             <div className="border rounded-2xl flex flex-col p-3  gap-y-6 lg:ml-4">
                 <div className="  flex font-semibold text-xs pb-4 border-b">

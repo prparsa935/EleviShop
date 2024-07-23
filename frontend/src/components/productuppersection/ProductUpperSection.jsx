@@ -3,8 +3,10 @@ import { useState } from "react";
 import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
+import SelectBox from "../selectbox/SelectBox";
 const ProductUpperSection = ({ setImageSiderActive }) => {
   const [liked, setLiked] = useState(false);
+  const [selectedSize,setSelectedSize]=useState({ value: 2, label: "S" })
   return (
     <div className="flex flex-col lg:flex-row justify-between">
       {/* right side */}
@@ -53,7 +55,7 @@ const ProductUpperSection = ({ setImageSiderActive }) => {
         {/* detail and add to cart */}
         <div className="flex lg:flex-row flex-col w-100">
           {/* detail */}
-          <div className="grow flex flex-col gap-y-4  mt-2 border-t-1 pt-1  ">
+          <div className="grow flex flex-col gap-y-4  mt-2 border-t-1 pt-1 mx-5  ">
             {/* rate */}
             <div className="flex items-center text-xs   ">
               <div className="gap-x-1 flex items-center ml-3    ">
@@ -63,6 +65,26 @@ const ProductUpperSection = ({ setImageSiderActive }) => {
               </div>
               <div className="gap-x-1 flex  items-center text-xs    ">
                 <span className=" text-sky-400 ">18 دیدگاه</span>
+              </div>
+            </div>
+            {/* size selection */}
+            <div className="flex flex-col gap-y-3">
+              <h3 className=" font-medium text-lg">
+                <span className="">اندازه:</span>
+                <span>{selectedSize?.label}</span>
+              </h3>
+              <div className=" w-40">
+                <SelectBox
+                  isClearable={false}
+                  defaultValue={selectedSize}
+                  isSearchable={false}
+                  options={[
+                    { value: "1", label: "M" },
+                    { value: 2, label: "S" },
+                  ]}
+                  onChange={setSelectedSize}
+                  
+                ></SelectBox>
               </div>
             </div>
             {/* features */}

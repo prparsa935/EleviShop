@@ -11,7 +11,7 @@ const TabsList =({ className, ...props }) => {
     <TabsPrimitive.List
    
     className={
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground bg-slate-100 "+className
+      "inline-flex h-10 items-center rounded-md bg-muted p-1 text-muted-foreground bg-slate-100 "+className
     }
     {...props}
   />
@@ -27,7 +27,7 @@ const TabsTrigger =({ className, ...props }) => {
       <TabsPrimitive.Trigger
  
       className={
-        "inline-flex items-center justify-center whitespace-nowrap text-slate-600 rounded-sm px-20 py-1.5 text-sm font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-green-50 data-[state=active]:text-green-600 data-[state=active]:border-b-2 border-green-600 "+className
+        "inline-flex items-center justify-center whitespace-nowrap text-slate-600 rounded-sm px-5 py-1.5 text-sm font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  data-[state=active]:text-rose-500 data-[state=active]:border-rose-500 border-b-2 border-white  "+className
       }
       {...props}
       />

@@ -1,17 +1,20 @@
-import { useContext } from "react";
 import Button from "../components/Button/Button";
 import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
-
-const Login = () => {
+import { useContext } from "react";
+const Register = () => {
   const context = useContext(AuthContext);
-  const loginSubmit = (e) => {
+  const registerSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
+    
     const username = form.get("username");
     const password = form.get("password");
-    context.login(username, password);
+    const  firstName= form.get("firstName");
+    const  lastName= form.get("lastName");
+    const  email= form.get("email");
+    context.register(firstName,lastName,email,username,password)
   };
   return (
     <div className="login-page flex items-center justify-center h-screen">
@@ -20,8 +23,8 @@ const Login = () => {
         <div className="flex justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="115"
-            height="30"
+            width="135"
+            height="50"
             viewBox="0 0 115 30"
           >
             <g fill="none" fill-rule="evenodd">
@@ -39,22 +42,40 @@ const Login = () => {
           </svg>
         </div>
         {/* body */}
-        <form onSubmit={loginSubmit} className="flex flex-col">
+        <form onSubmit={registerSubmit} className="flex flex-col">
           <div className=" font-semibold text-slate-700 text-2xl flex items-center gap-x-2 mt-5">
-            <span>ورود</span>
+            <span>ثبت نام</span>
           </div>
           <div className=" text-sm text-slate-600 mt-5 flex flex-col gap-y-1">
-            <span>سلام!</span>
-            <span>لطفا نام کاربری خود را وارد کنید</span>
+            <span>سلام لطفا اطلاعات خود را وارد کنید!</span>
+            <span>نام</span>
           </div>
           <div className="mt-2">
-            <Input name="username"></Input>
+            <Input name='firstName' invalid iMessage={"لطفا نام را درست وارد کنید"}></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
-            <span>لطفا کلمه عبور خود را وارد کنید</span>
+            <span>نام خانوادگی</span>
           </div>
           <div className="mt-2">
-            <Input name="password" type="password"></Input>
+            <Input name='lastName'></Input>
+          </div>
+          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
+            <span>ایمیل</span>
+          </div>
+          <div className="mt-2">
+            <Input name='email'></Input>
+          </div>
+          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
+            <span>نام کاربری</span>
+          </div>
+          <div className="mt-2">
+            <Input name='username'></Input>
+          </div>
+          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
+            <span>رمز عبور</span>
+          </div>
+          <div className="mt-2">
+            <Input name='password' type="password"></Input>
           </div>
           <div className="mt-7">
             <Button
@@ -71,7 +92,7 @@ const Login = () => {
             ورود شما به معنای پذیرش شرایط دیجی‌کالاو قوانین حریم‌خصوصی است
           </div>
           <div className="text-sm mt-6 flex justify-center text-slate-500">
-            <span>جهت ثبت نام</span>
+            <span>جهت ورود</span>
             <span className=" text-sky-500 mx-1 cursor-pointer ">اینجا</span>
             <span>کلیک کنید</span>
           </div>
@@ -80,4 +101,4 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default Register;

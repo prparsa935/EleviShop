@@ -5,7 +5,7 @@ const Skeleton=(props)=>{
         <div style={{
             width:props.width,
             height:props.height
-        }} className={"skeleton"+" "+(props.variant==='circle'?'rounded-full':'rounded')}>
+        }} className={"skeleton"+" "+(props.variant==='circle'?'rounded-full':'rounded')+' '+props.className}>
           
         </div>
     )

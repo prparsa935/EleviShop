@@ -1,14 +1,21 @@
 import Axios from "axios";
 import { serverAddress } from "../App";
-const searchProducts = async (searchParams, setProductList) => {
 
-  const res = await Axios.get(serverAddress + 'product', {
-    params: searchParams,
+
+const searchProducts = async (searchParams,productList, setProductList,page,setPage,setHasMore) => {
+
+  const res = await Axios.get(serverAddress+'product', {
+    params: {...searchParams,page},
   });
   if (res.status === 200) {
     const resData = await res.data;
-    console.log(resData)
-    setProductList(resData);
+    if(res.data.length===0){
+      setHasMore(false)
+      return
+    }
+    setPage(page+1)
+    setProductList([...productList,resData]);
+    
 
   } else {
     console.log("hello");

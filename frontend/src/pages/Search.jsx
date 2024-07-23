@@ -14,12 +14,9 @@ import Tag from "../components/tag/Tag";
 // price min max
 
 const Search = () => {
-  const [productList, setProductList] = useState([]);
+
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  useEffect(() => {
-    searchProducts(Object.fromEntries([...searchParams]), setProductList);
-  }, [searchParams]);
+
 
   return (
     <div className="search-page">
@@ -49,7 +46,7 @@ const Search = () => {
           <SearchFilter />
         </Sheet>
 
-        <SearchProductList productList={productList} />
+        <SearchProductList />
       </div>
     </div>
   );

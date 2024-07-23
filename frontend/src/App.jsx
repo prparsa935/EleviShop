@@ -17,7 +17,7 @@ const Search = lazy(() => import("./pages/Search.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const Cart = lazy(() => import("./pages/Cart.jsx"));
-const serverAddress = "http://192.168.77.64/api/";
+const serverAddress = "http://localhost/api/";
 export { serverAddress };
 function App() {
   return (

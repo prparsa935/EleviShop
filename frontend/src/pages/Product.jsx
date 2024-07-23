@@ -1,6 +1,7 @@
 import CategoryPath from "../components/categorypath/CategoryPath";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import imageTest1 from "../assets/img/4fb1ba5a6b5d981ce357ddf1db20048ba2cd1587_1692516449.webp";
+import { useParams } from 'react-router-dom';
 
 import Button from "../components/Button/Button";
 import Separator from "../components/separator/Separator";
@@ -23,12 +24,20 @@ import {
   TabsTrigger,
 } from "../components/tab/Tab";
 import ProductLowerSection from "../components/productlowersection/ProductLowerSection";
+import { fetchSingleProduct } from "../api/productApi";
 const Product = () => {
+  const { id } = useParams()
   const [imageSiderActive, setImageSiderActive] = useState(false);
+  useEffect(() => {
+    fetchSingleProduct(id, setProduct)
+
+  }, [])
+  const [product, setProduct] = useState()
   return (
     <div className="product-page">
       <NavBar />
       <ProductImageShow
+        productImageList={product?.images}
         active={imageSiderActive}
         setActive={setImageSiderActive}
       ></ProductImageShow>
@@ -42,7 +51,7 @@ const Product = () => {
         ></ProductUpperSection>
 
         <Carousel
-          opts={{ direction: "rtl",dragFree: true }}
+          opts={{ direction: "rtl", dragFree: true }}
           className=" w-100 h-12 m-auto  relative my-5 select-none cursor-pointer shadow-lg shadow-slate-200 "
         >
           <CarouselContent className={"h-100 justify-center align-baseline "}>

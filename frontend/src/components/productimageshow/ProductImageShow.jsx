@@ -1,4 +1,4 @@
-import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
+// import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import {
   Carousel,
   CarouselContent,
@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../Carousel/Carousel";
-const ProductImageShow = ({ active, setActive }) => {
+const ProductImageShow = ({ active, setActive,productImageList }) => {
   return (
     <div
       data-active={active}
@@ -26,9 +26,14 @@ const ProductImageShow = ({ active, setActive }) => {
           className="md:h-[70vh] md:w-[70vh] w-100 m-auto  relative "
         >
           <CarouselContent className={"h-100"}>
-            {Array.from({ length: 5 }).map((_, index) => (
+            {/* {Array.from({ length: 5 }).map((_, index) => (
               <CarouselItem key={index} className={"basis-full  "}>
                 <img className="h-100 w-100 " src={productImageTest}></img>
+              </CarouselItem>
+            ))} */}
+            {productImageList.map((image, index) => (
+              <CarouselItem key={index} className={"basis-full  "}>
+                <img className="h-100 w-100 " src={image.filePath}></img>
               </CarouselItem>
             ))}
           </CarouselContent>

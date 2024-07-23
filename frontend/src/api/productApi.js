@@ -9,6 +9,7 @@ const searchProducts = async (searchParams,productList, setProductList,page,setP
   });
   if (res.status === 200) {
     const resData = await res.data;
+    console.log(resData)
     if(res.data.length===0){
       setHasMore(false)
       return

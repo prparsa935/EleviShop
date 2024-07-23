@@ -47,13 +47,13 @@ const SearchProductList = () => {
               {product?.name}
             </div>
             <div className="flex justify-between items-center ">
-              {product?.inventories[0]?.quantity < 5 ? (
+              {/* {product?.inventories[0]?.quantity < 5 ? (
                 <div className="text-red-600 text-xs font-medium ">
                   تنها {product?.inventories[0]?.quantity} عدد در انبار باقی مانده
                 </div>
               ) : (
                 ""
-              )}
+              )} */}
 
               <div className="text-xs">
                 <span className="mx-2 font-bold text-slate-800">۴.۴</span>

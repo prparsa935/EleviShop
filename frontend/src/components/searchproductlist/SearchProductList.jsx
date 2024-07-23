@@ -44,12 +44,12 @@ const SearchProductList = () => {
               <img className="h-[240px] w-[240px]" src={productImageTest} />
             </div>
             <div className="h-[72px] overflow-hidden font-medium  text-xs text-slate-700 !leading-7 ">
-              {product.name}
+              {product?.name}
             </div>
             <div className="flex justify-between items-center ">
-              {product.inventories[0].quantity < 5 ? (
+              {product?.inventories[0]?.quantity < 5 ? (
                 <div className="text-red-600 text-xs font-medium ">
-                  تنها {product.inventories[0].quantity} عدد در انبار باقی مانده
+                  تنها {product?.inventories[0]?.quantity} عدد در انبار باقی مانده
                 </div>
               ) : (
                 ""

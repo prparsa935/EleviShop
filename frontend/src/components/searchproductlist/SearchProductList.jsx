@@ -12,6 +12,7 @@ const SearchProductList = () => {
   const [productList, setProductList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
+    console.log("meow")
     searchProducts(
       Object.fromEntries([...searchParams]),
       [],
@@ -26,10 +27,10 @@ const SearchProductList = () => {
       <div className="grow">
       <InfiniteScroll
         dataLength={productList.length}
-        next={searchProducts(
+      next={()=>searchProducts(
           Object.fromEntries([...searchParams]),
-          setProductList,
           productList,
+          setProductList,
           page,
           setPage,
           setHasMore

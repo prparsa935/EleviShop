@@ -31,7 +31,7 @@ const ProductImageShow = ({ active, setActive,productImageList }) => {
                 <img className="h-100 w-100 " src={productImageTest}></img>
               </CarouselItem>
             ))} */}
-            {productImageList.map((image, index) => (
+            {productImageList?.map((image, index) => (
               <CarouselItem key={index} className={"basis-full  "}>
                 <img className="h-100 w-100 " src={image.filePath}></img>
               </CarouselItem>

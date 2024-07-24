@@ -4,7 +4,7 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import SelectBox from "../selectbox/SelectBox";
-const ProductUpperSection = ({ setImageSiderActive }) => {
+const ProductUpperSection = ({ setImageSiderActive , productImageList}) => {
   const [liked, setLiked] = useState(false);
   const [selectedSize,setSelectedSize]=useState({ value: 2, label: "S" })
   return (
@@ -33,13 +33,13 @@ const ProductUpperSection = ({ setImageSiderActive }) => {
         {/* other photoes */}
 
         <div className="lg:order-3 order-2 flex   ">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {productImageList?.map((image, index) => (
             <img
               onClick={() => {
                 setImageSiderActive(true);
               }}
               className="ml-2 w-[72px] border-2 p-1 cursor-pointer "
-              src={productImageTest}
+              src={image.filePath}
             />
           ))}
         </div>

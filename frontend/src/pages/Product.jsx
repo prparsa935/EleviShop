@@ -48,6 +48,7 @@ const Product = () => {
         <ProductUpperSection
           imageSiderActive={imageSiderActive}
           setImageSiderActive={setImageSiderActive}
+          productImageList={product?.images}
         ></ProductUpperSection>
 
         <Carousel

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "react-cookie";
@@ -14,13 +14,81 @@ const AuthProvider = (props) => {
   const [access, setAccess] = useState(
     cookies?.access ? cookies?.access : null
   );
-
+  const [shoppingCart, setShoppingCart] = useState(
+    JSON.parse(window.sessionStorage?.getItem("shoppingCart")) || []
+  );
+  const count = useRef(false);
   // error here
   const [user, setUser] = useState(
     cookies?.access ? jwtDecode(cookies?.access) : null
   );
-//   const [shoppingCartItems, setShoppingCartItems] = useState(null);
+  //   const [shoppingCartItems, setShoppingCartItems] = useState(null);
   const url = useLocation();
+  // todo not first time
+  useEffect(() => {
+    console.log(shoppingCart);
+    // window.sessionStorage.removeItem("shoppingCart");
+    window.sessionStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
+  }, [shoppingCart]);
+  const findProductInCart = (id, inventoryId) => {
+    const productInCartIndex = shoppingCart?.findIndex(
+      (iProductInCart) =>
+        iProductInCart?.productId === id &&
+        iProductInCart.inventoryId === inventoryId
+    );
+
+    if (productInCartIndex === -1) {
+      return null;
+    } else {
+      return {
+        productInCartIndex: productInCartIndex,
+        productInCart: shoppingCart[productInCartIndex],
+      };
+    }
+  };
+  const subtractProductInCart = (productInCart) => {
+    setShoppingCart((prev) => {
+      if (productInCart.productInCart.quantity <= 1) {
+        deleteProductFromCart(prev, productInCart.productInCartIndex);
+      } else {
+        prev[productInCart.productInCartIndex].quantity -= 1;
+      }
+
+      return JSON.parse(JSON.stringify(prev));
+    });
+  };
+  const isProductInCartValid = (quantity,quantitySelected) => {
+    console.log(quantitySelected)
+    console.log(quantity)
+    if (quantitySelected > quantity) {
+
+      return false
+    }
+    return true
+  };
+  const deleteProductFromCart = (shoppingCartList, index) => {
+    shoppingCartList.splice(index, 1);
+    return shoppingCartList;
+  };
+  const sumProductInCart = (productInCart, productQuantity) => {
+    setShoppingCart((prev) => {
+      if (prev[productInCart.productInCartIndex].quantity >= productQuantity) {
+        return prev;
+      }
+      console.log('hell')
+      prev[productInCart.productInCartIndex].quantity += 1;
+
+      return JSON.parse(JSON.stringify(prev));
+    });
+  };
+  const addToCart = (productId, inventoryId) => {
+    setShoppingCart((prev) => {
+      return [
+        ...prev,
+        { productId: productId, inventoryId: inventoryId, quantity: 1 },
+      ];
+    });
+  };
 
   useEffect(() => {
     // const authority=sessionStorage.getItem('Authority')
@@ -64,7 +132,7 @@ const AuthProvider = (props) => {
 
     // })
     try {
-        console.log(firstName)
+      console.log(firstName);
       const response = await axios.post(
         serverAddress + "registerApi",
         {
@@ -115,10 +183,7 @@ const AuthProvider = (props) => {
 
         // localStorage.setItem('access',JSON.stringify(data))
       }
-    } catch (error) {
-    
-
-    }
+    } catch (error) {}
 
     // const response=await fetch('http://localhost:8000/userapi/login',{
     //     headers:{"content-type":"application/json"},
@@ -132,7 +197,7 @@ const AuthProvider = (props) => {
     setUser(null);
     setAccess(null);
   };
-
+  const shoppingCartSetter = (setShoppingCart) => {};
 
   return (
     <AuthContext.Provider
@@ -142,6 +207,15 @@ const AuthProvider = (props) => {
         register: register,
         logout: logout,
         userSetter: userSetter,
+        shoppingCart: shoppingCart,
+        setShoppingCart: setShoppingCart,
+        findProductInCart: findProductInCart,
+        subtractProductInCart: subtractProductInCart,
+        sumProductInCart: sumProductInCart,
+        addToCart: addToCart,
+        isProductInCartValid:isProductInCartValid,
+        deleteProductFromCart:deleteProductFromCart
+
       }}
     >
       {props.children}

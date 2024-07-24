@@ -4,7 +4,7 @@ import App from './App.jsx'
 // import './assets/bootstrap-5.0.2-dist/css/bootstrap.min.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <React.Fragment>
     <App />
-  </React.StrictMode>,
+  </React.Fragment>,
 )

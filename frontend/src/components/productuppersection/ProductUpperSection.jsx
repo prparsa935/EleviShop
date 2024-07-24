@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import SelectBox from "../selectbox/SelectBox";
-const ProductUpperSection = ({ setImageSiderActive , productImageList}) => {
+const ProductUpperSection = ({ setImageSiderActive, product }) => {
   const [liked, setLiked] = useState(false);
-  const [selectedSize,setSelectedSize]=useState({ value: 2, label: "S" })
+  const [selectedSize, setSelectedSize] = useState(
+    {label:product?.inventories[0].size,value:product?.inventories[0]}
+  );
+
   return (
     <div className="flex flex-col lg:flex-row justify-between">
       {/* right side */}
@@ -27,13 +30,16 @@ const ProductUpperSection = ({ setImageSiderActive , productImageList}) => {
             <i class="fa-regular fa-bell"></i>
           </div>
           <div className="mx-auto ">
-            <img className="h-[250px] lg:h-auto" src={productImageTest}></img>
+            <img
+              className="h-[250px] lg:h-auto"
+              src={product?.mainImage.filePath}
+            ></img>
           </div>
         </div>
         {/* other photoes */}
 
         <div className="lg:order-3 order-2 flex   ">
-          {productImageList?.map((image, index) => (
+          {product?.images?.map((image, index) => (
             <img
               onClick={() => {
                 setImageSiderActive(true);
@@ -78,12 +84,11 @@ const ProductUpperSection = ({ setImageSiderActive , productImageList}) => {
                   isClearable={false}
                   defaultValue={selectedSize}
                   isSearchable={false}
-                  options={[
-                    { value: "1", label: "M" },
-                    { value: 2, label: "S" },
-                  ]}
+                  options={product?.inventories?.map((inventory) => ({
+                    label: inventory.size,
+                    value: inventory,
+                  }))}
                   onChange={setSelectedSize}
-                  
                 ></SelectBox>
               </div>
             </div>
@@ -113,7 +118,7 @@ const ProductUpperSection = ({ setImageSiderActive , productImageList}) => {
             </div>
           </div>
           {/* add to cart */}
-          <AddToCart />
+          <AddToCart inventory={selectedSize?.value} product={product} />
         </div>
       </div>
     </div>

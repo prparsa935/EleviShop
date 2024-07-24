@@ -1,0 +1,16 @@
+{
+    "id":1,
+    "name":"عینک آفتابی مدل 3344C04-P01 Polarized Matte Onyx",
+    "inventories":[{
+        "id":1,
+        "size":"sm",
+        "quantity":10
+    }],
+    "mainImage":{"filePath":"/src/assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp"},
+    "images":[
+        {"filePath":"/src/assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp"}
+    ],
+    "price":"۳۰,۰۰۰"
+   
+
+}

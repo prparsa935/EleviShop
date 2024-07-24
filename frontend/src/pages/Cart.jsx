@@ -1,9 +1,12 @@
+import { useContext } from "react";
 import MobileFooter from "../components/mobilefooter/MobileFooter";
 import NavBar from "../components/navbar/NavBar";
 import ProductInCartBox from "../components/productincartbox/ProductInCartBox";
 import SubmitCartBox from "../components/submitcartbox/SubmitCartBox";
+import AuthContext from "../context/AuthContext";
 
 const Cart = () => {
+  const { shoppingCart } = useContext(AuthContext);
   return (
     <div className="cart-page">
       <NavBar />
@@ -17,12 +20,14 @@ const Cart = () => {
                 <span className=" font-semibold text-lg">سبد خرید شما</span>
                 <div>three dot</div>
               </div>
-              <span className=" text-neutral-500 text-sm">۲ کالا</span>
+              <span className=" text-neutral-500 text-sm">{shoppingCart.length} کالا</span>
             </div>
-            <ProductInCartBox></ProductInCartBox>
-            <ProductInCartBox></ProductInCartBox>
-            <ProductInCartBox></ProductInCartBox>
-            <ProductInCartBox></ProductInCartBox>
+            {shoppingCart.map((productInCart,index)=>(
+               <ProductInCartBox productInCart={{productInCart:productInCart,productInCartIndex:index}}></ProductInCartBox>
+            ))}
+           
+        
+          
           </div>
           <div>
             <SubmitCartBox></SubmitCartBox>

@@ -7,12 +7,13 @@ import SelectBox from "../selectbox/SelectBox";
 const ProductUpperSection = ({ setImageSiderActive, product }) => {
   const [liked, setLiked] = useState(false);
   const [selectedSize, setSelectedSize] = useState(
-    {label:product?.inventories[0].size,value:product?.inventories[0]}
+    null
   );
   useEffect(()=>{
-    console.log(selectedSize)
 
-  },[selectedSize])
+    setSelectedSize( {label:product?.inventories[0]?.size,value:product?.inventories[0]})
+
+  },[product])
 
   return (
     <div className="flex flex-col lg:flex-row justify-between">
@@ -92,6 +93,7 @@ const ProductUpperSection = ({ setImageSiderActive, product }) => {
                     label: inventory.size,
                     value: inventory,
                   }))}
+                  value={selectedSize}
                   onChange={setSelectedSize}
                 ></SelectBox>
               </div>

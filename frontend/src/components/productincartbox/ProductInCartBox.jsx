@@ -4,8 +4,9 @@ import specialSellImage from "../../assets/img/SpecialSell.svg";
 import { fetchSingleProduct } from "../../api/productApi";
 import product from "../../jsons/product.json";
 import AuthContext from "../../context/AuthContext";
+import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 
-const ProductInCartBox = ({ productInCart }) => {
+const ProductInCartBox = ({ productInCart, setPrices,key }) => {
   const [fullProduct, setFullProduct] = useState();
   const [selectedInventory, setSelectedInventory] = useState();
   const {
@@ -20,7 +21,7 @@ const ProductInCartBox = ({ productInCart }) => {
   useEffect(() => {
 
     // setFullProduct(product);
-    fetchSingleProduct(productInCart.productInCart.productId,setFullProduct)
+    fetchSingleProduct(productInCart.productInCart.productId, setFullProduct)
   }, []);
   useEffect(() => {
     const iSelectedInventory = fullProduct?.inventories.find((inventory) => {
@@ -39,6 +40,25 @@ const ProductInCartBox = ({ productInCart }) => {
       deleteProductFromCart(shoppingCart, productInCart.productInCartIndex);
     }
   }, [fullProduct]);
+
+  useDidUpdateEffect(() => {
+    setPrices((prev) => {
+      const quantity = productInCart?.productInCart?.quantity
+      const off = fullProduct?.offPercent
+      const price = fullProduct?.price
+
+      prev.totalPurePrice += quantity * price
+      prev.totalPrice += quantity * (price - ((price * off) / 100))
+      prev.totalOff = prev.totalPurePrice - prev.totalPrice
+      console.log(prev)
+      return JSON.parse(JSON.stringify(prev))
+
+    })
+
+
+
+
+  }, [fullProduct,productInCart.productInCart.quantity])
   return (
     <div className=" border-b px-1 py-5">
       <div className="flex">
@@ -49,7 +69,7 @@ const ProductInCartBox = ({ productInCart }) => {
           ></img>
           <img className="w-[60px] " src={specialSellImage}></img>
           <div className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center cursor-pointer select-none ">
-            <span 
+            <span
               onClick={() => {
                 sumProductInCart(productInCart, selectedInventory.quantity);
               }}
@@ -81,12 +101,12 @@ const ProductInCartBox = ({ productInCart }) => {
           </div>
           <div>
             <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
-              <span>{fullProduct?.price}</span>
-              <span>تومان</span>
+              <span>{fullProduct?.offPercent}</span>
+              <span>%</span>
               <span>تخفیف</span>
             </div>
             <div className=" flex text-lg gap-x-1  mt-3 font-semibold">
-              <span>۳۰,۰۰۰</span>
+              <span>{fullProduct?.price}</span>
               <span>تومان</span>
             </div>
           </div>

@@ -1,12 +1,19 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import MobileFooter from "../components/mobilefooter/MobileFooter";
 import NavBar from "../components/navbar/NavBar";
 import ProductInCartBox from "../components/productincartbox/ProductInCartBox";
 import SubmitCartBox from "../components/submitcartbox/SubmitCartBox";
 import AuthContext from "../context/AuthContext";
+import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 
 const Cart = () => {
   const { shoppingCart } = useContext(AuthContext);
+  const [prices,setPrices]=useState({totalPurePrice:0,totalPrice:0,totalOff:0})
+  useDidUpdateEffect(()=>{
+    console.log(prices)
+    setPrices({totalPurePrice:0,totalPrice:0,totalOff:0})
+
+  },[shoppingCart])
   return (
     <div className="cart-page">
       <NavBar />
@@ -23,14 +30,14 @@ const Cart = () => {
               <span className=" text-neutral-500 text-sm">{shoppingCart.length} کالا</span>
             </div>
             {shoppingCart.map((productInCart,index)=>(
-               <ProductInCartBox productInCart={{productInCart:productInCart,productInCartIndex:index}}></ProductInCartBox>
+               <ProductInCartBox setPrices={setPrices} productInCart={{productInCart:productInCart,productInCartIndex:index}}></ProductInCartBox>
             ))}
            
         
           
           </div>
           <div>
-            <SubmitCartBox></SubmitCartBox>
+            <SubmitCartBox prices={prices}></SubmitCartBox>
           </div>
         </div>
       </div>

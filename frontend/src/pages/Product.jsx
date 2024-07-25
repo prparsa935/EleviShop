@@ -29,11 +29,16 @@ const Product = () => {
   const { id } = useParams();
   const [imageSiderActive, setImageSiderActive] = useState(false);
   
-  const [product, setProduct] = useState()
+  const [product, setProduct] = useState(null)
   useEffect(() => {
     fetchSingleProduct(id, setProduct) 
 
   }, [])
+  useEffect(()=>{
+    console.log(product)
+    
+
+  },[product])
 
   return (
     <div className="product-page">

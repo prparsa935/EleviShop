@@ -3,8 +3,7 @@ import { serverAddress } from "../App";
 
 
 const searchProducts = async (searchParams,productList, setProductList,page,setPage,setHasMore) => {
-  console.log(page)
-  console.log(productList)
+
 
   const res = await Axios.get(serverAddress+'product', {
     params: {...searchParams,pageNumber:page},

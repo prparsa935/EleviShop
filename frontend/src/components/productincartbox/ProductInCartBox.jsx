@@ -18,8 +18,9 @@ const ProductInCartBox = ({ productInCart }) => {
     deleteProductFromCart,
   } = useContext(AuthContext);
   useEffect(() => {
+
     // setFullProduct(product);
-    fetchSingleProduct(productInCart.productId,setFullProduct)
+    fetchSingleProduct(productInCart.productInCart.productId,setFullProduct)
   }, []);
   useEffect(() => {
     const iSelectedInventory = fullProduct?.inventories.find((inventory) => {

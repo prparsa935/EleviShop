@@ -1,16 +1,61 @@
 {
-    "id":1,
-    "name":"عینک آفتابی مدل 3344C04-P01 Polarized Matte Onyx",
-    "inventories":[{
-        "id":1,
-        "size":"sm",
-        "quantity":10
-    }],
-    "mainImage":{"filePath":"/src/assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp"},
-    "images":[
-        {"filePath":"/src/assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp"}
-    ],
-    "price":"۳۰,۰۰۰"
-   
-
+  "id": 28,
+  "code": "22777",
+  "name": "shittyTshirtt",
+  "shortDescription": "shortDescription",
+  "longDescription": "longDescription",
+  "brand": {
+    "id": 2,
+    "name": "laboutin"
+  },
+  "inventories": [
+    {
+      "id": 29,
+      "quantity": 3,
+      "size": "S"
+    },
+    {
+      "id": 30,
+      "quantity": 3,
+      "size": "XS"
+    }
+  ],
+  "categories": [
+    {
+      "id": 2,
+      "name": "men",
+      "categoryPath": ["men", "digikala"]
+    },
+    {
+      "id": 1,
+      "name": "digikala",
+      "categoryPath": ["digikala"]
+    }
+  ],
+  "images": [
+    {
+      "id": 1,
+      "name": "genshin-impact-raiden-shogun.jpg",
+      "type": "image/jpeg",
+      "filePath": "/src/assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp"
+    },
+    {
+      "id": 2,
+      "name": "images.jpg",
+      "type": "image/jpeg",
+      "filePath": "/src/assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp"
+    }
+  ],
+  "mainImage": {
+    "id": 3,
+    "name": "images.jpg",
+    "type": "image/jpeg",
+    "filePath": "/src/assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp"
+  },
+  "color": {
+    "id": 1,
+    "name": "blue"
+  },
+  "price": 1000,
+  "offPercent": 10
 }

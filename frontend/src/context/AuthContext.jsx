@@ -15,7 +15,7 @@ const AuthProvider = (props) => {
     cookies?.access ? cookies?.access : null
   );
   const [shoppingCart, setShoppingCart] = useState(
-    JSON.parse(window.sessionStorage?.getItem("shoppingCart")) || []
+    JSON.parse(sessionStorage?.getItem("shoppingCart")) || []
   );
   const count = useRef(false);
   // error here
@@ -28,7 +28,7 @@ const AuthProvider = (props) => {
   useEffect(() => {
     console.log(shoppingCart);
     // window.sessionStorage.removeItem("shoppingCart");
-    window.sessionStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
+    sessionStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
   const findProductInCart = (id, inventoryId) => {
     const productInCartIndex = shoppingCart?.findIndex(

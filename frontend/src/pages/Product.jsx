@@ -31,7 +31,7 @@ const Product = () => {
   
   const [product, setProduct] = useState()
   useEffect(() => {
-    fetchSingleProduct(id, setProduct)
+    fetchSingleProduct(id, setProduct) 
 
   }, [])
 

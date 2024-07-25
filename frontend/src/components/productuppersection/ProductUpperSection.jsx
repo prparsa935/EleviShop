@@ -9,6 +9,10 @@ const ProductUpperSection = ({ setImageSiderActive, product }) => {
   const [selectedSize, setSelectedSize] = useState(
     {label:product?.inventories[0].size,value:product?.inventories[0]}
   );
+  useEffect(()=>{
+    console.log(selectedSize)
+
+  },[selectedSize])
 
   return (
     <div className="flex flex-col lg:flex-row justify-between">

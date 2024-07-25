@@ -37,7 +37,7 @@ const AddToCart = ({ className, product, inventory }) => {
         }
       }
     });
-  }, [shoppingCart]);
+  }, [shoppingCart,inventory]);
 
   return (
     <div

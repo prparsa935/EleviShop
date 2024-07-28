@@ -10,10 +10,10 @@ const Cart = () => {
   const { shoppingCart,updateShoppingCart,calculatePrice } = useContext(AuthContext);
   const [price, setPrice] = useState({ totalPurePrice: 0, totalPrice: 0, totalOff: 0 });
 
-  // useEffect(()=>{
-  //   updateShoppingCart()
+  useEffect(()=>{
+    updateShoppingCart()
 
-  // },[])
+  },[])
   useEffect(() => {
     calculatePrice(setPrice)
 

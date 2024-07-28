@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import specialSellImage from "../../assets/img/SpecialSell.svg";
 import { fetchSingleProduct } from "../../api/productApi";
-import product from "../../jsons/product.json";
+
 import AuthContext from "../../context/AuthContext";
 import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 

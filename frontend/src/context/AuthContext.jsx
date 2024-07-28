@@ -32,6 +32,7 @@ const AuthProvider = (props) => {
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
   const updateShoppingCart = async () => {
+
     let productInCartIndex = 0;
     for (const productInCart of shoppingCart) {
       const res = await Axios.get(
@@ -54,7 +55,9 @@ const AuthProvider = (props) => {
             return JSON.parse(JSON.stringify(prev));
           });
         } else {
-          deleteProductFromCart(shoppingCart, productInCartIndex);
+          console.log('hello bitch')
+          deleteProductFromCart( productInCartIndex);
+        
         }
       } else {
         console.log("hello");
@@ -93,15 +96,17 @@ const AuthProvider = (props) => {
     }
   };
   const subtractProductInCart = (productInCart) => {
-    setShoppingCart((prev) => {
-      if (productInCart.productInCart.quantity <= 1) {
-        deleteProductFromCart(prev, productInCart.productInCartIndex);
-      } else {
+    if (productInCart.productInCart.quantity <= 1) {
+      deleteProductFromCart( productInCart.productInCartIndex);
+    }
+    else {
+      setShoppingCart((prev) => {
         prev[productInCart.productInCartIndex].quantity -= 1;
-      }
+        return JSON.parse(JSON.stringify(prev));
+      });
+ 
+    }
 
-      return JSON.parse(JSON.stringify(prev));
-    });
   };
   const isProductInCartValid = (quantity, quantitySelected) => {
     console.log(quantitySelected);
@@ -111,9 +116,15 @@ const AuthProvider = (props) => {
     }
     return true;
   };
-  const deleteProductFromCart = (shoppingCartList, index) => {
-    shoppingCartList.splice(index, 1);
-    return JSON.parse(JSON.stringify(shoppingCartList));
+  const deleteProductFromCart = (index) => {
+    
+    setShoppingCart((prev)=>{
+      prev.splice(index, 1);
+      return JSON.parse(JSON.stringify(prev)) ;
+
+    })
+    
+ 
   };
   const sumProductInCart = (productInCart, productQuantity) => {
     setShoppingCart((prev) => {

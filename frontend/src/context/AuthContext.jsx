@@ -6,6 +6,7 @@ import Axios from "axios";
 import { serverAddress } from "../App";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchSingleProduct } from "../api/productApi";
+import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const navigate = useNavigate();
@@ -26,14 +27,12 @@ const AuthProvider = (props) => {
   //   const [shoppingCartItems, setShoppingCartItems] = useState(null);
   const url = useLocation();
   // todo not first time
-  useEffect(() => {
+  useDidUpdateEffect(() => {
     console.log(shoppingCart);
     // window.localStorage.removeItem("shoppingCart");
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
   const updateShoppingCart = async () => {
-
-    let productInCartIndex = 0;
     for (const productInCart of shoppingCart) {
       const res = await Axios.get(
         serverAddress + "product/" + productInCart.product.id
@@ -43,6 +42,10 @@ const AuthProvider = (props) => {
         const iSelectedInventory = product?.inventories.find((inventory) => {
           return inventory.id === productInCart.inventory.id;
         });
+        const { productInCartIndex } = findProductInCart(
+          product?.id,
+          iSelectedInventory?.id
+        );
         if (
           isProductInCartValid(
             iSelectedInventory?.quantity,
@@ -50,19 +53,20 @@ const AuthProvider = (props) => {
           )
         ) {
           setShoppingCart((prev) => {
+            console.log(prev);
+            console.log(productInCartIndex);
+            console.log(prev[productInCartIndex]);
+
             prev[productInCartIndex]["product"] = product;
             prev[productInCartIndex]["inventory"] = iSelectedInventory;
             return JSON.parse(JSON.stringify(prev));
           });
         } else {
-          console.log('hello bitch')
-          deleteProductFromCart( productInCartIndex);
-        
+          deleteProductFromCart(productInCartIndex);
         }
       } else {
         console.log("hello");
       }
-      productInCartIndex += 1;
     }
   };
   const calculatePrice = (setPrice) => {
@@ -71,11 +75,10 @@ const AuthProvider = (props) => {
       const quantity = productInCart?.quantity;
       const off = productInCart?.product?.offPercent;
       const purePrice = productInCart?.product?.price;
-      console.log(price)
+      console.log(price);
       price.totalPurePrice += quantity * purePrice;
       price.totalPrice += quantity * (purePrice - (purePrice * off) / 100);
       price.totalOff = price.totalPurePrice - price.totalPrice;
-
     }
     setPrice(price);
   };
@@ -97,16 +100,13 @@ const AuthProvider = (props) => {
   };
   const subtractProductInCart = (productInCart) => {
     if (productInCart.productInCart.quantity <= 1) {
-      deleteProductFromCart( productInCart.productInCartIndex);
-    }
-    else {
+      deleteProductFromCart(productInCart.productInCart);
+    } else {
       setShoppingCart((prev) => {
         prev[productInCart.productInCartIndex].quantity -= 1;
         return JSON.parse(JSON.stringify(prev));
       });
- 
     }
-
   };
   const isProductInCartValid = (quantity, quantitySelected) => {
     console.log(quantitySelected);
@@ -116,15 +116,11 @@ const AuthProvider = (props) => {
     }
     return true;
   };
-  const deleteProductFromCart = (index) => {
-    
-    setShoppingCart((prev)=>{
-      prev.splice(index, 1);
-      return JSON.parse(JSON.stringify(prev)) ;
-
-    })
-    
- 
+  const deleteProductFromCart = (productInCartIndex) => {
+    setShoppingCart((prev) => {
+      prev.splice(productInCartIndex, 1);
+      return JSON.parse(JSON.stringify(prev));
+    });
   };
   const sumProductInCart = (productInCart, productQuantity) => {
     setShoppingCart((prev) => {

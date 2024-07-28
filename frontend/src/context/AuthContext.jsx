@@ -113,7 +113,7 @@ const AuthProvider = (props) => {
   };
   const deleteProductFromCart = (shoppingCartList, index) => {
     shoppingCartList.splice(index, 1);
-    return shoppingCartList;
+    return JSON.parse(JSON.stringify(shoppingCartList));
   };
   const sumProductInCart = (productInCart, productQuantity) => {
     setShoppingCart((prev) => {

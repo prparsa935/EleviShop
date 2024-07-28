@@ -33,7 +33,8 @@ const AuthProvider = (props) => {
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
   const updateShoppingCart = async () => {
-    for (const productInCart of shoppingCart) {
+    const ishoppingCart=JSON.parse(JSON.stringify(shoppingCart))
+    for (const productInCart of ishoppingCart) {
       const res = await Axios.get(
         serverAddress + "product/" + productInCart.product.id
       );
@@ -56,7 +57,6 @@ const AuthProvider = (props) => {
             console.log(prev);
             console.log(productInCartIndex);
             console.log(prev[productInCartIndex]);
-
             prev[productInCartIndex]["product"] = product;
             prev[productInCartIndex]["inventory"] = iSelectedInventory;
             return JSON.parse(JSON.stringify(prev));

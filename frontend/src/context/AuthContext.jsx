@@ -100,7 +100,7 @@ const AuthProvider = (props) => {
   };
   const subtractProductInCart = (productInCart) => {
     if (productInCart.productInCart.quantity <= 1) {
-      deleteProductFromCart(productInCart.productInCart);
+      deleteProductFromCart(productInCart.productInCartIndex);
     } else {
       setShoppingCart((prev) => {
         prev[productInCart.productInCartIndex].quantity -= 1;

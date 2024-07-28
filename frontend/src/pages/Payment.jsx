@@ -6,24 +6,18 @@ import SubmitCartBox from "../components/submitcartbox/SubmitCartBox";
 import AuthContext from "../context/AuthContext";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 
-const Cart = () => {
-  const { shoppingCart,updateShoppingCart,calculatePrice } = useContext(AuthContext);
-  const [price, setPrice] = useState({ totalPurePrice: 0, totalPrice: 0, totalOff: 0 });
-
-  // useEffect(()=>{
-  //   updateShoppingCart()
-
-  // },[])
+const Payment = () => {
+  const { shoppingCart } = useContext(AuthContext);
+  const [prices, setPrices] = useState();
+  const [versionId, setVersionId] = useState(0);
   useEffect(() => {
-    calculatePrice(setPrice)
-
-    
+    setPrices({ totalPurePrice: 0, totalPrice: 0, totalOff: 0 });
+    setVersionId((prev) => prev + 1);
   }, [shoppingCart]);
 
   return (
-    <div className="cart-page">
-      <NavBar />
-      <MobileFooter />
+    <div className="payment-page">
+      {/* <div className="mx-auto max-w-screen-xl"></div> */}
       <div className="mx-auto max-w-screen-xl">
         <div className="flex mt-10">
           {/* all cart products box */}
@@ -40,8 +34,8 @@ const Cart = () => {
             {shoppingCart.map((productInCart, index) => (
               <ProductInCartBox
                 key={index}
-              
-           
+                versionId={versionId}
+                setPrices={setPrices}
                 productInCart={{
                   productInCart: productInCart,
                   productInCartIndex: index,
@@ -50,11 +44,11 @@ const Cart = () => {
             ))}
           </div>
           <div>
-            <SubmitCartBox price={price}></SubmitCartBox>
+            <SubmitCartBox prices={prices}></SubmitCartBox>
           </div>
         </div>
       </div>
     </div>
   );
 };
-export default Cart;
+export default Payment;

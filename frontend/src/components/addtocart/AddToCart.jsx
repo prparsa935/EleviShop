@@ -24,7 +24,7 @@ const AddToCart = ({ className, product, inventory }) => {
       } else {
         if (
           isProductInCartValid(
-            inventory.quantity,
+            inventory?.quantity,
             iProductInCart.productInCart.quantity
           )
         ) {
@@ -76,7 +76,7 @@ const AddToCart = ({ className, product, inventory }) => {
           {!productInCart ? (
             <Button
               onClick={() => {
-                addToCart(product.id, inventory.id);
+                addToCart(product, inventory);
               }}
               txtColor="text-white"
               bgColor="bg-rose-500"
@@ -90,7 +90,7 @@ const AddToCart = ({ className, product, inventory }) => {
             <div className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center w-20 font-semibold text-lg ">
               <span
                 onClick={() => {
-                  sumProductInCart(productInCart, inventory.quantity);
+                  sumProductInCart(productInCart, inventory?.quantity);
                 }}
                 className=" cursor-pointer"
               >

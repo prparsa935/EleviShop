@@ -17,6 +17,7 @@ const Search = lazy(() => import("./pages/Search.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const Cart = lazy(() => import("./pages/Cart.jsx"));
+const Payment = lazy(() => import("./pages/Payment.jsx"));
 const serverAddress = "http://localhost/api/";
 export { serverAddress };
 function App() {
@@ -69,6 +70,14 @@ function App() {
             element={
               <Suspense>
                 <Cart></Cart>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/payment"
+            element={
+              <Suspense>
+                <Payment></Payment>
               </Suspense>
             }
           />

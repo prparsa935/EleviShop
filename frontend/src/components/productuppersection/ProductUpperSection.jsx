@@ -7,7 +7,7 @@ import SelectBox from "../selectbox/SelectBox";
 const ProductUpperSection = ({ setImageSiderActive, product }) => {
   const [liked, setLiked] = useState(false);
   const [selectedSize, setSelectedSize] = useState(
-    null
+    {label:product?.inventories[0]?.size,value:product?.inventories[0]}
   );
   useEffect(()=>{
 

@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "react-cookie";
-import axios from "axios";
+import Axios from "axios";
 import { serverAddress } from "../App";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fetchSingleProduct } from "../api/productApi";
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const AuthProvider = (props) => {
     cookies?.access ? cookies?.access : null
   );
   const [shoppingCart, setShoppingCart] = useState(
-    JSON.parse(sessionStorage?.getItem("shoppingCart")) || []
+    JSON.parse(localStorage?.getItem("shoppingCart")) || []
   );
   const count = useRef(false);
   // error here
@@ -27,14 +28,59 @@ const AuthProvider = (props) => {
   // todo not first time
   useEffect(() => {
     console.log(shoppingCart);
-    // window.sessionStorage.removeItem("shoppingCart");
-    sessionStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
+    // window.localStorage.removeItem("shoppingCart");
+    localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
+  const updateShoppingCart = async () => {
+    let productInCartIndex = 0;
+    for (const productInCart of shoppingCart) {
+      const res = await Axios.get(
+        serverAddress + "product/" + productInCart.product.id
+      );
+      if (res.status === 200) {
+        const product = await res.data;
+        const iSelectedInventory = product?.inventories.find((inventory) => {
+          return inventory.id === productInCart.inventory.id;
+        });
+        if (
+          isProductInCartValid(
+            iSelectedInventory?.quantity,
+            productInCart?.quantity
+          )
+        ) {
+          setShoppingCart((prev) => {
+            prev[productInCartIndex]["product"] = product;
+            prev[productInCartIndex]["inventory"] = iSelectedInventory;
+            return JSON.parse(JSON.stringify(prev));
+          });
+        } else {
+          deleteProductFromCart(shoppingCart, productInCartIndex);
+        }
+      } else {
+        console.log("hello");
+      }
+      productInCartIndex += 1;
+    }
+  };
+  const calculatePrice = (setPrice) => {
+    let price = { totalPurePrice: 0, totalPrice: 0, totalOff: 0 };
+    for (const productInCart of shoppingCart) {
+      const quantity = productInCart?.quantity;
+      const off = productInCart?.product?.offPercent;
+      const purePrice = productInCart?.product?.price;
+      console.log(price)
+      price.totalPurePrice += quantity * purePrice;
+      price.totalPrice += quantity * (purePrice - (purePrice * off) / 100);
+      price.totalOff = price.totalPurePrice - price.totalPrice;
+
+    }
+    setPrice(price);
+  };
   const findProductInCart = (id, inventoryId) => {
     const productInCartIndex = shoppingCart?.findIndex(
       (iProductInCart) =>
-        iProductInCart?.productId === id &&
-        iProductInCart.inventoryId === inventoryId
+        iProductInCart?.product?.id === id &&
+        iProductInCart.inventory?.id === inventoryId
     );
 
     if (productInCartIndex === -1) {
@@ -57,14 +103,13 @@ const AuthProvider = (props) => {
       return JSON.parse(JSON.stringify(prev));
     });
   };
-  const isProductInCartValid = (quantity,quantitySelected) => {
-    console.log(quantitySelected)
-    console.log(quantity)
+  const isProductInCartValid = (quantity, quantitySelected) => {
+    console.log(quantitySelected);
+    console.log(quantity);
     if (quantitySelected > quantity) {
-
-      return false
+      return false;
     }
-    return true
+    return true;
   };
   const deleteProductFromCart = (shoppingCartList, index) => {
     shoppingCartList.splice(index, 1);
@@ -75,20 +120,22 @@ const AuthProvider = (props) => {
       if (prev[productInCart.productInCartIndex].quantity >= productQuantity) {
         return prev;
       }
-      console.log('hell')
+
       prev[productInCart.productInCartIndex].quantity += 1;
 
       return JSON.parse(JSON.stringify(prev));
     });
   };
-  const addToCart = (productId, inventoryId) => {
+  const addToCart = (product, inventory) => {
     setShoppingCart((prev) => {
-      return [
-        ...prev,
-        { productId: productId, inventoryId: inventoryId, quantity: 1 },
-      ];
+      return [...prev, { product: product, inventory: inventory, quantity: 1 }];
     });
   };
+  // const getFullShopingCart=()=>{
+  //   for(const shopingCartItem of shoppingCart){
+  //     fetchSingleProduct(shoppingCart.productId)
+  //   }
+  // }
 
   useEffect(() => {
     // const authority=sessionStorage.getItem('Authority')
@@ -213,9 +260,10 @@ const AuthProvider = (props) => {
         subtractProductInCart: subtractProductInCart,
         sumProductInCart: sumProductInCart,
         addToCart: addToCart,
-        isProductInCartValid:isProductInCartValid,
-        deleteProductFromCart:deleteProductFromCart
-
+        isProductInCartValid: isProductInCartValid,
+        deleteProductFromCart: deleteProductFromCart,
+        updateShoppingCart: updateShoppingCart,
+        calculatePrice: calculatePrice,
       }}
     >
       {props.children}

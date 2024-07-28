@@ -1,28 +1,28 @@
 import { useEffect } from "react";
 import Button from "../Button/Button";
 
-const SubmitCartBox = ({prices}) => {
+const SubmitCartBox = ({price}) => {
   
   return (
     <div className="lg:w-[300px] w-screen left-0 bg-white  justify-between items-center lg:items-stretch fixed bottom-[86px] flex lg:flex-col gap-y-4 border p-5 lg:sticky lg:top-[155px]">
       <div className="lg:flex   hidden justify-between text-neutral-500 font-semibold  ">
         <span>قیمت کالا ها </span>
         <div>
-          <span className="ml-1">{prices?.totalPurePrice}</span>
+          <span className="ml-1">{price?.totalPurePrice}</span>
           <span>تومان</span>
         </div>
       </div>
       <div className="flex lg:flex-row flex-col justify-between items-center  font-semibold lg:order-none order-2  ">
         <span>جمع سبد خرید</span>
         <div>
-          <span className="ml-1">{prices?.totalPrice}</span>
+          <span className="ml-1">{price?.totalPrice}</span>
           <span>تومان</span>
         </div>
       </div>
       <div className="lg:flex hidden justify-between text-rose-600 font-semibold   ">
         <span>سود شما از خرید</span>
         <div>
-          <span className="ml-1">{prices?.totalOff}</span>
+          <span className="ml-1">{price?.totalOff}</span>
           <span>تومان</span>
         </div>
       </div>

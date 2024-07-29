@@ -33,8 +33,8 @@ const AuthProvider = (props) => {
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
   const updateShoppingCart = async () => {
-    let productInCartIndex = 0
-    let invalidList = []
+    let productInCartIndex = 0;
+    let invalidList = [];
 
     for (const productInCart of shoppingCart) {
       const res = await Axios.get(
@@ -50,57 +50,64 @@ const AuthProvider = (props) => {
           isProductInCartValid(
             iSelectedInventory?.quantity,
             productInCart?.quantity
-          ) || iSelectedInventory?.quantity !== 0
+          ) ||
+          iSelectedInventory?.quantity !== 0
         ) {
-          setShoppingCart((prev) => {
-            console.log(prev);
-            console.log(productInCartIndex);
-            console.log(prev[productInCartIndex]);
-            prev[productInCartIndex]["product"] = product;
-            prev[productInCartIndex]["inventory"] = iSelectedInventory;
-            if (iSelectedInventory?.quantity !== 0 && !isProductInCartValid(
-              iSelectedInventory?.quantity,
-              productInCart?.quantity
-            )) {
-              prev[productInCartIndex]['quantity'] = iSelectedInventory?.quantity
-            }
-            return JSON.parse(JSON.stringify(prev));
-          });
+          updateItemInCart(
+            productInCartIndex,
+            productInCart,
+            product,
+            iSelectedInventory
+          );
         } else {
-
-          invalidList.push(iSelectedInventory.id)
-
-
-
+          invalidList.push(iSelectedInventory.id);
         }
       } else {
         console.log("hello");
       }
-      productInCartIndex += 1
+      productInCartIndex += 1;
     }
-    console.log(shoppingCart)
-    console.log(invalidList)
+    deleteInvalidItems(invalidList);
+    console.log(shoppingCart);
+    console.log(invalidList);
+  };
+  const updateItemInCart = (
+    productInCartIndex,
+    productInCart,
+    product,
+    iSelectedInventory
+  ) => {
+    setShoppingCart((prev) => {
+      console.log(prev);
+      console.log(productInCartIndex);
+      console.log(prev[productInCartIndex]);
+      prev[productInCartIndex]["product"] = product;
+      prev[productInCartIndex]["inventory"] = iSelectedInventory;
+      if (
+        iSelectedInventory?.quantity !== 0 &&
+        !isProductInCartValid(
+          iSelectedInventory?.quantity,
+          productInCart?.quantity
+        )
+      ) {
+        prev[productInCartIndex]["quantity"] = iSelectedInventory?.quantity;
+      }
+      return JSON.parse(JSON.stringify(prev));
+    });
+  };
+  const deleteInvalidItems = (invalidList) => {
     setShoppingCart((prev) => {
       for (const invalidItemId of invalidList) {
+        const invalidItemIndex = prev?.findIndex((iProductInCart) => {
+          return iProductInCart.inventory?.id === invalidItemId;
+        });
+        console.log(prev);
+        console.log(invalidItemIndex);
 
-        const invalidItemIndex = prev?.findIndex(
-          (iProductInCart) => {
-            return iProductInCart.inventory?.id === invalidItemId
-
-          }
-
-
-        );
-        console.log(prev)
-        console.log(invalidItemIndex)
-
-        prev.splice(invalidItemIndex, 1)
-
-
-
+        prev.splice(invalidItemIndex, 1);
       }
-      return JSON.parse(JSON.stringify(prev))
-    })
+      return JSON.parse(JSON.stringify(prev));
+    });
   };
   const calculatePrice = (setPrice) => {
     let price = { totalPurePrice: 0, totalPrice: 0, totalOff: 0 };
@@ -270,7 +277,7 @@ const AuthProvider = (props) => {
 
         // localStorage.setItem('access',JSON.stringify(data))
       }
-    } catch (error) { }
+    } catch (error) {}
 
     // const response=await fetch('http://localhost:8000/userapi/login',{
     //     headers:{"content-type":"application/json"},
@@ -284,7 +291,7 @@ const AuthProvider = (props) => {
     setUser(null);
     setAccess(null);
   };
-  const shoppingCartSetter = (setShoppingCart) => { };
+  const shoppingCartSetter = (setShoppingCart) => {};
 
   return (
     <AuthContext.Provider

@@ -33,8 +33,9 @@ const AuthProvider = (props) => {
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
   const updateShoppingCart = async () => {
-    const ishoppingCart=JSON.parse(JSON.stringify(shoppingCart))
-    for (const productInCart of ishoppingCart) {
+    let productInCartIndex=0
+    let invalidList=[]
+    for (const productInCart of shoppingCart) {
       const res = await Axios.get(
         serverAddress + "product/" + productInCart.product.id
       );
@@ -43,10 +44,7 @@ const AuthProvider = (props) => {
         const iSelectedInventory = product?.inventories.find((inventory) => {
           return inventory.id === productInCart.inventory.id;
         });
-        const { productInCartIndex } = findProductInCart(
-          product?.id,
-          iSelectedInventory?.id
-        );
+   
         if (
           isProductInCartValid(
             iSelectedInventory?.quantity,
@@ -62,12 +60,21 @@ const AuthProvider = (props) => {
             return JSON.parse(JSON.stringify(prev));
           });
         } else {
+          invalidList.push(productInCartIndex)
           deleteProductFromCart(productInCartIndex);
         }
       } else {
         console.log("hello");
       }
+      productInCartIndex+=1
     }
+    setShoppingCart((prev)=>{
+      for(const invalidItemIndex of invalidList){
+        prev.splice(invalidItemIndex,1)
+        
+      }
+      return prev
+    })
   };
   const calculatePrice = (setPrice) => {
     let price = { totalPurePrice: 0, totalPrice: 0, totalOff: 0 };

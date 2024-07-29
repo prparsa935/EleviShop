@@ -1,18 +1,29 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Button from "../components/Button/Button";
 import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 const Login = () => {
-  const context = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const loginSubmit = (e) => {
+
     e.preventDefault();
     const form = new FormData(e.target);
     const username = form.get("username");
     const password = form.get("password");
-    context.login(username, password);
+    login(username, password);
+
   };
+  useEffect(() => {
+    if (user !== null) {
+
+      return navigate("/");
+    }
+  }, []);
+
   return (
     <div className="login-page flex items-center justify-center h-screen">
       <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">

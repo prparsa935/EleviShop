@@ -1,21 +1,27 @@
+import { useNavigate } from "react-router";
 import Button from "../components/Button/Button";
 import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 const Register = () => {
-  const context = useContext(AuthContext);
+  const { register, user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const registerSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    
+
     const username = form.get("username");
     const password = form.get("password");
-    const  firstName= form.get("firstName");
-    const  lastName= form.get("lastName");
-    const  email= form.get("email");
-    context.register(firstName,lastName,email,username,password)
+
+    const email = form.get("email");
+    register(email, username, password);
   };
+  useEffect(() => {
+    if (user !== null) {
+      return navigate("/");
+    }
+  }, []);
   return (
     <div className="login-page flex items-center justify-center h-screen">
       <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">
@@ -48,34 +54,25 @@ const Register = () => {
           </div>
           <div className=" text-sm text-slate-600 mt-5 flex flex-col gap-y-1">
             <span>سلام لطفا اطلاعات خود را وارد کنید!</span>
-            <span>نام</span>
           </div>
-          <div className="mt-2">
-            <Input name='firstName' invalid iMessage={"لطفا نام را درست وارد کنید"}></Input>
-          </div>
-          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
-            <span>نام خانوادگی</span>
-          </div>
-          <div className="mt-2">
-            <Input name='lastName'></Input>
-          </div>
+
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>ایمیل</span>
           </div>
           <div className="mt-2">
-            <Input name='email'></Input>
+            <Input name="email"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>نام کاربری</span>
           </div>
           <div className="mt-2">
-            <Input name='username'></Input>
+            <Input name="username"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>رمز عبور</span>
           </div>
           <div className="mt-2">
-            <Input name='password' type="password"></Input>
+            <Input name="password" type="password"></Input>
           </div>
           <div className="mt-7">
             <Button
@@ -84,7 +81,7 @@ const Register = () => {
               moreCss="w-full"
               shape="rounded-lg"
             >
-              ورود
+              ثبت نام
             </Button>
           </div>
 

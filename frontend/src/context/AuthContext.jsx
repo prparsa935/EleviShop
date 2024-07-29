@@ -218,7 +218,7 @@ const AuthProvider = (props) => {
 
   //     }
   // }
-  const register = async (firstName, lastName, email, username, password) => {
+  const register = async (email, username, password) => {
     // const response=await fetch('http://localhost:8000/api/register',{
     //     headers:{"Content-Type": 'application/json'},
     //     method:'POST',
@@ -226,22 +226,11 @@ const AuthProvider = (props) => {
 
     // })
     try {
-      console.log(firstName);
-      const response = await axios.post(
-        serverAddress + "registerApi",
-        {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          username: username,
-          password: password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await Axios.post(serverAddress + "auth/register", {
+        email: email,
+        username: username,
+        password: password,
+      });
 
       if (response.status === 200) {
         const data = response.data;
@@ -254,15 +243,10 @@ const AuthProvider = (props) => {
   };
   const login = async (username, password) => {
     try {
-      const response = await axios.post(
-        serverAddress + "login",
-        { username: code, password: password },
-        {
-          headers: {
-            "Content-Type": "Application/Json",
-          },
-        }
-      );
+      const response = await Axios.post(serverAddress + "auth/login", {
+        username: username,
+        password: password,
+      });
 
       if (response.status === 200) {
         if (response.data.succsess === true) {
@@ -291,7 +275,6 @@ const AuthProvider = (props) => {
     setUser(null);
     setAccess(null);
   };
-  const shoppingCartSetter = (setShoppingCart) => {};
 
   return (
     <AuthContext.Provider

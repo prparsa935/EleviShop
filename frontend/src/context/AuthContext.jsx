@@ -193,6 +193,9 @@ const AuthProvider = (props) => {
       // }
       setAccess(cookies?.access ? cookies?.access : null);
       setUser(cookies?.access ? jwtDecode(cookies?.access) : null);
+      console.log(cookies?.access)
+      console.log(user)
+      console.log(jwtDecode(cookies?.access))
     } catch (error) {
       removeCookie("access", { path: "/" });
     }

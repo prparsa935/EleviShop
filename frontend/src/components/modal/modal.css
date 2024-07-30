@@ -1,9 +1,4 @@
-.modal-content{
-    margin-top: 5rem;
-  
 
-
-}
 .modal-sm{
 
     width: 35rem;
@@ -21,7 +16,7 @@
     left: 1.5rem;
     top: 1.5rem;
 }
-@media (min-width: 576px) {
+/* @media (min-width: 576px) {
     .modal-content{
         max-width: 30rem;
     
@@ -36,7 +31,7 @@
     }
     
     
-}
+} */
 
 @media(min-width:1024px) {
     .modal-content{

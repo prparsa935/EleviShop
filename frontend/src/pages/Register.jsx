@@ -21,7 +21,7 @@ const Register = () => {
     if (user !== null) {
       return navigate("/");
     }
-  }, []);
+  }, [user]);
   return (
     <div className="login-page flex items-center justify-center h-screen">
       <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">

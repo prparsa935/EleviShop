@@ -22,7 +22,7 @@ const Login = () => {
 
       return navigate("/");
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="login-page flex items-center justify-center h-screen">

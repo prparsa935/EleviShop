@@ -13,9 +13,10 @@ const Register = () => {
 
     const username = form.get("username");
     const password = form.get("password");
+    const confirmPassword = form.get("confirmPassword");
 
     const email = form.get("email");
-    register(email, username, password);
+    register(email, username, password,confirmPassword);
   };
   useEffect(() => {
     if (user !== null) {
@@ -73,6 +74,12 @@ const Register = () => {
           </div>
           <div className="mt-2">
             <Input name="password" type="password"></Input>
+          </div>
+          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
+            <span>تکرار رمز عبور </span>
+          </div>
+          <div className="mt-2">
+            <Input name="confirmPassword" type="password"></Input>
           </div>
           <div className="mt-7">
             <Button

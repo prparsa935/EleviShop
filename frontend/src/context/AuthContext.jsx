@@ -221,7 +221,7 @@ const AuthProvider = (props) => {
 
   //     }
   // }
-  const register = async (email, username, password) => {
+  const register = async (email, username, password,confirmPassword) => {
     // const response=await fetch('http://localhost:8000/api/register',{
     //     headers:{"Content-Type": 'application/json'},
     //     method:'POST',
@@ -233,6 +233,7 @@ const AuthProvider = (props) => {
         email: email,
         username: username,
         password: password,
+        confirmPassword:confirmPassword
       });
 
       if (response.status === 200) {

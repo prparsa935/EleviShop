@@ -40,7 +40,7 @@ const Modal = (props) => {
       >
         <div
           onClick={() => {
-            props.setPersonFormModalActive(false);
+            props.setModalActive(false);
           }}
           role="button"
           className=" dialog-close-btn "

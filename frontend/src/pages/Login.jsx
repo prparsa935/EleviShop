@@ -10,14 +10,14 @@ import Alert from "../components/alert/Alert";
 const Login = () => {
   const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
-  const [toastList,setToastList]=useState([])
+  const [errors, setErrors] = useState([]);
+  const [toastList, setToastList] = useState([]);
   const loginSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
     const username = form.get("username");
     const password = form.get("password");
-    login(username, password, setErrors,setToastList);
+    login(username, password, setErrors, setToastList);
   };
   useEffect(() => {
     if (user !== null) {
@@ -93,6 +93,19 @@ const Login = () => {
             >
               ورود
             </Button>
+          </div>
+
+          {/* errors section */}
+          <div className="flex flex-col font-semibold text-sm">
+            {errors.map((error) => {
+              if (error.field === null) {
+                return (
+                  <span className="text-red-500">
+                    {error.message}
+                  </span>
+                );
+              }
+            })}
           </div>
 
           <div className="text-xs mt-6 flex justify-center text-slate-500">

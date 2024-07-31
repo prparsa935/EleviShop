@@ -1,18 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import MobileFooter from "../components/mobilefooter/MobileFooter";
-import NavBar from "../components/navbar/NavBar";
+
 import ProductInCartBox from "../components/productincartbox/ProductInCartBox";
-import SubmitCartBox from "../components/submitcartbox/SubmitCartBox";
+
 import AuthContext from "../context/AuthContext";
-import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 
 import digiImg from "../assets/img/digi.svg";
 import { useNavigate } from "react-router";
 import SubmitOrderBox from "../components/submitorderbox/SubmitOrderBox";
 import AddressInOrder from "../components/addressinorder/AddressInOrder";
-import Modal from "../components/modal/Modal";
-import Input from "../components/input/Input";
-import Button from "../components/Button/Button";
+
 import Alert from "../components/alert/Alert";
 import PersonInformaionForm from "../components/personinformationform/PersonInformaionForm";
 import { getPerson } from "../api/personApi";
@@ -35,7 +31,7 @@ const Payment = () => {
   const [personFormModalActive, setPersonFormModalActive] = useState(false);
 
   useEffect(() => {
-    getPerson(access, setPerson, setErrors,setToastList);
+    getPerson(access, setPerson, setErrors, setToastList);
     updateShoppingCart();
   }, [personFormModalActive]);
   useEffect(() => {
@@ -48,7 +44,7 @@ const Payment = () => {
       <div className=" absolute w-100">
         {toastList?.map((toast) => {
           return (
-            <Alert duration={5000}  type={toast.type}>
+            <Alert duration={5000} type={toast.type}>
               {toast.message}
             </Alert>
           );
@@ -56,6 +52,7 @@ const Payment = () => {
       </div>
 
       <PersonInformaionForm
+        errors={errors}
         person={person}
         setPersonFormModalActive={setPersonFormModalActive}
         personFormModalActive={personFormModalActive}

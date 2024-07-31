@@ -5,7 +5,7 @@ import { useCookies } from "react-cookie";
 import Axios from "axios";
 import { serverAddress } from "../App";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fetchSingleProduct } from "../api/productApi";
+
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
@@ -247,11 +247,8 @@ const AuthProvider = (props) => {
       }
     } catch (error) {
       if (error.response) {
-        setErrors((prev) => {
-          return {
-            status: "fieldErrors",
-            fieldErrors: error.response.data.fieldErrors,
-          };
+        setErrors(() => {
+          return error.response.data.apiExceptions;
         });
       } else {
         // Something happened in setting up the request that triggered an Error
@@ -265,7 +262,7 @@ const AuthProvider = (props) => {
       }
     }
   };
-  const login = async (username, password, setErrors,setToastList) => {
+  const login = async (username, password, setErrors, setToastList) => {
     try {
       const response = await Axios.post(serverAddress + "auth/login", {
         username: username,
@@ -280,25 +277,20 @@ const AuthProvider = (props) => {
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response.data)
-        console.log({
-          status: "fieldErrors",
-          fieldErrors: error.response.data.fieldErrors,
-        })
-        setErrors((prev) => {
-          return {
-            status: "fieldErrors",
-            fieldErrors: error.response.data.fieldErrors,
-          };
+        setErrors(() => {
+          return error.response.data.apiExceptions;
         });
       } else {
         // Something happened in setting up the request that triggered an Error
         setToastList((prev) => {
-          return [...prev,{
-            type: "danger",
-            message: "در ارتباط با سرور مشکلی پیش امده",
-      
-          }];
+          return [
+            ...prev,
+            {
+         
+              type: "danger",
+              message: "در ارتباط با سرور مشکلی پیش امده",
+            },
+          ];
         });
       }
       //  {
@@ -330,7 +322,7 @@ const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         user: user,
-        access:access,
+        access: access,
         login: login,
         register: register,
         logout: logout,

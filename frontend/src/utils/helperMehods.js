@@ -1,8 +1,8 @@
 const getFieldMessage = (fieldName,errors) => {
-  if (errors.fieldErrors) {
+  if (errors) {
     console.log(errors);
     console.log(errors.fieldErrors);
-    for (const error of errors?.fieldErrors) {
+    for (const error of errors) {
       console.log(error);
       console.log(error.field);
       if (error.field === fieldName) {
@@ -10,7 +10,8 @@ const getFieldMessage = (fieldName,errors) => {
         return error.message;
       }
     }
-    return null;
+   
   }
+  return null;
 };
 export { getFieldMessage };

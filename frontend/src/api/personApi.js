@@ -15,13 +15,10 @@ const getPerson = async (access, setPerson, setErrors, setToastList) => {
       setPerson(person);
     }
   } catch (error) {
-    console.log('hello')
+    console.log("hello");
     if (error.response) {
       setErrors(() => {
-        return {
-          status: "fieldErrors",
-          fieldErrors: [error.response.data.fieldErrors],
-        };
+        return error.response.data.apiExceptions;
       });
     } else {
       console.log(error);

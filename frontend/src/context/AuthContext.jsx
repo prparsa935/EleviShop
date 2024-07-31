@@ -250,7 +250,7 @@ const AuthProvider = (props) => {
         setErrors((prev) => {
           return {
             status: "fieldErrors",
-            fieldErrors: [error.response.data.fieldErrors],
+            fieldErrors: error.response.data.fieldErrors,
           };
         });
       } else {
@@ -283,12 +283,12 @@ const AuthProvider = (props) => {
         console.log(error.response.data)
         console.log({
           status: "fieldErrors",
-          fieldErrors: [error.response.data.fieldErrors],
+          fieldErrors: error.response.data.fieldErrors,
         })
         setErrors((prev) => {
           return {
             status: "fieldErrors",
-            fieldErrors: [error.response.data.fieldErrors],
+            fieldErrors: error.response.data.fieldErrors,
           };
         });
       } else {

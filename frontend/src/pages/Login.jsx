@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 const Login = () => {
   const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({});
   const loginSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
@@ -23,8 +23,12 @@ const Login = () => {
   }, [user]);
   const getFieldMessage = (fieldName) => {
     if (errors.fieldErrors) {
+      console.log(errors)
+      console.log(errors.fieldErrors)
       for (const error of errors?.fieldErrors) {
+        console.log(error)
         if (error.field === fieldName) {
+          console.log(error.message)
           return error.message;
         }
         return null;

@@ -1,4 +1,4 @@
-const AddressInOrder = () => {
+const AddressInOrder = ({setPersonFormModalActive}) => {
   return (
     <div className="flex flex-col border rounded-md ml-3 px-7 py-3 mb-3">
       <div className="flex">
@@ -16,7 +16,9 @@ const AddressInOrder = () => {
       </div>
 
       <div className="flex justify-end text-sky-500 font-medium ">
-        <span className="mx-3">تغییر یا ویرایش ادرس</span>
+        <span onClick={()=>{
+            setPersonFormModalActive(true)
+        }} className="mx-3">تغییر یا ویرایش ادرس</span>
         <span>
           <i class="fa-light fa-angle-left"></i>
         </span>

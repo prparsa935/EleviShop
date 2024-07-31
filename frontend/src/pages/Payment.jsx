@@ -13,9 +13,11 @@ import AddressInOrder from "../components/addressinorder/AddressInOrder";
 import Modal from "../components/modal/Modal";
 import Input from "../components/input/Input";
 import Button from "../components/Button/Button";
+import Alert from "../components/alert/Alert";
 const Payment = () => {
   const [prices, setPrices] = useState();
   const [versionId, setVersionId] = useState(0);
+  const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
   const { shoppingCart, updateShoppingCart, calculatePrice } =
     useContext(AuthContext);
@@ -24,6 +26,7 @@ const Payment = () => {
     totalPrice: 0,
     totalOff: 0,
   });
+  const [personFormModalActive, setPersonFormModalActive] = useState(false);
 
   useEffect(() => {
     updateShoppingCart();
@@ -34,8 +37,21 @@ const Payment = () => {
 
   return (
     <div className="payment-page ">
+      {/* alerts container */}
+      <div className=" absolute w-100">
+        {errors.map(() => {
+          return (
+            <Alert duration={5000} title={"کیر خر"} type="success">
+              مشکلی نیست اینجا اطلاعاتی در باره کیر خر موجود است
+            </Alert>
+          );
+        })}
+
+      </div>
+
       <Modal
-        enable={true}
+        setPersonFormModalActive={setPersonFormModalActive}
+        enable={personFormModalActive}
         className="lg:h-[70vh] h-full lg:w-[550px] w-100 p-6 rounded-2xl "
       >
         <div className="flex-col flex gap-y-4">
@@ -48,16 +64,28 @@ const Payment = () => {
               <Input></Input>
             </div>
             <div className="flex flex-col gap-y-2">
-              <label className="text-neutral-500 mr-2 font-semibold">نام خانوادگی</label>
+              <label className="text-neutral-500 mr-2 font-semibold">
+                نام خانوادگی
+              </label>
               <Input></Input>
             </div>
             <div className="flex flex-col gap-y-2">
-              <label className="text-neutral-500 mr-2 font-semibold">شماره موبایل</label>
+              <label className="text-neutral-500 mr-2 font-semibold">
+                شماره موبایل
+              </label>
               <Input></Input>
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
-            <label className=" text-neutral-500 mr-2 font-semibold">نشانی پستی</label>
+            <label className=" text-neutral-500 mr-2 font-semibold">
+              کد پستی
+            </label>
+            <Input></Input>
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <label className=" text-neutral-500 mr-2 font-semibold">
+              نشانی پستی
+            </label>
             <Input type="textarea"></Input>
           </div>
           <Button
@@ -86,7 +114,9 @@ const Payment = () => {
         <div className="flex mt-10 ">
           {/* all cart products box */}
           <div className="grow">
-            <AddressInOrder />
+            <AddressInOrder
+              setPersonFormModalActive={setPersonFormModalActive}
+            />
             <div className=" flex flex-col border rounded-md ml-3 px-7 py-3">
               <div className="flex flex-col">
                 <div className="flex justify-between">

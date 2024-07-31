@@ -72,7 +72,7 @@ const Alert=(props)=>{
     }
 
     return(
-            <div ref={alertContainer} className="relative w-25 transition-400">
+            <div ref={alertContainer} className="relative w-96 transition-400 z-50">
                 
         
                 <div  className={"  w-100   flex justify-between border p-3  "+bgColor+" "+textColor}>

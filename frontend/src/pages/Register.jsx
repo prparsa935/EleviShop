@@ -3,9 +3,10 @@ import Button from "../components/Button/Button";
 import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 const Register = () => {
   const { register, user } = useContext(AuthContext);
+  const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
   const registerSubmit = (e) => {
     e.preventDefault();
@@ -16,13 +17,23 @@ const Register = () => {
     const confirmPassword = form.get("confirmPassword");
 
     const email = form.get("email");
-    register(email, username, password,confirmPassword);
+    register(email, username, password, confirmPassword,setErrors);
   };
   useEffect(() => {
     if (user !== null) {
       return navigate("/");
     }
   }, [user]);
+  const getFieldMessage = (fieldName) => {
+    if (errors.fieldErrors) {
+      for (const error of errors?.fieldErrors) {
+        if (error.field === fieldName) {
+          return error.message;
+        }
+        return null;
+      }
+    }
+  };
   return (
     <div className="login-page flex items-center justify-center h-screen">
       <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">
@@ -61,25 +72,25 @@ const Register = () => {
             <span>ایمیل</span>
           </div>
           <div className="mt-2">
-            <Input name="email"></Input>
+            <Input iMessage={getFieldMessage("email")} name="email"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>نام کاربری</span>
           </div>
           <div className="mt-2">
-            <Input name="username"></Input>
+            <Input iMessage={getFieldMessage("username")} name="username"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>رمز عبور</span>
           </div>
           <div className="mt-2">
-            <Input name="password" type="password"></Input>
+            <Input iMessage={getFieldMessage("password")} name="password" type="password"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>تکرار رمز عبور </span>
           </div>
           <div className="mt-2">
-            <Input name="confirmPassword" type="password"></Input>
+            <Input iMessage={getFieldMessage("confirmPassword")} name="confirmPassword" type="password"></Input>
           </div>
           <div className="mt-7">
             <Button

@@ -193,9 +193,9 @@ const AuthProvider = (props) => {
       // }
       setAccess(cookies?.access ? cookies?.access : null);
       setUser(cookies?.access ? jwtDecode(cookies?.access) : null);
-      console.log(cookies?.access)
-      console.log(user)
-      console.log(jwtDecode(cookies?.access))
+      console.log(cookies?.access);
+      console.log(user);
+      console.log(jwtDecode(cookies?.access));
     } catch (error) {
       removeCookie("access", { path: "/" });
     }
@@ -221,7 +221,13 @@ const AuthProvider = (props) => {
 
   //     }
   // }
-  const register = async (email, username, password,confirmPassword) => {
+  const register = async (
+    email,
+    username,
+    password,
+    confirmPassword,
+    setErrors
+  ) => {
     // const response=await fetch('http://localhost:8000/api/register',{
     //     headers:{"Content-Type": 'application/json'},
     //     method:'POST',
@@ -233,19 +239,33 @@ const AuthProvider = (props) => {
         email: email,
         username: username,
         password: password,
-        confirmPassword:confirmPassword
+        confirmPassword: confirmPassword,
       });
 
       if (response.status === 200) {
-        const data = response.data;
-
         navigate("login");
       }
     } catch (error) {
-      //   setLoginErr({ err: { message: "لطفا دوباره امتحان کنید" } });
+      if (error.response) {
+        setErrors((prev) => {
+          return {
+            status: "fieldErrors",
+            fieldErrors: [error.response.data.fieldErrors],
+          };
+        });
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setErrors((prev) => {
+          return {
+            status: "connectionError",
+            message: "در ارتباط با سرور مشکلی پیش امده",
+            fieldErrors: [],
+          };
+        });
+      }
     }
   };
-  const login = async (username, password) => {
+  const login = async (username, password, setErrors) => {
     try {
       const response = await Axios.post(serverAddress + "auth/login", {
         username: username,
@@ -253,19 +273,30 @@ const AuthProvider = (props) => {
       });
 
       if (response.status === 200) {
-        if (response.data.succsess === true) {
+        if (response.data.success === true) {
           const access = response.data.jwt;
           userSetter(access);
         }
-        // else if (response.data.code === 105) {
-        //   window.location.reload();
-        // } else {
-        //   setRegisterErr({ err: { message: response.data.err.message } });
-        // }
-
-        // localStorage.setItem('access',JSON.stringify(data))
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error.response) {
+        setErrors((prev) => {
+          return {
+            status: "fieldErrors",
+            fieldErrors: [error.response.data.fieldErrors],
+          };
+        });
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setErrors((prev) => {
+          return {
+            status: "connectionError",
+            message: "در ارتباط با سرور مشکلی پیش امده",
+            fieldErrors: [],
+          };
+        });
+      }
+    }
 
     // const response=await fetch('http://localhost:8000/userapi/login',{
     //     headers:{"content-type":"application/json"},

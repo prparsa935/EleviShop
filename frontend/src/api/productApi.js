@@ -31,7 +31,7 @@ const searchProducts = async (
   }
 };
 const fetchSingleProduct = async (productId, setProduct) => {
-  const res = await Axios.get(serverAddress + "product/" + productId);
+  const res = await Axios.get(serverAddress + "product/id/" + productId);
   if (res.status === 200) {
     const resData = await res.data;
     console.log(resData);

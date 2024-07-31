@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../components/Button/Button";
 import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
@@ -8,21 +8,29 @@ import { useNavigate } from "react-router";
 const Login = () => {
   const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [errors, setErrors] = useState([]);
   const loginSubmit = (e) => {
-
     e.preventDefault();
     const form = new FormData(e.target);
     const username = form.get("username");
     const password = form.get("password");
-    login(username, password);
-
+    login(username, password, setErrors);
   };
   useEffect(() => {
     if (user !== null) {
-
       return navigate("/");
     }
   }, [user]);
+  const getFieldMessage = (fieldName) => {
+    if (errors.fieldErrors) {
+      for (const error of errors?.fieldErrors) {
+        if (error.field === fieldName) {
+          return error.message;
+        }
+        return null;
+      }
+    }
+  };
 
   return (
     <div className="login-page flex items-center justify-center h-screen">
@@ -59,13 +67,20 @@ const Login = () => {
             <span>لطفا نام کاربری خود را وارد کنید</span>
           </div>
           <div className="mt-2">
-            <Input name="username"></Input>
+            <Input
+              iMessage={getFieldMessage("username")}
+              name="username"
+            ></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>لطفا کلمه عبور خود را وارد کنید</span>
           </div>
           <div className="mt-2">
-            <Input name="password" type="password"></Input>
+            <Input
+              iMessage={getFieldMessage("password")}
+              name="password"
+              type="password"
+            ></Input>
           </div>
           <div className="mt-7">
             <Button

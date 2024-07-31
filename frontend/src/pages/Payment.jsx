@@ -78,6 +78,7 @@ const Payment = () => {
           <div className="grow">
             <AddressInOrder
               setPersonFormModalActive={setPersonFormModalActive}
+              person={person}
             />
             <div className=" flex flex-col border rounded-md ml-3 px-7 py-3">
               <div className="flex flex-col">

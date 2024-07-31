@@ -14,6 +14,7 @@ const searchProducts = async (
     params: { ...searchParams, pageNumber: page },
   });
   if (res.status === 200) {
+    
     const resData = await res.data;
     console.log(resData);
     if (resData.length === 0) {

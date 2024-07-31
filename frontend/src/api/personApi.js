@@ -20,6 +20,7 @@ const getPerson = async (access, setPerson, setErrors,setToastList) => {
         };
       });
     } else {
+        console.log(error)
       // Something happened in setting up the request that triggered an Error
       setToastList((prev) => {
         return [...prev,{

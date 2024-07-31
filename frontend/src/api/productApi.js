@@ -9,6 +9,7 @@ const searchProducts = async (
   setPage,
   setHasMore
 ) => {
+  console.log('hellll')
   const res = await Axios.get(serverAddress + "product", {
     params: { ...searchParams, pageNumber: page },
   });

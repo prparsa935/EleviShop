@@ -14,10 +14,15 @@ import Modal from "../components/modal/Modal";
 import Input from "../components/input/Input";
 import Button from "../components/Button/Button";
 import Alert from "../components/alert/Alert";
+import PersonInformaionForm from "../components/personinformationform/PersonInformaionForm";
+import { getPerson } from "../api/personApi";
 const Payment = () => {
+  const { access } = useContext(AuthContext);
+  const [person, setPerson] = useState(null);
   const [prices, setPrices] = useState();
   const [versionId, setVersionId] = useState(0);
   const [errors, setErrors] = useState([]);
+  const [toastList, setToastList] = useState([]);
   const navigate = useNavigate();
   const { shoppingCart, updateShoppingCart, calculatePrice } =
     useContext(AuthContext);
@@ -26,11 +31,13 @@ const Payment = () => {
     totalPrice: 0,
     totalOff: 0,
   });
+
   const [personFormModalActive, setPersonFormModalActive] = useState(false);
 
   useEffect(() => {
+    getPerson(access, setPerson, setErrors,setToastList);
     updateShoppingCart();
-  }, []);
+  }, [personFormModalActive]);
   useEffect(() => {
     calculatePrice(setPrice);
   }, [shoppingCart]);
@@ -39,65 +46,20 @@ const Payment = () => {
     <div className="payment-page ">
       {/* alerts container */}
       <div className=" absolute w-100">
-        {errors.map(() => {
+        {toastList?.map((toast) => {
           return (
-            <Alert duration={5000} title={"کیر خر"} type="success">
-              مشکلی نیست اینجا اطلاعاتی در باره کیر خر موجود است
+            <Alert duration={5000}  type={toast.type}>
+              {toast.message}
             </Alert>
           );
         })}
-
       </div>
 
-      <Modal
+      <PersonInformaionForm
+        person={person}
         setPersonFormModalActive={setPersonFormModalActive}
-        enable={personFormModalActive}
-        className="lg:h-[70vh] h-full lg:w-[550px] w-100 p-6 rounded-2xl "
-      >
-        <div className="flex-col flex gap-y-4">
-          <div className="  font-semibold  border-b pb-5 ">
-            <span>تکمیل پروفایل</span>
-          </div>
-          <div className=" grid md:grid-cols-2 grid-cols-1 gap-x-2">
-            <div className="flex flex-col gap-y-2">
-              <label className="text-neutral-500 mr-2 font-semibold">نام</label>
-              <Input></Input>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <label className="text-neutral-500 mr-2 font-semibold">
-                نام خانوادگی
-              </label>
-              <Input></Input>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <label className="text-neutral-500 mr-2 font-semibold">
-                شماره موبایل
-              </label>
-              <Input></Input>
-            </div>
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className=" text-neutral-500 mr-2 font-semibold">
-              کد پستی
-            </label>
-            <Input></Input>
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className=" text-neutral-500 mr-2 font-semibold">
-              نشانی پستی
-            </label>
-            <Input type="textarea"></Input>
-          </div>
-          <Button
-            size="lg"
-            shape="rounded-xl"
-            txtColor="text-rose-500"
-            moreCss="border-rose-500"
-          >
-            ثبت اطلاعات
-          </Button>
-        </div>
-      </Modal>
+        personFormModalActive={personFormModalActive}
+      />
       <div className="mx-auto max-w-screen-xl mt-10 border relative ">
         <div className="flex justify-center p-4  ">
           <img className="w-24" src={digiImg}></img>

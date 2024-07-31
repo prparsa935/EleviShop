@@ -54,6 +54,7 @@ const Input = (props) => {
 
         {props.type === "textarea" ? (
           <textarea
+            defaultValue={props.defaultValue}
             onChange={props.onChange}
             value={props.value}
             disabled={props.disabled}
@@ -69,6 +70,7 @@ const Input = (props) => {
           />
         ) : (
           <input
+            defaultValue={props.defaultValue}
             name={props.name}
             onBlur={props.onBlur}
             onChange={props.onChange}

@@ -4,6 +4,7 @@ import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
+import { getFieldMessage } from "../utils/helperMehods";
 const Register = () => {
   const { register, user } = useContext(AuthContext);
   const [errors, setErrors] = useState([]);
@@ -24,19 +25,7 @@ const Register = () => {
       return navigate("/");
     }
   }, [user]);
-  const getFieldMessage = (fieldName) => {
-    if (errors.fieldErrors) {
-     
-      for (const error of errors?.fieldErrors) {
- 
-        if (error.field === fieldName) {
-          return error.message;
-        }
-      
-      }
-      return null
-    }
-  };
+
   return (
     <div className="login-page flex items-center justify-center h-screen">
       <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">
@@ -75,14 +64,17 @@ const Register = () => {
             <span>ایمیل</span>
           </div>
           <div className="mt-2">
-            <Input iMessage={getFieldMessage("email")} name="email"></Input>
+            <Input
+              iMessage={getFieldMessage("email", errors)}
+              name="email"
+            ></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>نام کاربری</span>
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("username")}
+              iMessage={getFieldMessage("username", errors)}
               name="username"
             ></Input>
           </div>
@@ -91,7 +83,7 @@ const Register = () => {
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("password")}
+              iMessage={getFieldMessage("password", errors)}
               name="password"
               type="password"
             ></Input>
@@ -101,7 +93,7 @@ const Register = () => {
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("confirmPassword")}
+              iMessage={getFieldMessage("confirmPassword", errors)}
               name="confirmPassword"
               type="password"
             ></Input>
@@ -122,7 +114,12 @@ const Register = () => {
           </div>
           <div className="text-sm mt-6 flex justify-center text-slate-500">
             <span>جهت ورود</span>
-            <span className=" text-sky-500 mx-1 cursor-pointer ">اینجا</span>
+            <span
+              className=" text-sky-500 mx-1 cursor-pointer "
+              onClick={() => navigate("/login")}
+            >
+              اینجا
+            </span>
             <span>کلیک کنید</span>
           </div>
         </form>

@@ -4,41 +4,38 @@ import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { getFieldMessage } from "../utils/helperMehods";
+import Alert from "../components/alert/Alert";
 
 const Login = () => {
   const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [toastList,setToastList]=useState([])
   const loginSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
     const username = form.get("username");
     const password = form.get("password");
-    login(username, password, setErrors);
+    login(username, password, setErrors,setToastList);
   };
   useEffect(() => {
     if (user !== null) {
       return navigate("/");
     }
   }, [user]);
-  const getFieldMessage = (fieldName) => {
-    if (errors.fieldErrors) {
-      console.log(errors)
-      console.log(errors.fieldErrors)
-      for (const error of errors?.fieldErrors) {
-        console.log(error)
-        console.log(error.field)
-        if (error.field === fieldName) {
-          console.log(error.message)
-          return error.message;
-        }
-        return null;
-      }
-    }
-  };
 
   return (
     <div className="login-page flex items-center justify-center h-screen">
+      <div className=" absolute top-0 w-100">
+        {toastList?.map((toast) => {
+          return (
+            <Alert duration={5000} type={toast.type}>
+              {toast.message}
+            </Alert>
+          );
+        })}
+      </div>
       <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">
         {/* header */}
         <div className="flex justify-center">
@@ -73,7 +70,7 @@ const Login = () => {
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("username")}
+              iMessage={getFieldMessage("username", errors)}
               name="username"
             ></Input>
           </div>
@@ -82,7 +79,7 @@ const Login = () => {
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("password")}
+              iMessage={getFieldMessage("password", errors)}
               name="password"
               type="password"
             ></Input>
@@ -103,7 +100,12 @@ const Login = () => {
           </div>
           <div className="text-sm mt-6 flex justify-center text-slate-500">
             <span>جهت ثبت نام</span>
-            <span className=" text-sky-500 mx-1 cursor-pointer ">اینجا</span>
+            <span
+              className=" text-sky-500 mx-1 cursor-pointer "
+              onClick={() => navigate("/register")}
+            >
+              اینجا
+            </span>
             <span>کلیک کنید</span>
           </div>
         </form>

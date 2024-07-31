@@ -265,7 +265,7 @@ const AuthProvider = (props) => {
       }
     }
   };
-  const login = async (username, password, setErrors) => {
+  const login = async (username, password, setErrors,setToastList) => {
     try {
       const response = await Axios.post(serverAddress + "auth/login", {
         username: username,
@@ -293,14 +293,24 @@ const AuthProvider = (props) => {
         });
       } else {
         // Something happened in setting up the request that triggered an Error
-        setErrors((prev) => {
-          return {
-            status: "connectionError",
+        setToastList((prev) => {
+          return [...prev,{
+            type: "danger",
             message: "در ارتباط با سرور مشکلی پیش امده",
-            fieldErrors: [],
-          };
+      
+          }];
         });
       }
+      //  {
+      //   // Something happened in setting up the request that triggered an Error
+      //   setErrors((prev) => {
+      //     return {
+      //       status: "connectionError",
+      //       message: "در ارتباط با سرور مشکلی پیش امده",
+      //       fieldErrors: [],
+      //     };
+      //   });
+      // }
     }
 
     // const response=await fetch('http://localhost:8000/userapi/login',{
@@ -320,6 +330,7 @@ const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         user: user,
+        access:access,
         login: login,
         register: register,
         logout: logout,

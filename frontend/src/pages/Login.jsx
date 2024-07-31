@@ -27,6 +27,7 @@ const Login = () => {
       console.log(errors.fieldErrors)
       for (const error of errors?.fieldErrors) {
         console.log(error)
+        console.log(error.field)
         if (error.field === fieldName) {
           console.log(error.message)
           return error.message;

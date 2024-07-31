@@ -17,7 +17,7 @@ const Register = () => {
     const confirmPassword = form.get("confirmPassword");
 
     const email = form.get("email");
-    register(email, username, password, confirmPassword,setErrors);
+    register(email, username, password, confirmPassword, setErrors);
   };
   useEffect(() => {
     if (user !== null) {
@@ -26,7 +26,11 @@ const Register = () => {
   }, [user]);
   const getFieldMessage = (fieldName) => {
     if (errors.fieldErrors) {
+      console.log(errors);
+      console.log(errors.fieldErrors);
       for (const error of errors?.fieldErrors) {
+        console.log(error);
+        console.log(error.field);
         if (error.field === fieldName) {
           return error.message;
         }
@@ -78,19 +82,30 @@ const Register = () => {
             <span>نام کاربری</span>
           </div>
           <div className="mt-2">
-            <Input iMessage={getFieldMessage("username")} name="username"></Input>
+            <Input
+              iMessage={getFieldMessage("username")}
+              name="username"
+            ></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>رمز عبور</span>
           </div>
           <div className="mt-2">
-            <Input iMessage={getFieldMessage("password")} name="password" type="password"></Input>
+            <Input
+              iMessage={getFieldMessage("password")}
+              name="password"
+              type="password"
+            ></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>تکرار رمز عبور </span>
           </div>
           <div className="mt-2">
-            <Input iMessage={getFieldMessage("confirmPassword")} name="confirmPassword" type="password"></Input>
+            <Input
+              iMessage={getFieldMessage("confirmPassword")}
+              name="confirmPassword"
+              type="password"
+            ></Input>
           </div>
           <div className="mt-7">
             <Button

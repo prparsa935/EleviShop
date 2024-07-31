@@ -26,16 +26,15 @@ const Register = () => {
   }, [user]);
   const getFieldMessage = (fieldName) => {
     if (errors.fieldErrors) {
-      console.log(errors);
-      console.log(errors.fieldErrors);
+     
       for (const error of errors?.fieldErrors) {
-        console.log(error);
-        console.log(error.field);
+ 
         if (error.field === fieldName) {
           return error.message;
         }
-        return null;
+      
       }
+      return null
     }
   };
   return (

@@ -280,6 +280,11 @@ const AuthProvider = (props) => {
       }
     } catch (error) {
       if (error.response) {
+        console.log(error.response.data)
+        console.log({
+          status: "fieldErrors",
+          fieldErrors: [error.response.data.fieldErrors],
+        })
         setErrors((prev) => {
           return {
             status: "fieldErrors",

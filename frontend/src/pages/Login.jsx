@@ -96,11 +96,11 @@ const Login = () => {
           </div>
 
           {/* errors section */}
-          <div className="flex flex-col font-semibold text-sm">
-            {errors.map((error) => {
+          <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">
+            {errors?.map((error) => {
               if (error.field === null) {
                 return (
-                  <span className="text-red-500">
+                  <span>
                     {error.message}
                   </span>
                 );

@@ -226,7 +226,8 @@ const AuthProvider = (props) => {
     username,
     password,
     confirmPassword,
-    setErrors
+    setErrors,
+    setToastList
   ) => {
     // const response=await fetch('http://localhost:8000/api/register',{
     //     headers:{"Content-Type": 'application/json'},
@@ -252,12 +253,15 @@ const AuthProvider = (props) => {
         });
       } else {
         // Something happened in setting up the request that triggered an Error
-        setErrors((prev) => {
-          return {
-            status: "connectionError",
-            message: "در ارتباط با سرور مشکلی پیش امده",
-            fieldErrors: [],
-          };
+        setToastList((prev) => {
+          return [
+            ...prev,
+            {
+         
+              type: "danger",
+              message: "در ارتباط با سرور مشکلی پیش امده",
+            },
+          ];
         });
       }
     }

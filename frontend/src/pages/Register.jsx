@@ -5,9 +5,11 @@ import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import { getFieldMessage } from "../utils/helperMehods";
+import Alert from "../components/alert/Alert";
 const Register = () => {
   const { register, user } = useContext(AuthContext);
   const [errors, setErrors] = useState([]);
+  const [toastList, setToastList] = useState([]);
   const navigate = useNavigate();
   const registerSubmit = (e) => {
     e.preventDefault();
@@ -18,7 +20,14 @@ const Register = () => {
     const confirmPassword = form.get("confirmPassword");
 
     const email = form.get("email");
-    register(email, username, password, confirmPassword, setErrors);
+    register(
+      email,
+      username,
+      password,
+      confirmPassword,
+      setErrors,
+      setToastList
+    );
   };
   useEffect(() => {
     if (user !== null) {
@@ -28,6 +37,15 @@ const Register = () => {
 
   return (
     <div className="login-page flex items-center justify-center h-screen">
+      <div className=" absolute top-0 w-100">
+        {toastList?.map((toast) => {
+          return (
+            <Alert duration={5000} type={toast.type}>
+              {toast.message}
+            </Alert>
+          );
+        })}
+      </div>
       <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">
         {/* header */}
         <div className="flex justify-center">
@@ -107,6 +125,13 @@ const Register = () => {
             >
               ثبت نام
             </Button>
+          </div>
+          <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">
+            {errors?.map((error) => {
+              if (error.field === null) {
+                return <span>{error.message}</span>;
+              }
+            })}
           </div>
 
           <div className="text-xs mt-6 flex justify-center text-slate-500">

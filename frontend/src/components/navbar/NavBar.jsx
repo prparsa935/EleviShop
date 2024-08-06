@@ -5,9 +5,12 @@ import { useNavigate } from "react-router-dom";
 import NavTab from "../navtab/NavTab";
 import Separator from "../separator/Separator";
 import AuthContext from "../../context/AuthContext";
+import Badge from "../badge/Badge";
+import Tag from "../tag/Tag";
 const NavBar = () => {
   const navEl = useRef();
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, shoppingCart } = useContext(AuthContext);
+
   const Navigate = useNavigate();
   const controlNavbar = () => {
     console.log(window.scrollY);
@@ -68,9 +71,12 @@ const NavBar = () => {
           </div>
           {/* left */}
           <div className="lg:flex hidden">
-            <Button shape="rounded-lg" morCss="ml-3 border-2" size="md">
-              <i className=" font-medium fa-light fa-cart-shopping"></i>
-            </Button>
+            <Badge position="top-full right-0" content={<Tag size='xs' bgColor='bg-rose-500' txtColor='text-white'>{shoppingCart.length}</Tag>}>
+              <Button shape="rounded-lg" moreCss="" size="md">
+                <i className=" font-medium fa-light fa-cart-shopping "></i>
+              
+              </Button>
+            </Badge>
 
             {!user ? (
               <Button

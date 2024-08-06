@@ -11,6 +11,7 @@ import MobileFooter from "./components/mobilefooter/MobileFooter.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 
 
+
 const Product = lazy(() => import("./pages/Product.jsx"));
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Search = lazy(() => import("./pages/Search.jsx"));
@@ -18,6 +19,8 @@ const Login = lazy(() => import("./pages/Login.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const Cart = lazy(() => import("./pages/Cart.jsx"));
 const Payment = lazy(() => import("./pages/Payment.jsx"));
+const Profile = lazy(() => import("./pages/Profile.jsx"));
+const Orders = lazy(() => import("./pages/Orders.jsx"));
 const serverAddress = "http://localhost/api/";
 export { serverAddress };
 function App() {
@@ -78,6 +81,22 @@ function App() {
             element={
               <Suspense>
                 <Payment></Payment>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Suspense>
+                <Profile></Profile>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/profile/orders"
+            element={
+              <Suspense>
+                <Orders></Orders>
               </Suspense>
             }
           />

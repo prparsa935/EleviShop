@@ -259,7 +259,7 @@ const AuthProvider = (props) => {
 
       if (response.status === 200) {
         if (response.data.success === true) {
-          const data = response.data.jwt;
+          const data = response.data;
           userSetter(data.data.jwt);
         }
       }

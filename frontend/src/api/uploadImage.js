@@ -14,8 +14,13 @@ const uploadImage = async (
 
     const res = await axios.post(
       serverAddress + "image/upload",
+
       formData,
+
       {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
         onUploadProgress: (progressEvent) => {
           const progress = Math.round(
             (progressEvent.loaded / progressEvent.total) * 100
@@ -27,7 +32,7 @@ const uploadImage = async (
     setUploadProgress(0);
     setIsUploading(false);
     if (res.status === 200) {
-      console.log('im uploaded LOL')
+      console.log("im uploaded LOL");
       setUploadedImages((prev) => {
         return [...prev, res.data];
       });

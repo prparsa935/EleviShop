@@ -273,7 +273,7 @@ const AuthProvider = (props) => {
             ...prev,
             {
               type: "danger",
-              message: error.response.data.overallError,
+              message: error.response.data?.overallError?.message,
             },
           ];
         });

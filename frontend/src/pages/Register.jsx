@@ -120,7 +120,7 @@ const Register = () => {
             </Button>
           </div>
           <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">
-            {errors?.map((error) => {
+            {toastList?.map((toastList) => {
               return <span>{toastList.message}</span>;
             })}
           </div>

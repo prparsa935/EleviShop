@@ -34,7 +34,7 @@ const uploadImage = async (
     if (res.status === 200) {
       console.log("im uploaded LOL");
       setUploadedImages((prev) => {
-        return [...prev, res.data];
+        return [...prev, res.data.data.image];
       });
     }
   } catch (error) {

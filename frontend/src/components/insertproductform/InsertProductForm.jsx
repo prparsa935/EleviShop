@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { deleteInvetory, insertInventory } from "../../utils/helperMehods";
 import { uploadImage } from "../../api/uploadImage";
 import ProgressBar from "../progressbar/ProgressBar";
+import { serverAddress } from "../../App";
 const InsertProductForm = () => {
   const form = useRef();
   const [inventories, setInventories] = useState([]);
@@ -193,10 +194,7 @@ const InsertProductForm = () => {
                   name="productImage"
                   className=" absolute top-0 w-full h-full z-30 opacity-0 hidden"
                 ></input>
-                <ProgressBar
-                  className="h-[20px]"
-                  persentage={90}
-                ></ProgressBar>
+                <ProgressBar className="h-[20px]" persentage={90}></ProgressBar>
               </>
             ) : (
               <>
@@ -224,9 +222,34 @@ const InsertProductForm = () => {
       <div className="grow flex flex-col gap-y-10">
         <div className=" text-lg font-semibold">تصاویر بارگذاری شده</div>
         <div className=" flex flex-col ">
-          <div className="border flex justify-between  items-center  rounded-lg p-10">
-            <div>
+          {uploadedImages.map((image) => {
+            return (
+              <div className="border flex justify-between  items-center  rounded-lg p-10">
+                <div className="flex items-center">
+                  <img
+                    className="w-[80px]"
+                    src={"http://localhost/" + image?.filePath}
+                  ></img>
+                  <span className=" text-sm text-slate-400">
+                    {image?.filePath}
+                  </span>
+                </div>
+                <div className="flex justify-around gap-x-4">
+                  <div>
+                    <i class="fa-solid fa-flag text-sky-400"></i>
+                  </div>
+                  <div>
+                    <i class="fa-solid fa-trash text-red-400"></i>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* <div className="border flex justify-between  items-center  rounded-lg p-10">
+            <div className="flex items-center">
               <img className="w-[80px]" src={productImageTest}></img>
+              <span className=" text-sm text-slate-400">product93141.jpg</span>
             </div>
             <div className="flex justify-around gap-x-4">
               <div>
@@ -236,20 +259,7 @@ const InsertProductForm = () => {
                 <i class="fa-solid fa-trash text-red-400"></i>
               </div>
             </div>
-          </div>
-          <div className="border flex justify-between  items-center  rounded-lg p-10">
-            <div>
-              <img className="w-[80px]" src={productImageTest}></img>
-            </div>
-            <div className="flex justify-around gap-x-4">
-              <div>
-                <i class="fa-solid fa-flag text-sky-400"></i>
-              </div>
-              <div>
-                <i class="fa-solid fa-trash text-red-400"></i>
-              </div>
-            </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </form>

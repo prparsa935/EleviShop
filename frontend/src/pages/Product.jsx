@@ -28,13 +28,11 @@ import { fetchSingleProduct } from "../api/productApi";
 const Product = () => {
   const { id } = useParams();
   const [imageSiderActive, setImageSiderActive] = useState(false);
-  
-  const [product, setProduct] = useState(null)
+
+  const [product, setProduct] = useState(null);
   useEffect(() => {
-    fetchSingleProduct(id, setProduct) 
-
-  }, [])
-
+    fetchSingleProduct(id, setProduct);
+  }, []);
 
   return (
     <div className="product-page">

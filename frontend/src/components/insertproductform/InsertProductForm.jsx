@@ -4,9 +4,19 @@ import Input from "../input/Input";
 import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
+import { useEffect, useRef, useState } from "react";
+import { deleteInvetory, insertInventory } from "../../utils/helperMehods";
+import { uploadImage } from "../../api/uploadImage";
+import ProgressBar from "../progressbar/ProgressBar";
 const InsertProductForm = () => {
+  const form = useRef();
+  const [inventories, setInventories] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
   return (
-    <form className="insert-product-form flex flex-col gap-y-10">
+    <form ref={form} className="insert-product-form flex flex-col gap-y-10">
       <div className="flex ">
         <div className="mx-2 self-start">
           <i class="fa-solid fa-2x fa-square-plus text-sky-400"></i>
@@ -104,34 +114,58 @@ const InsertProductForm = () => {
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">سایز</span>
               </div>
-              <SelectBox />
+              <SelectBox
+                name="inventorySize"
+                options={[
+                  { label: "xs", value: "xs" },
+                  { label: "sm", value: "sm" },
+                ]}
+              />
             </div>
             <div className="flex flex-col col-span-5 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">تعداد</span>
               </div>
-              <Input type="number" />
+              <Input name="inventoryStock" type="number" />
             </div>
 
-            <div className="mt-4 cursor-pointer">
+            <div
+              onClick={() => {
+                insertInventory(form, inventories, setInventories);
+              }}
+              className="mt-4 cursor-pointer"
+            >
               <i class="fa-solid fa-circle-plus fa-2x text-green-500"></i>
             </div>
 
             <div className=" col-span-12 grid grid-cols-12 ">
-              <div className="flex justify-between col-span-4 p-3 border rounded">
-                <div>
-                  <span>سایز:</span>
-                  <span>xs</span>
-                </div>
-                <div className="flex items-center">
-                  <span>تعداد:</span>
-                  <span>۱۲</span>
-                </div>
-                <div className="flex items-center">
-                  <i class="fas fa-window-close text-red-500"></i>
-                </div>
-              </div>
+              {inventories.map((inventory) => {
+                return (
+                  <div className="flex justify-between col-span-4 p-3 border rounded">
+                    <div>
+                      <span>سایز:</span>
+                      <span>{inventory.size}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span>تعداد:</span>
+                      <span>{inventory.stock}</span>
+                    </div>
+                    <div
+                      onClick={() =>
+                        deleteInvetory(
+                          inventory.size,
+                          inventories,
+                          setInventories
+                        )
+                      }
+                      className="flex items-center cursor-pointer"
+                    >
+                      <i class="fas fa-window-close text-red-500"></i>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -144,11 +178,45 @@ const InsertProductForm = () => {
         <div className="grow flex flex-col gap-y-10">
           <div className=" text-lg font-semibold">گام چهارم: اپلود عکس</div>
           <div className=" flex border justify-center items-center border-slate-500 border-dotted rounded-lg p-10 relative">
-            <input
-              type="file"
-              className=" absolute top-0 w-full h-full z-30 opacity-0"
-            ></input>
-            <i class="fa-thin fa-circle-plus fa-3x text-sky-400"></i>
+            {isUploading ? (
+              <>
+                <input
+                  onChange={(e) =>
+                    uploadImage(
+                      e,
+                      setUploadProgress,
+                      setUploadedImages,
+                      setIsUploading
+                    )
+                  }
+                  type="file"
+                  name="productImage"
+                  className=" absolute top-0 w-full h-full z-30 opacity-0 hidden"
+                ></input>
+                <ProgressBar
+                  className="h-[20px]"
+                  persentage={90}
+                ></ProgressBar>
+              </>
+            ) : (
+              <>
+                {" "}
+                <input
+                  onChange={(e) =>
+                    uploadImage(
+                      e,
+                      setUploadProgress,
+                      setUploadedImages,
+                      setIsUploading
+                    )
+                  }
+                  type="file"
+                  name="productImage"
+                  className=" absolute top-0 w-full h-full z-30 opacity-0"
+                ></input>
+                <i class="fa-thin fa-circle-plus fa-3x text-sky-400"></i>
+              </>
+            )}
           </div>
         </div>
       </div>

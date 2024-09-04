@@ -4,7 +4,7 @@ import Select from "react-select";
 const SelectBox = (props) => {
   return (
     <Select
-    onChange={props.onChange}
+      onChange={props.onChange}
       options={props.options}
       placeholder={props.placeHolder}
       className={props.className}

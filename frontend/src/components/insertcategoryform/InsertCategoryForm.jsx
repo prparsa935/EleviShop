@@ -5,7 +5,7 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
-const InsertCategoryForm = () => {
+const InsertCategoryForm = ({ errors }) => {
   return (
     <form className="insert-product-form flex flex-col gap-y-10">
       <div className="flex ">
@@ -18,6 +18,11 @@ const InsertCategoryForm = () => {
           <div className="mx-3">
             <SelectCategoryList categories={categories} />
           </div>
+          {errors["parentId"] ? (
+            errors["parentId"]
+          ) : (
+            <span className=" text-red-600 text-sm"></span>
+          )}
         </div>
       </div>
       <div className="flex flex-col col-span-6 ">
@@ -25,7 +30,7 @@ const InsertCategoryForm = () => {
           <span className=" text-red-500 text-lg !leading-3 ">*</span>
           <span className="!leading-3">نام گروه کالایی</span>
         </div>
-        <Input />
+        <Input name="name" iMessage={errors["name"]} />
       </div>
       <Button
         bgColor={"bg-sky-100"}

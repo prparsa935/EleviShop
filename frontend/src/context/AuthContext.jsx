@@ -178,11 +178,6 @@ const AuthProvider = (props) => {
       return [...prev, { product: product, inventory: inventory, quantity: 1 }];
     });
   };
-  // const getFullShopingCart=()=>{
-  //   for(const shopingCartItem of shoppingCart){
-  //     fetchSingleProduct(shoppingCart.productId)
-  //   }
-  // }
 
   useEffect(() => {
     // const authority=sessionStorage.getItem('Authority')
@@ -193,9 +188,6 @@ const AuthProvider = (props) => {
       // }
       setAccess(cookies?.access ? cookies?.access : null);
       setUser(cookies?.access ? jwtDecode(cookies?.access) : null);
-      console.log(cookies?.access);
-      console.log(user);
-      console.log(jwtDecode(cookies?.access));
     } catch (error) {
       removeCookie("access", { path: "/" });
     }
@@ -211,16 +203,10 @@ const AuthProvider = (props) => {
     setAccess(access);
     setUser(jwtDecode(access));
   };
-  //     const getShoppingCart=async()=>{
-  //     const res=await axios.post(serverAddress+'userapi/shoppingcart',{
-  //         Headers:{'Content-Type':'Application/json'}
-  //     })
-  //     if(res.status===200){
-  //         console.log(res.data)
-  //         setShoppingCartItems(res.data.productsInCart)
+  useEffect(() => {
+    Axios.defaults.headers.common["Authorization"] = `Bearer ${access}`;
+  }, [access]);
 
-  //     }
-  // }
   const register = async (
     email,
     username,
@@ -229,12 +215,6 @@ const AuthProvider = (props) => {
     setErrors,
     setToastList
   ) => {
-    // const response=await fetch('http://localhost:8000/api/register',{
-    //     headers:{"Content-Type": 'application/json'},
-    //     method:'POST',
-    //     body:JSON.stringify({username:'prparsa'})
-
-    // })
     try {
       const response = await Axios.post(serverAddress + "auth/register", {
         email: email,
@@ -249,7 +229,16 @@ const AuthProvider = (props) => {
     } catch (error) {
       if (error.response) {
         setErrors(() => {
-          return error.response.data.apiExceptions;
+          return error.response.data.fieldErrors;
+        });
+        setToastList((prev) => {
+          return [
+            ...prev,
+            {
+              type: "danger",
+              message: error.response.data.overallError,
+            },
+          ];
         });
       } else {
         // Something happened in setting up the request that triggered an Error
@@ -257,7 +246,6 @@ const AuthProvider = (props) => {
           return [
             ...prev,
             {
-         
               type: "danger",
               message: "در ارتباط با سرور مشکلی پیش امده",
             },
@@ -282,7 +270,16 @@ const AuthProvider = (props) => {
     } catch (error) {
       if (error.response) {
         setErrors(() => {
-          return error.response.data.apiExceptions;
+          return error.response.data.fieldErrors;
+        });
+        setToastList((prev) => {
+          return [
+            ...prev,
+            {
+              type: "danger",
+              message: error.response.data.overallError,
+            },
+          ];
         });
       } else {
         // Something happened in setting up the request that triggered an Error
@@ -290,34 +287,16 @@ const AuthProvider = (props) => {
           return [
             ...prev,
             {
-         
               type: "danger",
               message: "در ارتباط با سرور مشکلی پیش امده",
             },
           ];
         });
       }
-      //  {
-      //   // Something happened in setting up the request that triggered an Error
-      //   setErrors((prev) => {
-      //     return {
-      //       status: "connectionError",
-      //       message: "در ارتباط با سرور مشکلی پیش امده",
-      //       fieldErrors: [],
-      //     };
-      //   });
-      // }
     }
-
-    // const response=await fetch('http://localhost:8000/userapi/login',{
-    //     headers:{"content-type":"application/json"},
-    //     method:"POST",
-    //     body:JSON.stringify({"username":username,"password":password})
-    // })
   };
   const logout = () => {
     removeCookie("access", { path: "/" });
-
     setUser(null);
     setAccess(null);
   };

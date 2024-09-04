@@ -5,7 +5,7 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
-const InsertBrandForm = () => {
+const InsertBrandForm = ({ errors }) => {
   return (
     <form
       onSubmit={(e) => {
@@ -20,14 +20,18 @@ const InsertBrandForm = () => {
             <span className=" text-red-500 text-lg !leading-3 ">*</span>
             <span className="!leading-3">نام برند</span>
           </div>
-          <Input />
+          <Input name="name" iMessage={errors["name"]} />
         </div>
         <div className="flex flex-col col-span-12 ">
           <div className="mb-2 font-medium text-sm !leading-3 ">
             <span className=" text-red-500 text-lg !leading-3 ">*</span>
             <span className="!leading-3">توضحات</span>
           </div>
-          <Input name="color" type="textarea" />
+          <Input
+            iMessage={errors["explanation"]}
+            name="explanation"
+            type="textarea"
+          />
         </div>
       </div>
 

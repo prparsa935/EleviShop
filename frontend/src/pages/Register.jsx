@@ -4,7 +4,6 @@ import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
-import { getFieldMessage } from "../utils/helperMehods";
 import Alert from "../components/alert/Alert";
 const Register = () => {
   const { register, user } = useContext(AuthContext);
@@ -82,26 +81,20 @@ const Register = () => {
             <span>ایمیل</span>
           </div>
           <div className="mt-2">
-            <Input
-              iMessage={getFieldMessage("email", errors)}
-              name="email"
-            ></Input>
+            <Input iMessage={errors["email"]} name="email"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>نام کاربری</span>
           </div>
           <div className="mt-2">
-            <Input
-              iMessage={getFieldMessage("username", errors)}
-              name="username"
-            ></Input>
+            <Input iMessage={errors["username"]} name="username"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>رمز عبور</span>
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("password", errors)}
+              iMessage={errors["password"]}
               name="password"
               type="password"
             ></Input>
@@ -111,7 +104,7 @@ const Register = () => {
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("confirmPassword", errors)}
+              iMessage={errors["confirmPassword"]}
               name="confirmPassword"
               type="password"
             ></Input>
@@ -128,9 +121,7 @@ const Register = () => {
           </div>
           <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">
             {errors?.map((error) => {
-              if (error.field === null) {
-                return <span>{error.message}</span>;
-              }
+              return <span>{toastList.message}</span>;
             })}
           </div>
 

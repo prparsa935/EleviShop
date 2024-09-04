@@ -4,7 +4,7 @@ import Input from "../components/input/Input";
 import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router";
-import { getFieldMessage } from "../utils/helperMehods";
+
 import Alert from "../components/alert/Alert";
 
 const Login = () => {
@@ -69,17 +69,14 @@ const Login = () => {
             <span>لطفا نام کاربری خود را وارد کنید</span>
           </div>
           <div className="mt-2">
-            <Input
-              iMessage={getFieldMessage("username", errors)}
-              name="username"
-            ></Input>
+            <Input iMessage={errors["username"]} name="username"></Input>
           </div>
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
             <span>لطفا کلمه عبور خود را وارد کنید</span>
           </div>
           <div className="mt-2">
             <Input
-              iMessage={getFieldMessage("password", errors)}
+              iMessage={errors["password"]}
               name="password"
               type="password"
             ></Input>
@@ -96,13 +93,11 @@ const Login = () => {
           </div>
 
           {/* errors section */}
-          <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">
-            {errors?.map((error) => {
-              if (error.field === null) {
-                return <span>{error.message}</span>;
-              }
+          {/* <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">
+            {toastList?.map((toastList) => {
+              return <span>{toastList.message}</span>;
             })}
-          </div>
+          </div> */}
 
           <div className="text-xs mt-6 flex justify-center text-slate-500">
             ورود شما به معنای پذیرش شرایط دیجی‌کالاو قوانین حریم‌خصوصی است

@@ -10,8 +10,6 @@ import NavBar from "./components/navbar/NavBar.jsx";
 import MobileFooter from "./components/mobilefooter/MobileFooter.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 
-
-
 const Product = lazy(() => import("./pages/Product.jsx"));
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Search = lazy(() => import("./pages/Search.jsx"));
@@ -21,6 +19,16 @@ const Cart = lazy(() => import("./pages/Cart.jsx"));
 const Payment = lazy(() => import("./pages/Payment.jsx"));
 const Profile = lazy(() => import("./pages/Profile.jsx"));
 const Orders = lazy(() => import("./pages/Orders.jsx"));
+const Admin = lazy(() => import("./pages/Admin.jsx"));
+const AdminBrand = lazy(() => import("./pages/AdminBrand.jsx"));
+const AdminColor = lazy(() => import("./pages/AdminColor.jsx"));
+const AdminCategory = lazy(() => import("./pages/AdminCategory.jsx"));
+const AdminProduct = lazy(() => import("./pages/AdminProduct.jsx"));
+
+const InsertProduct = lazy(() => import("./pages/InsertProduct.jsx"));
+const InsertCategory = lazy(() => import("./pages/InsertCategory.jsx"));
+const InsertColor = lazy(() => import("./pages/InsertColor.jsx"));
+const InsertBrand = lazy(() => import("./pages/InsertBrand.jsx"));
 const serverAddress = "http://localhost/api/";
 export { serverAddress };
 function App() {
@@ -97,6 +105,79 @@ function App() {
             element={
               <Suspense>
                 <Orders></Orders>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <Suspense>
+                <Admin></Admin>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/brand"
+            element={
+              <Suspense>
+                <AdminBrand></AdminBrand>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/color"
+            element={
+              <Suspense>
+                <AdminColor></AdminColor>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/category"
+            element={
+              <Suspense>
+                <AdminCategory></AdminCategory>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/product"
+            element={
+              <Suspense>
+                <AdminProduct></AdminProduct>
+              </Suspense>
+            }
+          />
+     
+          <Route
+            path="/admin/product/save"
+            element={
+              <Suspense>
+                <InsertProduct></InsertProduct>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/category/save"
+            element={
+              <Suspense>
+                <InsertCategory></InsertCategory>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/color/save"
+            element={
+              <Suspense>
+                <InsertColor></InsertColor>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/brand/save"
+            element={
+              <Suspense>
+                <InsertBrand></InsertBrand>
               </Suspense>
             }
           />

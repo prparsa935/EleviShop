@@ -6,12 +6,11 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "../../api/category";
 const SearchFilter = () => {
-  const [categories,setCategories]=useState()
+  const [categories, setCategories] = useState();
   const [searchParms, setSearchParam] = useSearchParams();
-  useEffect(()=>{
-    getAllCategories(setCategories)
-
-  },[])
+  useEffect(() => {
+    getAllCategories(setCategories);
+  }, []);
   return (
     <div className="   w-100   flex-col gap-y-8 p-6 rounded-2xl flex">
       <div className="flex justify-between items-center cursor-pointer">
@@ -56,7 +55,10 @@ const SearchFilter = () => {
           </div>
         </div>
         <Slider
-          defaultValue={[searchParms.get('minPrice')||10000000, searchParms.get('maxPrice')||500000]}
+          defaultValue={[
+            searchParms.get("minPrice") || 10000000,
+            searchParms.get("maxPrice") || 500000,
+          ]}
           max={10000000}
           step={1000}
           onValueCommit={(values) => {
@@ -77,9 +79,8 @@ const SearchFilter = () => {
       <div className="flex justify-between items-center cursor-pointer">
         <h5 className=" text-sm font-semibold text-slate-700  ">دارای تخفیف</h5>
         <Switch
-          defaultChecked={searchParms.get("enableOff")==='true'||false}
+          defaultChecked={searchParms.get("enableOff") === "true" || false}
           onCheckedChange={(value) => {
-
             setSearchParam((prev) => {
               prev.set("enableOff", value);
               return prev;

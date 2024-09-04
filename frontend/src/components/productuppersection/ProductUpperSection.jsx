@@ -6,14 +6,16 @@ import AddToCart from "../addtocart/AddToCart";
 import SelectBox from "../selectbox/SelectBox";
 const ProductUpperSection = ({ setImageSiderActive, product }) => {
   const [liked, setLiked] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(
-    {label:product?.inventories[0]?.size,value:product?.inventories[0]}
-  );
-  useEffect(()=>{
-
-    setSelectedSize( {label:product?.inventories[0]?.size,value:product?.inventories[0]})
-
-  },[product])
+  const [selectedSize, setSelectedSize] = useState({
+    label: product?.inventories[0]?.size,
+    value: product?.inventories[0],
+  });
+  useEffect(() => {
+    setSelectedSize({
+      label: product?.inventories[0]?.size,
+      value: product?.inventories[0],
+    });
+  }, [product]);
 
   return (
     <div className="flex flex-col lg:flex-row justify-between">

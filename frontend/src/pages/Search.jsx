@@ -14,9 +14,7 @@ import Tag from "../components/tag/Tag";
 // price min max
 
 const Search = () => {
-
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-
 
   return (
     <div className="search-page">
@@ -24,7 +22,7 @@ const Search = () => {
       <MobileFooter />
       <Tag
         onClick={() => {
-            setIsFilterSheetOpen(true)
+          setIsFilterSheetOpen(true);
         }}
         prefix={<i class="fa-solid fa-filter-list"></i>}
         border

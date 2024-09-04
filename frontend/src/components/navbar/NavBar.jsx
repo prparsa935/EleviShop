@@ -7,6 +7,7 @@ import Separator from "../separator/Separator";
 import AuthContext from "../../context/AuthContext";
 import Badge from "../badge/Badge";
 import Tag from "../tag/Tag";
+import Categories from "../categories/Categories";
 const NavBar = () => {
   const navEl = useRef();
   const { user, logout, shoppingCart } = useContext(AuthContext);
@@ -71,10 +72,16 @@ const NavBar = () => {
           </div>
           {/* left */}
           <div className="lg:flex hidden">
-            <Badge position="top-full right-0" content={<Tag size='xs' bgColor='bg-rose-500' txtColor='text-white'>{shoppingCart.length}</Tag>}>
+            <Badge
+              position="top-full right-0"
+              content={
+                <Tag size="xs" bgColor="bg-rose-500" txtColor="text-white">
+                  {shoppingCart.length}
+                </Tag>
+              }
+            >
               <Button shape="rounded-lg" moreCss="" size="md">
                 <i className=" font-medium fa-light fa-cart-shopping "></i>
-              
               </Button>
             </Badge>
 
@@ -119,10 +126,11 @@ const NavBar = () => {
         <div
           ref={navEl}
           data-scrolled="false"
-          className=" duration-300 h-0 data-[scrolled=false]:lg:h-12 overflow-hidden items-center px-5 mx-auto  container max-w-screen-2xl "
+          className=" duration-300 h-0 overflow-hidden  data-[scrolled=false]:lg:h-12 data-[scrolled=false]:lg:overflow-visible  items-center px-5 mx-auto  container max-w-screen-2xl "
         >
           <div className="flex items-stretch">
-            <NavTab>
+            <NavTab 
+            menu={<Categories></Categories>}>
               <Button
                 size="md"
                 border="none "

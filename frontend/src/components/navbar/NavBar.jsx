@@ -35,7 +35,7 @@ const NavBar = () => {
 
   return (
     <header className=" lg:h-[144px] h-[96px]  ">
-      <div className=" w-100   fixed border-b-2 z-50 bg-white">
+      <div className=" w-100   fixed border-b-2 z-40 bg-white">
         {/* upper side */}
         <div className="pb-3 mx-auto  mt-9 container max-w-screen-2xl flex lg:justify-between items-center px-5 ">
           {/* right */}

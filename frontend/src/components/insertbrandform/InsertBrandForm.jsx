@@ -5,13 +5,27 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
-const InsertBrandForm = ({ errors }) => {
+import formApiHandler from "../../api/form";
+const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
+  const submitFormHandler = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const explanation = e.target.explanation.value;
+
+    // todo validation
+    formApiHandler(
+      "brand/save",
+      {
+        name: name,
+        explanation: explanation,
+      },
+      setToastList,
+      setErrors
+    );
+  };
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        console.log(e.target.color.value);
-      }}
+      onSubmit={submitFormHandler}
       className="insert-product-form flex flex-col gap-y-10"
     >
       <div className=" grid grid-cols-12">

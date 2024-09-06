@@ -5,7 +5,8 @@ const uploadImage = async (
   e,
   setUploadProgress,
   setUploadedImages,
-  setIsUploading
+  setIsUploading,
+  setErrors
 ) => {
   try {
     setIsUploading(true);
@@ -41,6 +42,29 @@ const uploadImage = async (
     console.log("hello");
     setIsUploading(false);
     setUploadProgress(0);
+    if (error.response) {
+      setErrors(() => {
+        return error.response.data.fieldErrors;
+      });
+      setToastList((prev) => {
+        return [
+          {
+            type: "danger",
+            message: error.response.data?.overallError?.message,
+          },
+        ];
+      });
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      setToastList((prev) => {
+        return [
+          {
+            type: "danger",
+            message: "در ارتباط با سرور مشکلی پیش امده",
+          },
+        ];
+      });
+    }
   }
 };
 export { uploadImage };

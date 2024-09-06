@@ -10,9 +10,9 @@ const getFieldMessage = (fieldName, errors) => {
 };
 
 const insertInventory = (form, inventories, setInventories) => {
-  const stock = form.current.inventoryStock.value;
+  const quantity = form.current.inventoryQuantity.value;
   const size = form.current.inventorySize.value;
-  if (stock && size) {
+  if (quantity && size) {
     const existingInventoryIndex = inventories.findIndex((inventory) => {
       if (inventory.size === size) {
         return true;
@@ -22,12 +22,12 @@ const insertInventory = (form, inventories, setInventories) => {
     if (existingInventoryIndex !== -1) {
       setInventories((prev) => {
         console.log(prev[existingInventoryIndex]);
-        prev[existingInventoryIndex].stock = stock;
+        prev[existingInventoryIndex].quantity = quantity;
         return JSON.parse(JSON.stringify(prev));
       });
     } else {
       setInventories((prev) => {
-        prev.push({ size: size, stock: stock });
+        prev.push({ size: size, quantity: quantity });
         return JSON.parse(JSON.stringify(prev));
       });
     }

@@ -5,9 +5,31 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
-const InsertCategoryForm = ({ errors }) => {
+import { useSearchParams } from "react-router-dom";
+import formApiHandler from "../../api/form";
+const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const submitFormHandler = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const categoryId = searchParams.get("categoryId");
+
+    // todo validation
+    formApiHandler(
+      "product/save",
+      {
+        name: name,
+        categoryId: categoryId,
+      },
+      setToastList,
+      setErrors
+    );
+  };
   return (
-    <form className="insert-product-form flex flex-col gap-y-10">
+    <form
+      onSubmit={submitFormHandler}
+      className="insert-product-form flex flex-col gap-y-10"
+    >
       <div className="flex ">
         <div className="mx-2 self-start">
           <i class="fa-solid fa-2x fa-square-plus text-sky-400"></i>

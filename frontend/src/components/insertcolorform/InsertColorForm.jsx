@@ -5,13 +5,27 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
-const InsertColorForm = () => {
+import formApiHandler from "../../api/form";
+const InsertColorForm = ({errors, setToastList, setErrors}) => {
+  const submitFormHandler = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const hexCode = e.target.hexCode.value;
+
+    // todo validation
+    formApiHandler(
+      "color/save",
+      {
+        name: name,
+        hexCode: hexCode,
+      },
+      setToastList,
+      setErrors
+    );
+  };
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        console.log(e.target.color.value);
-      }}
+      onSubmit={submitFormHandler}
       className="insert-product-form flex flex-col gap-y-10"
     >
       <div className=" grid grid-cols-12">
@@ -20,7 +34,7 @@ const InsertColorForm = () => {
             <span className=" text-red-500 text-lg !leading-3 ">*</span>
             <span className="!leading-3">نام رنگ</span>
           </div>
-          <Input />
+          <Input name="name" iMessage={errors["name"]} />
         </div>
         <div className="flex flex-col col-span-6 ">
           <div className="mb-2 font-medium text-sm !leading-3 ">
@@ -28,7 +42,7 @@ const InsertColorForm = () => {
             <span className="!leading-3">انخاب رنگ</span>
           </div>
           <input
-            name="color"
+            name="hexCode"
             className=" rounded-full w-12  h-12"
             type="color"
           />

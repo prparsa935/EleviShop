@@ -9,15 +9,110 @@ import { deleteInvetory, insertInventory } from "../../utils/helperMehods";
 import { uploadImage } from "../../api/uploadImage";
 import ProgressBar from "../progressbar/ProgressBar";
 import { serverAddress } from "../../App";
-const InsertProductForm = () => {
+import { useSearchParams } from "react-router-dom";
+import Button from "../Button/Button";
+import formApiHandler from "../../api/form";
+import { fetchSingleProduct } from "../../api/productApi";
+// const ValidationSchema = Yup.object().shape({
+//   email: Yup.string()
+//     .email("Invalid email address")
+//     .required("Email is required"),
+//   password: Yup.string()
+//     .required("Password is required")
+//     .min(6, "Password must be at least 6 characters"),
+// });
+const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const form = useRef();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [inventories, setInventories] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [mainImage, setMainImage] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
+  // useEffect(() => {
+  //   form.current.code.value;
+  //   fetchSingleProduct(searchParams.get("productId"));
+  //   // todo declear product state and use useeffect([product])
+  //   form.current.target.code.value = product.code;
+  //   form.current.target.productName.value = product.productName;
+  //   form.current.target.description.value = product.description;
+  //   form.current.target.price.value = product.price;
+  //   form.current.target.offPercent.value = product.offPercent;
+  //   form.current.target.material.value = product.material;
+  //   form.current.target.height.value = product.height;
+  //   // todo categoy lis is comming we fucked
+  //   // e.target.categoryId.value = product.category;
+  //   form.current.target.brandId.value = product.brandId;
+  //   form.current.target.colorId.value = product.colorId;
+  //   setUploadedImages(product.images, product.mainImage);
+  //   setMainImage(product.mainImage);
+  // }, []);
+  // const formik = useFormik({
+  //   initialValues: {
+  //     email: "",
+  //     password: "",
+  //   },
+  //   validationSchema: ValidationSchema,
+  //   onSubmit: (values) => {
+  //     console.log(values);
+  //   },
+  // });
+  const submitFormHandler = (e) => {
+    const productId = searchParams.get("productId");
+
+    e.preventDefault();
+    console.log(form.current.description);
+    const code = e.target.code.value;
+    const productName = e.target.productName.value;
+    const description = e.target.description.value;
+    const price = e.target.price.value;
+    const offPercent = e.target.offPercent.value;
+    const material = e.target.material.value;
+    const pattern = e.target.pattern.value;
+    const height = e.target.height.value;
+    const categoryId = searchParams.get("categoryId");
+    const brandId = e.target.brandId.value;
+    const colorId = e.target.colorId.value;
+
+    const imageIds = uploadedImages.map((uploadedImage) => {
+      if (uploadedImage.id !== mainImage.id) {
+        return uploadedImage.id;
+      }
+    });
+
+    const mainImageId = mainImage.id;
+    // todo validation
+    formApiHandler(
+      searchParams.get("productId")
+        ? "product/update/" + searchParams.get("productId")
+        : "product/save",
+      {
+        code: code,
+        productName: productName,
+        description: description,
+        price: price,
+        offPercent: offPercent,
+        material: material,
+        pattern: pattern,
+        height: height,
+        categoryId: categoryId,
+        brandId: brandId,
+        colorId: colorId,
+        inventories: inventories,
+        imageIds: imageIds,
+        mainImageId: mainImageId,
+      },
+      setToastList,
+      setErrors
+    );
+  };
 
   return (
-    <form ref={form} className="insert-product-form flex flex-col gap-y-10">
+    <form
+      onSubmit={submitFormHandler}
+      ref={form}
+      className="insert-product-form flex flex-col gap-y-10"
+    >
       <div className="flex ">
         <div className="mx-2 self-start">
           <i class="fa-solid fa-2x fa-square-plus text-sky-400"></i>
@@ -45,36 +140,52 @@ const InsertProductForm = () => {
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">نام فارسی کالا</span>
               </div>
-              <Input />
+              <Input iMessage={errors["productName"]} name="productName" />
             </div>
-            <div className="flex flex-col col-span-6 ">
+            <div className="flex flex-col col-span-3 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">قیمت</span>
               </div>
-              <Input />
+              <Input iMessage={errors["price"]} name="price" />
             </div>
-
+            <div className="flex flex-col col-span-3 ">
+              <div className="mb-2 font-medium text-sm !leading-3 ">
+                <span className="!leading-3">درصد تخفیف</span>
+              </div>
+              <Input iMessage={errors["offPercent"]} name="offPercent" />
+            </div>
+            <div className="flex flex-col col-span-4 ">
+              <div className="mb-2 font-medium text-sm !leading-3 ">
+                <span className=" text-red-500 text-lg !leading-3 ">*</span>
+                <span className="!leading-3">کد</span>
+              </div>
+              <Input iMessage={errors["code"]} name="code" />
+            </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">برند</span>
               </div>
-              <ASelectBox />
+              <ASelectBox name="brandId" />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">رنگ</span>
               </div>
-              <ASelectBox />
+              <ASelectBox name="colorId" />
             </div>
             <div className="flex flex-col col-span-12 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">توضیحات</span>
               </div>
-              <Input type="textarea" />
+              <Input
+                iMessage={errors["description"]}
+                name="description"
+                type="textarea"
+              />
             </div>
           </div>
         </div>
@@ -94,20 +205,20 @@ const InsertProductForm = () => {
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">جنس</span>
               </div>
-              <Input />
+              <Input iMessage={errors["material"]} name="material" />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className="!leading-3">طرح</span>
               </div>
-              <Input />
+              <Input iMessage={errors["pattern"]} name="pattern" />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">قد</span>
               </div>
-              <Input />
+              <Input iMessage={errors["height"]} name="height" />
             </div>
 
             <div className="flex flex-col col-span-5 ">
@@ -128,7 +239,11 @@ const InsertProductForm = () => {
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">تعداد</span>
               </div>
-              <Input name="inventoryStock" type="number" />
+              <Input
+                iMessage={errors["inventoryQuantity"]}
+                name="inventoryQuantity"
+                type="number"
+              />
             </div>
 
             <div
@@ -150,7 +265,7 @@ const InsertProductForm = () => {
                     </div>
                     <div className="flex items-center">
                       <span>تعداد:</span>
-                      <span>{inventory.stock}</span>
+                      <span>{inventory.quantity}</span>
                     </div>
                     <div
                       onClick={() =>
@@ -194,7 +309,10 @@ const InsertProductForm = () => {
                   name="productImage"
                   className=" absolute top-0 w-full h-full z-30 opacity-0 hidden"
                 ></input>
-                <ProgressBar className="h-[20px]" persentage={90}></ProgressBar>
+                <ProgressBar
+                  className="h-[20px]"
+                  persentage={uploadProgress}
+                ></ProgressBar>
               </>
             ) : (
               <>
@@ -236,7 +354,11 @@ const InsertProductForm = () => {
                 </div>
                 <div className="flex justify-around gap-x-4">
                   <div>
-                    <i class="fa-solid fa-flag text-sky-400"></i>
+                    <i
+                      onClick={() => setMainImage(image)}
+                      data-mainImage={mainImage.id === image.id}
+                      class="fa-solid fa-flag data-[mainImage]:text-sky-400 text-slate-400 "
+                    ></i>
                   </div>
                   <div>
                     <i class="fa-solid fa-trash text-red-400"></i>
@@ -262,6 +384,7 @@ const InsertProductForm = () => {
           </div> */}
         </div>
       </div>
+      <Button type="submit">da</Button>
     </form>
   );
 };

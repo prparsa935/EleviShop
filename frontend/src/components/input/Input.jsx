@@ -54,6 +54,7 @@ const Input = (props) => {
 
         {props.type === "textarea" ? (
           <textarea
+            name={props.name}
             defaultValue={props.defaultValue}
             onChange={props.onChange}
             value={props.value}

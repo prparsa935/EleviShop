@@ -99,8 +99,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     // todo validation
     formApiHandler(
       searchParams.get("productId")
-        ? "product/update/" + searchParams.get("productId")
-        : "product/save",
+        ? "product/admin/update/" + searchParams.get("productId")
+        : "product/admin/save",
       {
         code: code,
         productName: productName,

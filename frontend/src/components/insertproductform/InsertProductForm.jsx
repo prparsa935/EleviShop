@@ -1,18 +1,19 @@
 import SelectCategoryList from "../selectcategorylist/SelectCategoryList";
 import categories from "../../jsons/categories.json";
 import Input from "../input/Input";
-import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { deleteInvetory, insertInventory } from "../../utils/helperMehods";
 import { uploadImage } from "../../api/uploadImage";
 import ProgressBar from "../progressbar/ProgressBar";
-import { serverAddress } from "../../App";
 import { useSearchParams } from "react-router-dom";
 import Button from "../Button/Button";
 import formApiHandler from "../../api/form";
 import { fetchSingleProduct } from "../../api/productApi";
+import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
+import { findColorByName } from "../../api/color";
+import { findBrandByName } from "../../api/brand";
 // const ValidationSchema = Yup.object().shape({
 //   email: Yup.string()
 //     .email("Invalid email address")
@@ -25,28 +26,39 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const form = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
   const [inventories, setInventories] = useState([]);
+  const [existingProduct, setExistingProduct] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [mainImage, setMainImage] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
-  // useEffect(() => {
-  //   form.current.code.value;
-  //   fetchSingleProduct(searchParams.get("productId"));
-  //   // todo declear product state and use useeffect([product])
-  //   form.current.target.code.value = product.code;
-  //   form.current.target.productName.value = product.productName;
-  //   form.current.target.description.value = product.description;
-  //   form.current.target.price.value = product.price;
-  //   form.current.target.offPercent.value = product.offPercent;
-  //   form.current.target.material.value = product.material;
-  //   form.current.target.height.value = product.height;
-  //   // todo categoy lis is comming we fucked
-  //   // e.target.categoryId.value = product.category;
-  //   form.current.target.brandId.value = product.brandId;
-  //   form.current.target.colorId.value = product.colorId;
-  //   setUploadedImages(product.images, product.mainImage);
-  //   setMainImage(product.mainImage);
-  // }, []);
+  useEffect(() => {
+    fetchSingleProduct(searchParams.get("productId"), setExistingProduct);
+    // todo declear product state and use useeffect([product])
+  }, []);
+  const ExistingProductFormSetter = () => {
+    try {
+      const currentForm = form.current;
+      currentForm.code.value = product.code;
+      currentForm.code.value = product.code;
+      currentForm.productName.value = product.productName;
+      currentForm.description.value = product.description;
+      currentForm.price.value = product.price;
+      currentForm.offPercent.value = product.offPercent;
+      currentForm.material.value = product.material;
+      currentForm.height.value = product.height;
+      // todo categoy lis is comming we fucked
+      // e.target.categoryId.value = product.category;
+      setSearchParams((prev) =>
+        prev.set("categoryId", product?.mainCategory?.id)
+      );
+      currentForm.brandId.value = product.brandId;
+      currentForm.colorId.value = product.colorId;
+      setUploadedImages(product?.images, product?.mainImage);
+      setMainImage(product?.mainImage);
+    } catch (error) {}
+  };
+  useDidUpdateEffect(ExistingProductFormSetter, [existingProduct]);
+
   // const formik = useFormik({
   //   initialValues: {
   //     email: "",
@@ -58,8 +70,6 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   //   },
   // });
   const submitFormHandler = (e) => {
-    const productId = searchParams.get("productId");
-
     e.preventDefault();
     console.log(form.current.description);
     const code = e.target.code.value;
@@ -106,6 +116,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       setErrors
     );
   };
+  const loadcolorOptions = useCallback(findColorByName);
+  const loadBrandOptions = useCallback(findBrandByName);
 
   return (
     <form
@@ -140,41 +152,49 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">نام فارسی کالا</span>
               </div>
-              <Input iMessage={errors["productName"]} name="productName" />
+              <Input iMessage={errors?.productName} name="productName" />
             </div>
             <div className="flex flex-col col-span-3 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">قیمت</span>
               </div>
-              <Input iMessage={errors["price"]} name="price" />
+              <Input iMessage={errors?.price} name="price" />
             </div>
             <div className="flex flex-col col-span-3 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className="!leading-3">درصد تخفیف</span>
               </div>
-              <Input iMessage={errors["offPercent"]} name="offPercent" />
+              <Input iMessage={errors?.offPercent} name="offPercent" />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">کد</span>
               </div>
-              <Input iMessage={errors["code"]} name="code" />
+              <Input iMessage={errors?.code} name="code" />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">برند</span>
               </div>
-              <ASelectBox name="brandId" />
+              <ASelectBox
+                loadOptions={loadBrandOptions}
+                isSearchable={true}
+                name="brandId"
+              />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">رنگ</span>
               </div>
-              <ASelectBox name="colorId" />
+              <ASelectBox
+                loadOptions={loadcolorOptions}
+                isSearchable={true}
+                name="colorId"
+              />
             </div>
             <div className="flex flex-col col-span-12 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
@@ -182,7 +202,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 <span className="!leading-3">توضیحات</span>
               </div>
               <Input
-                iMessage={errors["description"]}
+                iMessage={errors?.description}
                 name="description"
                 type="textarea"
               />
@@ -205,20 +225,20 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">جنس</span>
               </div>
-              <Input iMessage={errors["material"]} name="material" />
+              <Input iMessage={errors?.material} name="material" />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className="!leading-3">طرح</span>
               </div>
-              <Input iMessage={errors["pattern"]} name="pattern" />
+              <Input iMessage={errors?.pattern} name="pattern" />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">قد</span>
               </div>
-              <Input iMessage={errors["height"]} name="height" />
+              <Input iMessage={errors?.height} name="height" />
             </div>
 
             <div className="flex flex-col col-span-5 ">
@@ -240,7 +260,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 <span className="!leading-3">تعداد</span>
               </div>
               <Input
-                iMessage={errors["inventoryQuantity"]}
+                iMessage={errors?.inventoryQuantity}
                 name="inventoryQuantity"
                 type="number"
               />

@@ -89,11 +89,18 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     const brandId = e.target.brandId.value;
     const colorId = e.target.colorId.value;
 
-    const imageIds = uploadedImages.map((uploadedImage) => {
-      if (uploadedImage.id !== mainImage.id) {
+    // const imageIds = uploadedImages.map((uploadedImage) => {
+    //   if (uploadedImage.id !== mainImage.id) {
+    //     return uploadedImage.id;
+    //   }
+    // });
+    const imageIds = uploadedImages
+      .filter((uploadedImage) => {
+        return uploadedImage.id !== mainImage.id;
+      })
+      .map((uploadedImage) => {
         return uploadedImage.id;
-      }
-    });
+      });
 
     const mainImageId = mainImage.id;
     // todo validation

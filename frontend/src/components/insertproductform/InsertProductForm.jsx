@@ -254,8 +254,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
               <SelectBox
                 name="inventorySize"
                 options={[
-                  { label: "xs", value: "xs" },
-                  { label: "sm", value: "sm" },
+                  { label: "xs", value: "XS" },
+                  { label: "sm", value: "S" },
                 ]}
               />
             </div>

@@ -1,4 +1,4 @@
-import { Axios } from "axios";
+import Axios from "axios";
 import { serverAddress } from "../App";
 
 const formApiHandler = async (address, object, setToastList, setErrors) => {

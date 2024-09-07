@@ -3,8 +3,8 @@ import { serverAddress } from "../App";
 
 const findBrandByName = async (brandname, callback) => {
   try {
-    const res = await axios.get(serverAddress + "brand/findby", {
-      brandname: brandname,
+    const res = await axios.get(serverAddress + "brand/findBy", {
+      params: { brandname: brandname },
     });
     if (res.status === 200) {
       const formattedOptions = res.data.map((item) => ({

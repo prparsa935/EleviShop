@@ -1,5 +1,5 @@
 import SelectCategoryList from "../selectcategorylist/SelectCategoryList";
-import categories from "../../jsons/categories.json";
+
 import Input from "../input/Input";
 import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
@@ -14,6 +14,7 @@ import { fetchSingleProduct } from "../../api/productApi";
 import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 import { findColorByName } from "../../api/color";
 import { findBrandByName } from "../../api/brand";
+import { getAllCategories } from "../../api/category";
 // const ValidationSchema = Yup.object().shape({
 //   email: Yup.string()
 //     .email("Invalid email address")
@@ -31,6 +32,10 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const [mainImage, setMainImage] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [categories, setCategories] = useState(null);
+  useEffect(() => {
+    getAllCategories(setCategories);
+  }, []);
   useEffect(() => {
     fetchSingleProduct(searchParams.get("productId"), setExistingProduct);
     // todo declear product state and use useeffect([product])
@@ -376,8 +381,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                   <div>
                     <i
                       onClick={() => setMainImage(image)}
-                      data-mainImage={mainImage.id === image.id}
-                      class="fa-solid fa-flag data-[mainImage]:text-sky-400 text-slate-400 "
+                      data-mainImage={mainImage?.id === image?.id}
+                      class="fa-solid fa-flag data-[mainImage=true]:text-sky-400 text-slate-400 "
                     ></i>
                   </div>
                   <div>

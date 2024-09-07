@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Button from "../Button/Button";
 import Input from "../input/Input";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import AuthContext from "../../context/AuthContext";
 import Badge from "../badge/Badge";
 import Tag from "../tag/Tag";
 import Categories from "../categories/Categories";
+import { getAllCategories } from "../../api/category";
 const NavBar = () => {
   const navEl = useRef();
   const { user, logout, shoppingCart } = useContext(AuthContext);
@@ -26,6 +27,7 @@ const NavBar = () => {
 
     Navigate(`/search?name=${e.target.searchInput.value}`);
   };
+
   useEffect(() => {
     window.addEventListener("scroll", controlNavbar);
     return () => {
@@ -129,8 +131,7 @@ const NavBar = () => {
           className=" duration-300 h-0 overflow-hidden  data-[scrolled=false]:lg:h-12 data-[scrolled=false]:lg:overflow-visible  items-center px-5 mx-auto  container max-w-screen-2xl "
         >
           <div className="flex items-stretch">
-            <NavTab 
-            menu={<Categories></Categories>}>
+            <NavTab menu={<Categories></Categories>}>
               <Button
                 size="md"
                 border="none "

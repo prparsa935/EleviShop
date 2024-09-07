@@ -1,7 +1,9 @@
+import { Axios } from "axios";
+
 const formApiHandler = async (address, object, setToastList, setErrors) => {
   try {
-    console.log(address)
-    console.log(object)
+    console.log(address);
+    console.log(object);
     const response = await Axios.post(serverAddress + address, object);
 
     if (response.status === 200 && response.data.success === true) {

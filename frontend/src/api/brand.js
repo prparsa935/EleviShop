@@ -1,10 +1,10 @@
 import axios from "axios";
 import { serverAddress } from "../App";
 
-const findBrandByName = async (brandname, callback) => {
+const findBrandByName = async (brandName, callback) => {
   try {
     const res = await axios.get(serverAddress + "brand/findBy", {
-      params: { brandname: brandname },
+      params: { brandName: brandName },
     });
     if (res.status === 200) {
       const formattedOptions = res.data.map((item) => ({

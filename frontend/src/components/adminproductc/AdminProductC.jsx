@@ -4,8 +4,29 @@ import Input from "../input/Input";
 import AdminItemBox from "../adminitembox/AdminItemBox";
 import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import SearchFilter from "../searchfilter/SearchFilter";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { searchProducts } from "../../api/productApi";
+import SearchSkeleton from "../searchskeleton/SearchSkeleton";
+import Loading from "../icons/Loading";
 const AdminProductC = () => {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [productList, setProductList] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    console.log("meow");
+    searchProducts(
+      Object.fromEntries([...searchParams]),
+      [],
+      setProductList,
+      1,
+      setPage,
+      setHasMore
+    );
+  }, [searchParams]);
   return (
     <div className="flex flex-col border ">
       {/* header */}
@@ -24,7 +45,10 @@ const AdminProductC = () => {
 
           <div className="flex items-stretch">
             <div className="h-[30px]">
-              <Input height="30px" inputclassName=""></Input>
+              <Input onChange={(e)=>setSearchParams((prev)=>{
+                prev.set('name',e.target.value)
+                return prev
+                })} height="30px" inputclassName=""></Input>
             </div>
 
             <div>
@@ -44,18 +68,38 @@ const AdminProductC = () => {
         </div>
       </div>
       <div className="">
-        {[1, 2, 3].map((item, index) => {
-          return (
-            <AdminItemBox>
-              <div className="flex items-center">
-                <div>
-                  <img className="w-[80px]" src={productImageTest}></img>
+        <InfiniteScroll
+          dataLength={productList.length}
+          next={() =>
+            searchProducts(
+              Object.fromEntries([...searchParams]),
+              productList,
+              setProductList,
+              page,
+              setPage,
+              setHasMore
+            )
+          }
+          hasMore={hasMore}
+          loader={
+            <div className="flex justify-center w-full">
+              <Loading className='w-8 h-8'></Loading>
+            </div>
+          }
+        >
+          {productList?.map((product) => {
+            return (
+              <AdminItemBox>
+                <div className="flex items-center">
+                  <div>
+                    <img className="w-[80px]" src={productImageTest}></img>
+                  </div>
+                  <h3 className=" lg:font-semibold">{product?.name}</h3>
                 </div>
-                <h3 className=" lg:font-semibold">فنر تقویت مچ دست مدل MY</h3>
-              </div>
-            </AdminItemBox>
-          );
-        })}
+              </AdminItemBox>
+            );
+          })}
+        </InfiniteScroll>
       </div>
     </div>
   );

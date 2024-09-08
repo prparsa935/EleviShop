@@ -6,7 +6,7 @@ import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
 import formApiHandler from "../../api/form";
-const InsertColorForm = ({errors, setToastList, setErrors}) => {
+const InsertColorForm = ({ errors, setToastList, setErrors }) => {
   const submitFormHandler = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -34,7 +34,7 @@ const InsertColorForm = ({errors, setToastList, setErrors}) => {
             <span className=" text-red-500 text-lg !leading-3 ">*</span>
             <span className="!leading-3">نام رنگ</span>
           </div>
-          <Input name="name" iMessage={errors["name"]} />
+          <Input name="name" iMessage={errors?.name} />
         </div>
         <div className="flex flex-col col-span-6 ">
           <div className="mb-2 font-medium text-sm !leading-3 ">

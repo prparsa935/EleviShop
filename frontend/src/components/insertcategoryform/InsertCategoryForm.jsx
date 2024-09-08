@@ -19,7 +19,7 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
       "product/save",
       {
         name: name,
-        categoryId: categoryId,
+        parentId: categoryId,
       },
       setToastList,
       setErrors
@@ -52,7 +52,7 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
           <span className=" text-red-500 text-lg !leading-3 ">*</span>
           <span className="!leading-3">نام گروه کالایی</span>
         </div>
-        <Input name="name" iMessage={errors["name"]} />
+        <Input name="name" iMessage={errors?.name} />
       </div>
       <Button
         bgColor={"bg-sky-100"}

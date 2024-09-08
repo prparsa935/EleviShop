@@ -12,7 +12,6 @@ const InsertCategory = () => {
 
   return (
     <div className="profile-page">
-
       <NavBar />
       <div className=" sticky top-24 w-100 h-0 ">
         {toastList?.map((toast) => {

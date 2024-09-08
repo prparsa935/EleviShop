@@ -14,7 +14,7 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
 
     // todo validation
     formApiHandler(
-      "brand/save",
+      "brand/admin/save",
       {
         name: name,
         explanation: explanation,
@@ -34,7 +34,7 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
             <span className=" text-red-500 text-lg !leading-3 ">*</span>
             <span className="!leading-3">نام برند</span>
           </div>
-          <Input name="name" iMessage={errors["name"]} />
+          <Input name="name" iMessage={errors?.name} />
         </div>
         <div className="flex flex-col col-span-12 ">
           <div className="mb-2 font-medium text-sm !leading-3 ">
@@ -42,7 +42,7 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
             <span className="!leading-3">توضحات</span>
           </div>
           <Input
-            iMessage={errors["explanation"]}
+            iMessage={errors?.explanation}
             name="explanation"
             type="textarea"
           />

@@ -16,7 +16,7 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
 
     // todo validation
     formApiHandler(
-      "product/save",
+      "category/admin/save",
       {
         name: name,
         parentId: categoryId,

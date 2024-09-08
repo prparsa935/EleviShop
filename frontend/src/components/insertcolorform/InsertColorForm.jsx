@@ -14,7 +14,7 @@ const InsertColorForm = ({ errors, setToastList, setErrors }) => {
 
     // todo validation
     formApiHandler(
-      "color/save",
+      "color/admin/save",
       {
         name: name,
         hexCode: hexCode,

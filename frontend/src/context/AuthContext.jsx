@@ -160,10 +160,12 @@ const AuthProvider = (props) => {
   };
   const deleteProductFromCart = (inventoryId) => {
     const productInCartIndex = shoppingCart?.findIndex(
-      (iProductInCart) => iProductInCart.inventory?.id === inventoryId
+      (iProductInCart) => (iProductInCart.inventory?.id === inventoryId)
     );
     console.log(shoppingCart)
     console.log(productInCartIndex)
+    console.log(inventoryId)
+   
     if (productInCartIndex !== -1) {
       setShoppingCart((prev) => {
         prev.splice(productInCartIndex, 1);

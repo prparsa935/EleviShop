@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import Button from "../Button/Button";
+import { useNavigate } from "react-router";
 
 const SubmitCartBox = ({price}) => {
-  
+  const navigate=useNavigate()
   return (
     <div className="lg:w-[300px] w-screen left-0 bg-white  justify-between items-center lg:items-stretch fixed bottom-[86px] flex lg:flex-col gap-y-4 border p-5 lg:sticky lg:top-[155px]">
       <div className="lg:flex   hidden justify-between text-neutral-500 font-semibold  ">
@@ -27,6 +28,11 @@ const SubmitCartBox = ({price}) => {
         </div>
       </div>
       <Button
+        onClick={()=>{
+          navigate('/payment')
+
+
+        }}
         size="lg"
         shape="rounded-xl"
         bgColor="bg-rose-500"

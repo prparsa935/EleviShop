@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import Button from "../Button/Button";
 import Input from "../input/Input";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavTab from "../navtab/NavTab";
 import Separator from "../separator/Separator";
 import AuthContext from "../../context/AuthContext";
@@ -11,6 +11,7 @@ import Categories from "../categories/Categories";
 import { getAllCategories } from "../../api/category";
 const NavBar = () => {
   const navEl = useRef();
+  const navigate = useNavigate();
   const { user, logout, shoppingCart } = useContext(AuthContext);
 
   const Navigate = useNavigate();
@@ -44,6 +45,8 @@ const NavBar = () => {
           <div className="flex items-center  w-100 lg:w-fit ">
             <div className="ml-5">
               <svg
+                onClick={() => navigate("/")}
+                className=" cursor-pointer"
                 xmlns="http://www.w3.org/2000/svg"
                 width="115"
                 height="30"
@@ -82,7 +85,12 @@ const NavBar = () => {
                 </Tag>
               }
             >
-              <Button shape="rounded-lg" moreCss="" size="md">
+              <Button
+                onClick={() => navigate("/cart")}
+                shape="rounded-lg"
+                moreCss=""
+                size="md"
+              >
                 <i className=" font-medium fa-light fa-cart-shopping "></i>
               </Button>
             </Badge>
@@ -94,16 +102,17 @@ const NavBar = () => {
                 morCss="border-2  "
                 size="md"
               >
-                ورود
+                <Link to={"/login"}>ورود</Link>
                 <Separator
                   orientation="vertical"
                   className={"bg-slate-400 mx-2"}
                 ></Separator>{" "}
-                ثبت نام
+                <Link to={"/register"}>ثبت نام</Link>
               </Button>
             ) : (
               <>
                 <Button
+                  onClick={() => navigate("/profile")}
                   shape="rounded-lg"
                   leftIcon={<i class="fa-light fa-angle-down  "></i>}
                   morCss="border-2  "

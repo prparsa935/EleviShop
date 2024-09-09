@@ -1,13 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
+
 import specialSellImage from "../../assets/img/SpecialSell.svg";
-import { fetchSingleProduct } from "../../api/productApi";
 
 import AuthContext from "../../context/AuthContext";
-import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
+import { useNavigate } from "react-router";
 
-const ProductInCartBox = ({ productInCart,key }) => {
- 
+const ProductInCartBox = ({ productInCart, key }) => {
+  const navigate = useNavigate();
   const {
     shoppingCart,
     findProductInCart,
@@ -17,10 +16,13 @@ const ProductInCartBox = ({ productInCart,key }) => {
     isProductInCartValid,
     deleteProductFromCart,
   } = useContext(AuthContext);
-  
 
   return (
-    <div className=" border-b px-1 py-5" key={key}>
+    <div
+      onClick={() => navigate("/product/" + productInCart?.product?.id)}
+      className=" border-b px-1 py-5 cursor-pointer"
+      key={key}
+    >
       <div className="flex">
         <div className="flex flex-col items-center">
           <img
@@ -28,10 +30,18 @@ const ProductInCartBox = ({ productInCart,key }) => {
             src={productInCart?.productInCart.product?.mainImage?.filePath}
           ></img>
           <img className="w-[60px] " src={specialSellImage}></img>
-          <div className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center cursor-pointer select-none ">
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center cursor-pointer select-none "
+          >
             <span
               onClick={() => {
-                sumProductInCart(productInCart, productInCart?.productInCart.inventory.quantity);
+                sumProductInCart(
+                  productInCart,
+                  productInCart?.productInCart.inventory.quantity
+                );
               }}
             >
               +

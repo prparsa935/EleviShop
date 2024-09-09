@@ -1,24 +1,20 @@
 import Axios from "axios";
+import { serverAddress } from "../App";
 
-const formApiHandler = async (address, object, setToastList, setErrors) => {
+const findOrderByState = async (state, setOrders, setToastList, setErrors) => {
   try {
     console.log(address);
     console.log(object);
-    const response = await Axios.post(serverAddress + address, object);
+    const response = await Axios.get(serverAddress + "order/" + state);
 
-    if (response.status === 200 && response.data.success === true) {
-      setToastList(() => [
-        {
-          type: "success",
-          message: response.data.successMessage,
-        },
-      ]);
+    if (response.status === 200) {
+      setOrders(response.data);
     }
   } catch (error) {
     if (error.response) {
-      setErrors(() => {
-        return error.response.data.fieldErrors;
-      });
+      // setErrors(() => {
+      //   return error.response.data.fieldErrors;
+      // });
       setToastList((prev) => {
         return [
           ...prev,
@@ -29,7 +25,6 @@ const formApiHandler = async (address, object, setToastList, setErrors) => {
         ];
       });
     } else {
-      console.log(error);
       // Something happened in setting up the request that triggered an Error
       setToastList((prev) => {
         return [
@@ -43,3 +38,4 @@ const formApiHandler = async (address, object, setToastList, setErrors) => {
     }
   }
 };
+export {findOrderByState}

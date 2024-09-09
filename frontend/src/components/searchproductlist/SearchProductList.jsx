@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import productImageTest from "../../assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp";
 import { searchProducts } from "../../api/productApi";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loading from "../icons/Loading";
 import SearchSkeleton from "../searchskeleton/SearchSkeleton";
+import { imageServerAddress } from "../../App";
 
 const SearchProductList = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [productList, setProductList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
-    console.log("meow")
+    console.log("meow");
     searchProducts(
       Object.fromEntries([...searchParams]),
       [],
@@ -23,26 +25,33 @@ const SearchProductList = () => {
     );
   }, [searchParams]);
   return (
-  
-      <div className="grow">
+    <div className="grow">
       <InfiniteScroll
         dataLength={productList.length}
-      next={()=>searchProducts(
-          Object.fromEntries([...searchParams]),
-          productList,
-          setProductList,
-          page,
-          setPage,
-          setHasMore
-        )}
+        next={() =>
+          searchProducts(
+            Object.fromEntries([...searchParams]),
+            productList,
+            setProductList,
+            page,
+            setPage,
+            setHasMore
+          )
+        }
         hasMore={hasMore}
-        loader={ <SearchSkeleton></SearchSkeleton> }
+        loader={<SearchSkeleton></SearchSkeleton>}
         className="h-96  grow lg:mr-5 grid grid-cols-1 xl:grid-cols-4 md:grid-cols-3 "
       >
         {productList?.map((product, index) => (
-          <div className="flex flex-col p-3 gap-y-3 border border-slate-200  hover:shadow-lg cursor-pointer">
+          <div
+            onClick={() => navigate("/product/" + product.id)}
+            className="flex flex-col p-3 gap-y-3 border border-slate-200  hover:shadow-lg cursor-pointer"
+          >
             <div className="mx-auto mt-4">
-              <img className="h-[240px] w-[240px]" src={productImageTest} />
+              <img
+                className="h-[240px] w-[240px]"
+                src={imageServerAddress + product?.mainImage.filePath}
+              />
             </div>
             <div className="h-[72px] overflow-hidden font-medium  text-xs text-slate-700 !leading-7 ">
               {product?.name}
@@ -67,12 +76,8 @@ const SearchProductList = () => {
             </div>
           </div>
         ))}
-        
       </InfiniteScroll>
-     
-      </div>
-    
- 
+    </div>
   );
 };
 export default SearchProductList;

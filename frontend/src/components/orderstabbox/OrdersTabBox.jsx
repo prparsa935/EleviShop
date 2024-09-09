@@ -1,7 +1,17 @@
+import { useEffect, useState } from "react";
 import OrderBox from "../orderBox/OrderBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ordertab/OrderTab";
+import { findOrderByState } from "../../api/order";
 
 const OrdersTabBox = () => {
+  const [currentOrders, setCurrentOrders] = useState([]);
+  const [deliveredOrders, setDeliveredOrders] = useState([]);
+  const [canceledOrders, setCanceledOrders] = useState([]);
+  useEffect(() => {
+    findOrderByState("current", setCurrentOrders);
+    findOrderByState("canceled", setCanceledOrders);
+    findOrderByState("delivered", setDeliveredOrders);
+  }, []);
   return (
     <div className="border p-4 flex flex-col">
       <div className="mb-10">
@@ -9,7 +19,7 @@ const OrdersTabBox = () => {
       </div>
       <Tabs
         activationMode={"manual"}
-        defaultValue="inProgress"
+        defaultValue="current"
         orientation="vertical"
         className="grow "
       >
@@ -18,60 +28,39 @@ const OrdersTabBox = () => {
             "w-100 lg:justify-start justify-around sticky top-[96px] mb-8  "
           }
         >
-          <TabsTrigger className={"lg:grow-0 grow "} value="inProgress">
+          <TabsTrigger className={"lg:grow-0 grow "} value="current">
             <span className="ml-1 lg:text-base text-sm">جاری</span>
 
             <span className="bg-slate-400 !text-white w-5 h-5 rounded ">۳</span>
           </TabsTrigger>
-          <TabsTrigger className={"lg:grow-0 grow"} value="sent">
+          <TabsTrigger className={"lg:grow-0 grow"} value="delivered">
             <span className="ml-1 lg:text-base text-sm ">تحویل شده</span>
           </TabsTrigger>
-          <TabsTrigger className={"lg:grow-0 grow"} value="returned">
+          <TabsTrigger className={"lg:grow-0 grow"} value="canceled">
             <span className="ml-1 lg:text-base text-sm">لغو شده</span>
           </TabsTrigger>
         </TabsList>
-        <TabsContent data-state="active" value="inProgress">
+        <TabsContent data-state="active" value="current">
           <div className="flex flex-col gap-y-3 lg:mx-5">
-            <OrderBox/>
-            <OrderBox/>
-     
+            {currentOrders?.map((order) => {
+              return <OrderBox order={order} />;
+            })}
+            <OrderBox />
           </div>
         </TabsContent>
-        <TabsContent data-state="active" value="sent">
-          <div className="flex lg:gap-x-72 lg:flex-row flex-col mx-10 ">
-            <div className=" lg:text-xl text-base font-medium text-neutral-700 mb-5">
-              مشخصات
-            </div>
-            <div className="flex flex-col gap-y-8 ">
-              <div className="flex lg:text-base text-xs ">
-                <span className=" text-neutral-400 font-semibold ml-36  ">
-                  جنس فریم
-                </span>
-                <span>TPE (الاستومر ترموپلاستیک)</span>
-              </div>
-              <div className="flex  lg:text-base text-xs ">
-                <span className=" text-neutral-400 font-semibold  ml-36 ">
-                  فرم فریم
-                </span>
-                <span>چند ضلعی فریم های خاص مربعی مستطیلی</span>
-              </div>
-              <div className="flex  lg:text-base text-xs">
-                <span className=" text-neutral-400 font-semibold ml-36 ">
-                  جنس فریم
-                </span>
-                <span>TPE (الاستومر ترموپلاستیک)</span>
-              </div>
-              <div className="flex lg:text-base text-xs">
-                <span className=" text-neutral-400 font-semibold ml-36  ">
-                  جنس فریم
-                </span>
-                <span>TPE (الاستومر ترموپلاستیک)</span>
-              </div>
-            </div>
+        <TabsContent data-state="active" value="delivered">
+          <div className="flex flex-col gap-y-3 lg:mx-5">
+            {deliveredOrders?.map((order) => {
+              return <OrderBox order={order} />;
+            })}
           </div>
         </TabsContent>
-        <TabsContent data-state="active" value="returned">
-          Tab three content
+        <TabsContent data-state="active" value="canceled">
+          <div className="flex flex-col gap-y-3 lg:mx-5">
+            {canceledOrders?.map((order) => {
+              return <OrderBox order={order} />;
+            })}
+          </div>
         </TabsContent>
       </Tabs>
     </div>

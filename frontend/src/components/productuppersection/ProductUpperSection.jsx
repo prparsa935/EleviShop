@@ -4,6 +4,7 @@ import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import SelectBox from "../selectbox/SelectBox";
+import { imageServerAddress } from "../../App";
 const ProductUpperSection = ({ setImageSiderActive, product }) => {
   const [liked, setLiked] = useState(false);
   const [selectedSize, setSelectedSize] = useState({
@@ -39,7 +40,7 @@ const ProductUpperSection = ({ setImageSiderActive, product }) => {
           <div className="mx-auto ">
             <img
               className="h-[250px] lg:h-auto"
-              src={product?.mainImage.filePath}
+              src={imageServerAddress + product?.mainImage.filePath}
             ></img>
           </div>
         </div>
@@ -52,7 +53,7 @@ const ProductUpperSection = ({ setImageSiderActive, product }) => {
                 setImageSiderActive(true);
               }}
               className="ml-2 w-[72px] border-2 p-1 cursor-pointer "
-              src={image.filePath}
+              src={imageServerAddress + image.filePath}
             />
           ))}
         </div>

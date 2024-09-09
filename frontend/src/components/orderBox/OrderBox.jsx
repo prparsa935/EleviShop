@@ -1,5 +1,5 @@
-import productImg from '../../assets/img/947920b7e5d1b87552bff471172eb45237b15a03_1660396852.jpg'
-const OrderBox = () => {
+import productImg from "../../assets/img/947920b7e5d1b87552bff471172eb45237b15a03_1660396852.jpg";
+const OrderBox = ({ order }) => {
   return (
     <div className="flex flex-col border">
       {/* header */}
@@ -34,10 +34,10 @@ const OrderBox = () => {
           </div>
         </div>
       </div>
-      <div className='flex p-4 gap-x-4'>
-        <img className='w-[64px] h-[64px]' src={productImg}/>
-        <img className='w-[64px] h-[64px]' src={productImg}/>
-        <img className='w-[64px] h-[64px]' src={productImg}/>
+      <div className="flex p-4 gap-x-4">
+        <img className="w-[64px] h-[64px]" src={productImg} />
+        <img className="w-[64px] h-[64px]" src={productImg} />
+        <img className="w-[64px] h-[64px]" src={productImg} />
       </div>
     </div>
   );

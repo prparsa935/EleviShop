@@ -30,7 +30,9 @@ const InsertCategory = lazy(() => import("./pages/InsertCategory.jsx"));
 const InsertColor = lazy(() => import("./pages/InsertColor.jsx"));
 const InsertBrand = lazy(() => import("./pages/InsertBrand.jsx"));
 const serverAddress = "http://localhost/api/";
-export { serverAddress };
+const imageServerAddress = "http://localhost";
+
+export { serverAddress,imageServerAddress };
 function App() {
   return (
     <BrowserRouter>
@@ -148,7 +150,7 @@ function App() {
               </Suspense>
             }
           />
-     
+
           <Route
             path="/admin/product/save"
             element={

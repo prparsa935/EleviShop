@@ -7,17 +7,19 @@ import AuthContext from "../context/AuthContext";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 
 const Cart = () => {
-  const { shoppingCart,updateShoppingCart,calculatePrice } = useContext(AuthContext);
-  const [price, setPrice] = useState({ totalPurePrice: 0, totalPrice: 0, totalOff: 0 });
+  const { shoppingCart, updateShoppingCart, calculatePrice } =
+    useContext(AuthContext);
+  const [price, setPrice] = useState({
+    totalPurePrice: 0,
+    totalPrice: 0,
+    totalOff: 0,
+  });
 
-  useEffect(()=>{
-    updateShoppingCart()
-
-  },[])
   useEffect(() => {
-    calculatePrice(setPrice)
-
-    
+    updateShoppingCart();
+  }, []);
+  useEffect(() => {
+    calculatePrice(setPrice);
   }, [shoppingCart]);
 
   return (
@@ -40,8 +42,6 @@ const Cart = () => {
             {shoppingCart.map((productInCart, index) => (
               <ProductInCartBox
                 key={index}
-              
-           
                 productInCart={{
                   productInCart: productInCart,
                   productInCartIndex: index,

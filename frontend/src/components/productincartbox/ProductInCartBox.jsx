@@ -19,7 +19,7 @@ const ProductInCartBox = ({ productInCart, key }) => {
 
   return (
     <div
-      onClick={() => navigate("/product/" + productInCart?.product?.id)}
+      onClick={() => navigate("/product/" + productInCart?.productInCart?.product?.id)}
       className=" border-b px-1 py-5 cursor-pointer"
       key={key}
     >

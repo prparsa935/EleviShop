@@ -50,7 +50,7 @@ const SearchProductList = () => {
             <div className="mx-auto mt-4">
               <img
                 className="h-[240px] w-[240px]"
-                src={imageServerAddress + product?.mainImage.filePath}
+                src={imageServerAddress + product?.mainImage?.filePath}
               />
             </div>
             <div className="h-[72px] overflow-hidden font-medium  text-xs text-slate-700 !leading-7 ">

@@ -13,13 +13,17 @@ const AuthProvider = (props) => {
 
   const [cookies, setCookie, removeCookie] = useCookies("access");
   const [registerErrM, setregisterErrM] = useState(null);
-  const [access, setAccess] = useState(null);
+  const [access, setAccess] = useState(
+    cookies?.access ? cookies?.access : null
+  );
   const [shoppingCart, setShoppingCart] = useState(
     JSON.parse(localStorage?.getItem("shoppingCart")) || []
   );
   const count = useRef(false);
   // error here
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(
+    cookies?.access ? jwtDecode(cookies?.access) : null
+  );
   //   const [shoppingCartItems, setShoppingCartItems] = useState(null);
   const url = useLocation();
   // todo not first time

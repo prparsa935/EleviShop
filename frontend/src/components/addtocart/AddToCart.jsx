@@ -32,7 +32,10 @@ const AddToCart = ({ className, product, inventory }) => {
         } else {
           console.log("wtf why are you here");
           console.log(iProductInCart);
-          deleteProductFromCart(inventory?.id);
+          deleteProductFromCart(
+            shoppingCart,
+            iProductInCart.productInCartIndex
+          );
         }
       }
     });
@@ -102,7 +105,7 @@ const AddToCart = ({ className, product, inventory }) => {
 
               <span
                 onClick={() => {
-                  subtractProductInCart(productInCart);
+                  subtractProductInCart(inventory?.id);
                 }}
                 className=" cursor-pointer"
               >

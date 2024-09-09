@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import SelectCategory from "../selectcategory/SelectCategory";
+import { getAllCategories } from "../../api/category";
 
-const SelectCategoryList = ({ categories, active }) => {
+const SelectCategoryList = ({ active }) => {
   const [categories, setCategories] = useState(null);
   useEffect(() => {
     getAllCategories(setCategories);

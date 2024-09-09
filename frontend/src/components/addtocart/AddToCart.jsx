@@ -17,7 +17,7 @@ const AddToCart = ({ className, product, inventory }) => {
   useEffect(() => {
     setProductInCart(() => {
       const iProductInCart = findProductInCart(product?.id, inventory?.id);
-      console.log(product);
+      console.log(iProductInCart);
       if (iProductInCart === null) {
         console.log("not found in cart");
         return null;

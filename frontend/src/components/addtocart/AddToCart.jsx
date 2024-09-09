@@ -78,7 +78,9 @@ const AddToCart = ({ className, product, inventory }) => {
           {!productInCart ? (
             <Button
               onClick={() => {
-                addToCart(product, inventory);
+                if (inventory?.quantity !== 0) {
+                  addToCart(product, inventory);
+                }
               }}
               txtColor="text-white"
               bgColor="bg-rose-500"

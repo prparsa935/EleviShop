@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../Button/Button";
 import Input from "../input/Input";
 import Modal from "../modal/Modal";
-import { getFieldMessage } from "../../utils/helperMehods";
+import formApiHandler from "../../api/form";
 
 const PersonInformaionForm = ({
   setPersonFormModalActive,
   personFormModalActive,
   person,
   errors,
+  setToastList,
+  setErrors
 }) => {
   const [formValues, setFormValues] = useState();
   useEffect(() => {
@@ -22,6 +24,21 @@ const PersonInformaionForm = ({
       [name]: value,
     });
   };
+  const submitHandler = (e) => {
+    const firstName = e.target.firstName.value;
+    const lastName = e.target.lastName.value;
+    const phoneNumber = e.target.phoneNumber.value;
+    const postalCode = e.target.postalCode.value;
+    const addressLine = e.target.addressLine.value;
+    formApiHandler("person/save", {
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      postalCode: postalCode,
+      addressLine: addressLine,
+    },setToastList,setErrors);
+    e.preventDefault();
+  };
 
   return (
     <Modal
@@ -29,7 +46,7 @@ const PersonInformaionForm = ({
       enable={personFormModalActive}
       className="lg:h-[70vh] h-full lg:w-[550px] w-100 p-6 rounded-2xl "
     >
-      <form className="flex-col flex gap-y-4">
+      <form onSubmit={submitHandler} className="flex-col flex gap-y-4">
         <div className="  font-semibold  border-b pb-5 ">
           <span>تکمیل پروفایل</span>
         </div>
@@ -41,7 +58,7 @@ const PersonInformaionForm = ({
               name="firstName"
               onChange={updateFormValue}
               value={person?.firstName}
-              iMessage={getFieldMessage("firstName", errors)}
+              iMessage={errors?.firstName}
             ></Input>
           </div>
           <div className="flex flex-col gap-y-2">
@@ -52,7 +69,7 @@ const PersonInformaionForm = ({
               name="lastName"
               onChange={updateFormValue}
               value={person?.lastName}
-              iMessage={getFieldMessage("lastName", errors)}
+              iMessage={errors?.lastName}
             ></Input>
           </div>
           <div className="flex flex-col gap-y-2">
@@ -63,7 +80,7 @@ const PersonInformaionForm = ({
               name="phoneNumber"
               onChange={updateFormValue}
               value={person?.phoneNumber}
-              iMessage={getFieldMessage("phoneNumber", errors)}
+              iMessage={errors?.phoneNumber}
             ></Input>
           </div>
         </div>
@@ -75,7 +92,7 @@ const PersonInformaionForm = ({
             name="postalCode"
             onChange={updateFormValue}
             value={person?.address?.postalCode}
-            iMessage={getFieldMessage("postalCode", errors)}
+            iMessage={errors?.postalCode}
           ></Input>
         </div>
         <div className="flex flex-col gap-y-2">
@@ -87,7 +104,7 @@ const PersonInformaionForm = ({
             type="textarea"
             onChange={updateFormValue}
             value={person?.address?.addressLine}
-            iMessage={getFieldMessage("addressLine", errors)}
+            iMessage={errors?.addressLine}
           ></Input>
         </div>
         <Button

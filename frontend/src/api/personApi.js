@@ -11,7 +11,8 @@ const getPerson = async (setPerson, setErrors, setToastList) => {
       setPerson(person);
     }
   } catch (error) {
-    if (error.response) {
+    console.log(error);
+    if (error?.response) {
       // setErrors(() => {
       //   return error.response.data.apiExceptions;
       // });

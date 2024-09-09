@@ -1,6 +1,11 @@
+import { useEffect, useState } from "react";
 import SelectCategory from "../selectcategory/SelectCategory";
 
 const SelectCategoryList = ({ categories, active }) => {
+  const [categories, setCategories] = useState(null);
+  useEffect(() => {
+    getAllCategories(setCategories);
+  }, []);
   return (
     <ul
       data-active={active}

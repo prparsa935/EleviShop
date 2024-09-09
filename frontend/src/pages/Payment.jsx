@@ -31,7 +31,7 @@ const Payment = () => {
   const [personFormModalActive, setPersonFormModalActive] = useState(false);
 
   useEffect(() => {
-    getPerson(access, setPerson, setErrors, setToastList);
+    getPerson(setPerson, setErrors, setToastList);
     updateShoppingCart();
   }, [personFormModalActive]);
   useEffect(() => {
@@ -52,6 +52,8 @@ const Payment = () => {
       </div>
 
       <PersonInformaionForm
+        setToastList={setToastList}
+        setErrors={setErrors}
         errors={errors}
         person={person}
         setPersonFormModalActive={setPersonFormModalActive}
@@ -101,7 +103,11 @@ const Payment = () => {
             </div>
           </div>
           <div>
-            <SubmitOrderBox price={price}></SubmitOrderBox>
+            <SubmitOrderBox
+              setErrors={setErrors}
+              setToastList={setToastList}
+              price={price}
+            ></SubmitOrderBox>
           </div>
         </div>
       </div>

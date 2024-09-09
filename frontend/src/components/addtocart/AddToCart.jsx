@@ -105,7 +105,7 @@ const AddToCart = ({ className, product, inventory }) => {
 
               <span
                 onClick={() => {
-                  subtractProductInCart(inventory?.id);
+                  subtractProductInCart(productInCart);
                 }}
                 className=" cursor-pointer"
               >

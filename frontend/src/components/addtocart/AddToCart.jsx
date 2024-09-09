@@ -15,11 +15,11 @@ const AddToCart = ({ className, product, inventory }) => {
   } = useContext(AuthContext);
   const [productInCart, setProductInCart] = useState(null);
   useEffect(() => {
-   
     setProductInCart(() => {
       const iProductInCart = findProductInCart(product?.id, inventory?.id);
-      console.log(product)
+      console.log(product);
       if (iProductInCart === null) {
+        console.log("not found in cart");
         return null;
       } else {
         if (
@@ -30,6 +30,8 @@ const AddToCart = ({ className, product, inventory }) => {
         ) {
           return iProductInCart;
         } else {
+          console.log("wtf why are you here");
+          console.log(iProductInCart);
           deleteProductFromCart(
             shoppingCart,
             iProductInCart.productInCartIndex
@@ -37,7 +39,7 @@ const AddToCart = ({ className, product, inventory }) => {
         }
       }
     });
-  }, [shoppingCart,inventory]);
+  }, [shoppingCart, inventory]);
 
   return (
     <div

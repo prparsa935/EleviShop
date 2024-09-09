@@ -33,6 +33,7 @@ const AuthProvider = (props) => {
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
   const updateShoppingCart = async () => {
+    console.log('hello im updating')
     let productInCartIndex = 0;
     let invalidList = [];
 
@@ -96,6 +97,7 @@ const AuthProvider = (props) => {
     });
   };
   const deleteInvalidItems = (invalidList) => {
+    console.log('deleteing invalid shit')
     setShoppingCart((prev) => {
       for (const invalidItemId of invalidList) {
         const invalidItemIndex = prev?.findIndex((iProductInCart) => {
@@ -157,6 +159,7 @@ const AuthProvider = (props) => {
     return true;
   };
   const deleteProductFromCart = (productInCartIndex) => {
+    console.log('deleting one item')
     setShoppingCart((prev) => {
       prev.splice(productInCartIndex, 1);
       return JSON.parse(JSON.stringify(prev));
@@ -175,6 +178,7 @@ const AuthProvider = (props) => {
   };
   const addToCart = (product, inventory) => {
     setShoppingCart((prev) => {
+      console.log([...prev, { product: product, inventory: inventory, quantity: 1 }])
       return [...prev, { product: product, inventory: inventory, quantity: 1 }];
     });
   };

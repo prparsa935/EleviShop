@@ -17,7 +17,7 @@ const AddToCart = ({ className, product, inventory }) => {
   useEffect(() => {
     setProductInCart(() => {
       const iProductInCart = findProductInCart(product?.id, inventory?.id);
-      console.log(iProductInCart);
+      console.log(product);
       if (iProductInCart === null) {
         console.log("not found in cart");
         return null;
@@ -32,10 +32,7 @@ const AddToCart = ({ className, product, inventory }) => {
         } else {
           console.log("wtf why are you here");
           console.log(iProductInCart);
-          deleteProductFromCart(
-            shoppingCart,
-            iProductInCart.productInCartIndex
-          );
+          deleteProductFromCart(inventory?.id);
         }
       }
     });
@@ -78,7 +75,9 @@ const AddToCart = ({ className, product, inventory }) => {
           {!productInCart ? (
             <Button
               onClick={() => {
-                addToCart(product, inventory);
+                if (inventory?.quantity !== 0) {
+                  addToCart(product, inventory);
+                }
               }}
               txtColor="text-white"
               bgColor="bg-rose-500"

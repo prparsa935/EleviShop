@@ -162,6 +162,8 @@ const AuthProvider = (props) => {
     const productInCartIndex = shoppingCart?.findIndex(
       (iProductInCart) => iProductInCart.inventory?.id === inventoryId
     );
+    console.log(shoppingCart)
+    console.log(productInCartIndex)
     if (productInCartIndex !== -1) {
       setShoppingCart((prev) => {
         prev.splice(productInCartIndex, 1);

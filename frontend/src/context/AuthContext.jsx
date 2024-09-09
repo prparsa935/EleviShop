@@ -34,7 +34,7 @@ const AuthProvider = (props) => {
 
     for (const productInCart of shoppingCart) {
       const res = await Axios.get(
-        serverAddress + "product/" + productInCart.product.id
+        serverAddress + "product/id/" + productInCart.product.id
       );
       if (res.status === 200) {
         const product = await res.data;

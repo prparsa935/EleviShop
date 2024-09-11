@@ -95,7 +95,7 @@ const AdminProductC = ({ handleDeleteItem }) => {
         >
           {productList?.map((product) => {
             return (
-              <AdminItemBox onDelete={() => handleDeleteItem(color?.id)}>
+              <AdminItemBox onDelete={() => handleDeleteItem(product?.id)}>
                 <div className="flex items-center">
                   <div>
                     <img className="w-[80px]" src={productImageTest}></img>

@@ -12,7 +12,7 @@ import DeleteModal from "../components/deletemodal/DeleteModal";
 import ToastList from "../components/toastlist/ToastList";
 
 const AdminProduct = () => {
-  const [deleteModalActive, setDeleteModalActive] = useState(false);
+  const [deleteModalActive, setDeleteModalActive] = useState(true);
   const [itemSelectedForDelete, setItemSelectedForDelete] = useState(null);
 
   const [toastList, setToastList] = useState([]);

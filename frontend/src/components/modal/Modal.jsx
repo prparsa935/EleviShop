@@ -27,7 +27,7 @@ const Modal = (props) => {
     <div
       ref={modalRef}
       className={
-        "absolute top-0 w-100 h-100vh flex justify-center  bg-opacity-70 bg-black duration-500 z-40      "
+        "fixed top-0 w-100 h-100vh flex justify-center  bg-opacity-70 bg-black duration-500 z-40      "
       }
     >
       <div

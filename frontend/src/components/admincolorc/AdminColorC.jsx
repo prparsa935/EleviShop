@@ -87,7 +87,7 @@ const AdminColorC = ({ handleDeleteItem }) => {
         {colorList?.map((color) => {
           return (
             <AdminItemBox onDelete={() => handleDeleteItem(color?.id)}>
-              <div className="flex items-center">
+              <div className="flex items-center gap-x-5">
                 <div
                   style={{ backgroundColor: color?.hexCode }}
                   className=" w-8 h-8 rounded-full "

@@ -1,11 +1,11 @@
 import Axios from "axios";
 import { serverAddress } from "../App";
 
-const formApiHandler = async (address, object, setToastList, setErrors) => {
+const deleteItem = async (address, id, setToastList, setErrors) => {
   try {
     console.log(address);
-    console.log(object);
-    const response = await Axios.post(serverAddress + address, object);
+    console.log(id);
+    const response = await Axios.delete(serverAddress + address + id);
 
     if (response.status === 200 && response.data.success === true) {
       setToastList(() => [
@@ -44,5 +44,4 @@ const formApiHandler = async (address, object, setToastList, setErrors) => {
     }
   }
 };
-
-export default formApiHandler;
+export default deleteItem;

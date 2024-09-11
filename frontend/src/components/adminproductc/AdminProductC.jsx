@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { searchProducts } from "../../api/productApi";
 import SearchSkeleton from "../searchskeleton/SearchSkeleton";
 import Loading from "../icons/Loading";
-const AdminProductC = () => {
+const AdminProductC = ({ handleDeleteItem }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -45,10 +45,16 @@ const AdminProductC = () => {
 
           <div className="flex items-stretch">
             <div className="h-[30px]">
-              <Input onChange={(e)=>setSearchParams((prev)=>{
-                prev.set('name',e.target.value)
-                return prev
-                })} height="30px" inputclassName=""></Input>
+              <Input
+                onChange={(e) =>
+                  setSearchParams((prev) => {
+                    prev.set("name", e.target.value);
+                    return prev;
+                  })
+                }
+                height="30px"
+                inputclassName=""
+              ></Input>
             </div>
 
             <div>
@@ -83,13 +89,13 @@ const AdminProductC = () => {
           hasMore={hasMore}
           loader={
             <div className="flex justify-center w-full">
-              <Loading className='w-8 h-8'></Loading>
+              <Loading className="w-8 h-8"></Loading>
             </div>
           }
         >
           {productList?.map((product) => {
             return (
-              <AdminItemBox>
+              <AdminItemBox onDelete={() => handleDeleteItem(color?.id)}>
                 <div className="flex items-center">
                   <div>
                     <img className="w-[80px]" src={productImageTest}></img>

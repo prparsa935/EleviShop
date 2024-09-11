@@ -3,16 +3,28 @@ import Badge from "../badge/Badge";
 import Button from "../Button/Button";
 import Tag from "../tag/Tag";
 import AuthContext from "../../context/AuthContext";
+import { useNavigate } from "react-router";
 
 const MobileFooter = () => {
-    const { user, logout, shoppingCart } = useContext(AuthContext);
+  const { user, logout, shoppingCart } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   return (
     <div className="w-100 fixed flex justify-around items-center  lg:hidden bottom-0 left-0 px-7 py-3 border-t-2 bg-white z-50">
       <Button
+        onClick={() => navigate("/")}
         col
         size="md"
         border="none "
-        icon={<i class="fa-light fa-house"></i>}
+        txtColor={
+          window.location.pathname === "/" ? "text-black" : "text-slate-500"
+        }
+        icon={
+          <i
+            data-href={window.location.pathname}
+            className="fa-light fa-house "
+          ></i>
+        }
       >
         خانه
       </Button>
@@ -34,7 +46,12 @@ const MobileFooter = () => {
         }
       >
         <Button
-          txtColor="text-slate-500"
+          txtColor={
+            window.location.pathname === "/cart"
+              ? "text-black"
+              : "text-slate-500"
+          }
+          onClick={() => navigate("/cart")}
           col
           size="md"
           border="none "
@@ -45,7 +62,12 @@ const MobileFooter = () => {
       </Badge>
 
       <Button
-        txtColor="text-slate-500"
+        txtColor={
+          window.location.pathname === "/profile"
+            ? "text-black"
+            : "text-slate-500"
+        }
+        onClick={() => navigate("/profile")}
         col
         size="md"
         border="none "

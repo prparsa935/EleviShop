@@ -10,7 +10,7 @@ const PersonInformaionForm = ({
   person,
   errors,
   setToastList,
-  setErrors
+  setErrors,
 }) => {
   const [formValues, setFormValues] = useState();
   useEffect(() => {
@@ -30,13 +30,18 @@ const PersonInformaionForm = ({
     const phoneNumber = e.target.phoneNumber.value;
     const postalCode = e.target.postalCode.value;
     const addressLine = e.target.addressLine.value;
-    formApiHandler("person/save", {
-      firstName: firstName,
-      lastName: lastName,
-      phoneNumber: phoneNumber,
-      postalCode: postalCode,
-      addressLine: addressLine,
-    },setToastList,setErrors);
+    formApiHandler(
+      "person/save",
+      {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        postalCode: postalCode,
+        addressLine: addressLine,
+      },
+      setToastList,
+      setErrors
+    );
     e.preventDefault();
   };
 

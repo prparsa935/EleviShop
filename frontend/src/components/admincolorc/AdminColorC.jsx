@@ -2,9 +2,28 @@ import { useNavigate } from "react-router";
 import Button from "../Button/Button";
 import Input from "../input/Input";
 import AdminItemBox from "../adminitembox/AdminItemBox";
+import { findColorByNamePaging } from "../../api/color";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from "../icons/Loading";
 
-const AdminColorC = () => {
+const AdminColorC = ({ handleDeleteItem }) => {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [colorList, setColorList] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    findColorByNamePaging(
+      searchParams.get("name"),
+      [],
+      setColorList,
+      1,
+      setPage,
+      setHasMore
+    );
+  }, [searchParams]);
   return (
     <div className="flex flex-col border ">
       {/* header */}
@@ -22,7 +41,16 @@ const AdminColorC = () => {
 
         <div className="flex items-stretch">
           <div className="h-[30px]">
-            <Input height="30px" inputclassName=""></Input>
+            <Input
+              onChange={(e) =>
+                setSearchParams((prev) => {
+                  prev.set("name", e.target.value);
+                  return prev;
+                })
+              }
+              height="30px"
+              inputclassName=""
+            ></Input>
           </div>
 
           <div>
@@ -37,12 +65,34 @@ const AdminColorC = () => {
         </div>
       </div>
       <div className="">
-        {[1, 2, 3].map((item, index) => {
+        <InfiniteScroll
+          dataLength={colorList?.length}
+          next={() =>
+            findColorByNamePaging(
+              searchParams.get("name"),
+              colorList,
+              setColorList,
+              page,
+              setPage,
+              setHasMore
+            )
+          }
+          hasMore={hasMore}
+          loader={
+            <div className="flex justify-center w-full">
+              <Loading className="w-8 h-8"></Loading>
+            </div>
+          }
+        ></InfiniteScroll>
+        {colorList?.map((color) => {
           return (
-            <AdminItemBox>
+            <AdminItemBox onDelete={() => handleDeleteItem(color?.id)}>
               <div className="flex items-center">
-                <div className=" w-8 h-8 rounded-full bg-black mx-3"></div>
-                <h3 className="">مشکی</h3>
+                <div
+                  style={{ backgroundColor: color?.hexCode }}
+                  className=" w-8 h-8 rounded-full "
+                ></div>
+                <h3 className="">{color?.name}</h3>
               </div>
             </AdminItemBox>
           );

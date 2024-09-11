@@ -17,23 +17,24 @@ const searchProducts = async (
     });
     if (res.status === 200) {
       const resData = await res.data;
-      console.log(resData);
+
       if (resData.length === 0) {
         setHasMore(false);
 
-        if (productList.length === 0) {
+        if (page === 1) {
           setProductList([]);
         }
-        return;
+      } else {
+        setHasMore(true);
+
+        setPage(page + 1);
+        setProductList([...productList, ...resData]);
       }
-      setPage(page + 1);
-      setProductList([...productList, ...resData]);
-      setHasMore(true);
     }
   } catch (error) {
     setHasMore(false);
 
-    if (productList.length === 0) {
+    if (page === 1) {
       setProductList([]);
     }
   }

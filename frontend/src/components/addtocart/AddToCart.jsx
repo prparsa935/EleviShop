@@ -32,10 +32,7 @@ const AddToCart = ({ className, product, inventory }) => {
         } else {
           console.log("wtf why are you here");
           console.log(iProductInCart);
-          deleteProductFromCart(
-            shoppingCart,
-            iProductInCart.productInCartIndex
-          );
+          deleteProductFromCart(inventory?.id);
         }
       }
     });

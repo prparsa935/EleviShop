@@ -17,4 +17,42 @@ const findBrandByName = async (brandName, callback) => {
     callback([]);
   }
 };
-export { findBrandByName };
+
+const findBrandByNamePaging = async (
+  brandName,
+  brandList,
+  setBrandList,
+  page,
+  setPage,
+  setHasMore
+) => {
+  try {
+    console.log("hellll");
+    const res = await axios.get(serverAddress + "brand", {
+      params: { brandName: brandName, pageNumber: page },
+    });
+    if (res.status === 200) {
+      const resData = await res.data;
+
+      if (resData.length === 0) {
+        setHasMore(false);
+
+        if (page === 1) {
+          setBrandList([]);
+        }
+      } else {
+        setHasMore(true);
+
+        setPage(page + 1);
+        setBrandList([...brandList, ...resData]);
+      }
+    }
+  } catch (error) {
+    setHasMore(false);
+
+    if (page === 1) {
+      setBrandList([]);
+    }
+  }
+};
+export { findBrandByName, findBrandByNamePaging };

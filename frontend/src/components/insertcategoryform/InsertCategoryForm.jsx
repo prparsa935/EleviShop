@@ -1,9 +1,7 @@
 import SelectCategoryList from "../selectcategorylist/SelectCategoryList";
 import categories from "../../jsons/categories.json";
 import Input from "../input/Input";
-import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
-import ASelectBox from "../selectbox/ASelectBox";
-import SelectBox from "../selectbox/SelectBox";
+
 import Button from "../Button/Button";
 import { useSearchParams } from "react-router-dom";
 import formApiHandler from "../../api/form";

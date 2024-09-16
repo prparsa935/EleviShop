@@ -9,6 +9,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Loading from "../icons/Loading";
 
 const AdminBrandC = ({ handleDeleteItem }) => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [brandList, setBrandList] = useState([]);
@@ -25,7 +26,6 @@ const AdminBrandC = ({ handleDeleteItem }) => {
     );
   }, [searchParams]);
 
-  const navigate = useNavigate();
   return (
     <div className="flex flex-col border ">
       {/* header */}
@@ -87,7 +87,10 @@ const AdminBrandC = ({ handleDeleteItem }) => {
         >
           {brandList?.map((brand) => {
             return (
-              <AdminItemBox onDelete={() => handleDeleteItem(brand?.id)}>
+              <AdminItemBox
+                onDelete={() => handleDeleteItem(brand?.id)}
+                onEdit={() => navigate(`admin/brand/save?${brand?.id}`)}
+              >
                 <div className="flex">
                   <h3 className=" font-semibold mx-4">{brand?.name}</h3>
                   <span className="mx-5 h-20 overflow-hidden text-justify">

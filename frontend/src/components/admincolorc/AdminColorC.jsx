@@ -86,7 +86,10 @@ const AdminColorC = ({ handleDeleteItem }) => {
         ></InfiniteScroll>
         {colorList?.map((color) => {
           return (
-            <AdminItemBox onDelete={() => handleDeleteItem(color?.id)}>
+            <AdminItemBox
+              onDelete={() => handleDeleteItem(color?.id)}
+              onEdit={() => navigate(`admin/color/save?${color?.id}`)}
+            >
               <div className="flex items-center gap-x-5">
                 <div
                   style={{ backgroundColor: color?.hexCode }}

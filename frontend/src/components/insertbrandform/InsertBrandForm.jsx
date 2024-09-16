@@ -6,10 +6,24 @@ import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
 import formApiHandler from "../../api/form";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loading from "../icons/Loading";
+import { useSearchParams } from "react-router-dom";
+import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
+import fetchSingleItem from "../../api/fetchSingleItem";
 const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
   const [loading, setLoading] = useState(false);
+  const [existingBrand, setExistingBrand] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const form = useRef();
+
+  const existingBrandFormSetter = () => {
+    try {
+      const currentForm = form.current;
+      currentForm.name.value = existingBrand.name;
+      currentForm.explanation.value = existingBrand.explanation;
+    } catch (error) {}
+  };
   const submitFormHandler = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -18,7 +32,9 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
     // todo validation
     setLoading(true);
     formApiHandler(
-      "brand/admin/save",
+      searchParams.get("brandId")
+        ? "brand/admin/apdate/" + searchParams.get("brandId")
+        : "brand/admin/save",
       {
         name: name,
         explanation: explanation,
@@ -28,6 +44,11 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
       setLoading
     );
   };
+  useEffect(() => {
+    fetchSingleItem("brand/id/", searchParams.get("brandId"), setExistingBrand);
+    // todo declear product state and use useeffect([product])
+  }, [searchParams.get("brandId")]);
+  useDidUpdateEffect(existingBrandFormSetter, [existingBrand]);
   return (
     <form
       onSubmit={submitFormHandler}

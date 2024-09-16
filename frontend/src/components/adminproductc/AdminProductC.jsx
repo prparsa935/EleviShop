@@ -95,7 +95,10 @@ const AdminProductC = ({ handleDeleteItem }) => {
         >
           {productList?.map((product) => {
             return (
-              <AdminItemBox onDelete={() => handleDeleteItem(product?.id)}>
+              <AdminItemBox
+                onDelete={() => handleDeleteItem(product?.id)}
+                onEdit={() => navigate(`admin/product/save?${product?.id}`)}
+              >
                 <div className="flex items-center">
                   <div>
                     <img className="w-[80px]" src={productImageTest}></img>

@@ -1,15 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectCategoryList from "../selectcategorylist/SelectCategoryList";
 import { useSearchParams } from "react-router-dom";
 
-const SelectCategory = ({ category }) => {
+const SelectCategory = ({ category, allwaysActive }) => {
   const [active, setActive] = useState(false);
   const [searchParam, setSearchParam] = useSearchParams();
+  useEffect(() => {
+    if (allwaysActive) {
+      setActive(true);
+    }
+  }, []);
   const activeHandler = () => {
-    if (active === false) {
+    if (allwaysActive === true) {
       setActive(true);
     } else {
-      setActive(false);
+      if (active === false) {
+        setActive(true);
+      } else {
+        setActive(false);
+      }
     }
   };
   return (
@@ -44,6 +53,7 @@ const SelectCategory = ({ category }) => {
       </li>
       <li>
         <SelectCategoryList
+          allwaysActive={allwaysActive}
           categories={category.childCategories}
           active={active}
         ></SelectCategoryList>

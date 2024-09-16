@@ -16,6 +16,7 @@ import { findColorByName } from "../../api/color";
 import { findBrandByName } from "../../api/brand";
 import { getAllCategories } from "../../api/category";
 import Loading from "../icons/Loading";
+import SelectCategories from "../selectcategories/SelectCategories";
 // const ValidationSchema = Yup.object().shape({
 //   email: Yup.string()
 //     .email("Invalid email address")
@@ -33,11 +34,9 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const [mainImage, setMainImage] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [categories, setCategories] = useState(null);
+
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    getAllCategories(setCategories);
-  }, []);
+
   useEffect(() => {
     fetchSingleProduct(searchParams.get("productId"), setExistingProduct);
     // todo declear product state and use useeffect([product])
@@ -151,7 +150,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
             گام اول: انتخاب گروه کالا
           </div>
           <div className="mx-3">
-            <SelectCategoryList categories={categories} />
+            <SelectCategories allwaysActive={true} />
           </div>
         </div>
       </div>

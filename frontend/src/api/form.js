@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { serverAddress } from "../App";
 
-const formApiHandler = async (address, object, setToastList, setErrors) => {
+const formApiHandler = async (address, object, setToastList, setErrors,setLoading) => {
   try {
     console.log(address);
     console.log(object);
@@ -42,6 +42,9 @@ const formApiHandler = async (address, object, setToastList, setErrors) => {
         ];
       });
     }
+  }
+  finally{
+    setLoading(false)
   }
 };
 

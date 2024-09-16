@@ -142,7 +142,7 @@ const AuthProvider = (props) => {
   };
   const subtractProductInCart = (productInCart) => {
     if (productInCart.productInCart.quantity <= 1) {
-      console.log(productInCart)
+      console.log(productInCart);
       deleteProductFromCart(productInCart?.productInCart?.inventory?.id);
     } else {
       setShoppingCart((prev) => {
@@ -161,12 +161,12 @@ const AuthProvider = (props) => {
   };
   const deleteProductFromCart = (inventoryId) => {
     const productInCartIndex = shoppingCart?.findIndex(
-      (iProductInCart) => (iProductInCart.inventory?.id === inventoryId)
+      (iProductInCart) => iProductInCart.inventory?.id === inventoryId
     );
-    console.log(shoppingCart)
-    console.log(productInCartIndex)
-    console.log(inventoryId)
-   
+    console.log(shoppingCart);
+    console.log(productInCartIndex);
+    console.log(inventoryId);
+
     if (productInCartIndex !== -1) {
       setShoppingCart((prev) => {
         prev.splice(productInCartIndex, 1);
@@ -229,7 +229,8 @@ const AuthProvider = (props) => {
     password,
     confirmPassword,
     setErrors,
-    setToastList
+    setToastList,
+    setLoading
   ) => {
     try {
       const response = await Axios.post(serverAddress + "auth/register", {
@@ -268,9 +269,17 @@ const AuthProvider = (props) => {
           ];
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
-  const login = async (username, password, setErrors, setToastList) => {
+  const login = async (
+    username,
+    password,
+    setErrors,
+    setToastList,
+    setLoading
+  ) => {
     try {
       const response = await Axios.post(serverAddress + "auth/login", {
         username: username,
@@ -309,6 +318,8 @@ const AuthProvider = (props) => {
           ];
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
   const logout = () => {

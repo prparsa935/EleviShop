@@ -5,10 +5,12 @@ import Separator from "../components/separator/Separator";
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import Alert from "../components/alert/Alert";
+import Loading from "../components/icons/Loading";
 const Register = () => {
   const { register, user } = useContext(AuthContext);
   const [errors, setErrors] = useState([]);
   const [toastList, setToastList] = useState([]);
+  const [loading, setLoading] = useState();
   const navigate = useNavigate();
   const registerSubmit = (e) => {
     e.preventDefault();
@@ -19,13 +21,15 @@ const Register = () => {
     const confirmPassword = form.get("confirmPassword");
 
     const email = form.get("email");
+    setLoading(true);
     register(
       email,
       username,
       password,
       confirmPassword,
       setErrors,
-      setToastList
+      setToastList,
+      setLoading
     );
   };
   useEffect(() => {
@@ -115,8 +119,9 @@ const Register = () => {
               txtColor="text-white"
               moreCss="w-full"
               shape="rounded-lg"
+              disabled={loading}
             >
-              ثبت نام
+              {loading ? <Loading className="w-5 h-5"></Loading> : "ثبت نام"}
             </Button>
           </div>
           <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">

@@ -6,25 +6,52 @@ import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
 import formApiHandler from "../../api/form";
+import Loading from "../icons/Loading";
+import { useContext, useEffect, useRef, useState } from "react";
+import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
+import fetchSingleItem from "../../api/fetchSingleItem";
+import { useSearchParams } from "react-router-dom";
 const InsertColorForm = ({ errors, setToastList, setErrors }) => {
+  const [loading, setLoading] = useState(false);
+  const [existingColor, setExistingColor] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const form = useRef();
+
+  const existingColorFormSetter = () => {
+    try {
+      const currentForm = form.current;
+      currentForm.name.value = existingColor.name;
+      currentForm.hexCode.value = existingColor.hexCode;
+    } catch (error) {}
+  };
   const submitFormHandler = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const hexCode = e.target.hexCode.value;
 
     // todo validation
+    setLoading(true);
     formApiHandler(
-      "color/admin/save",
+      searchParams.get("colorId")
+        ? "color/admin/update/" + searchParams.get("colorId")
+        : "color/admin/save",
       {
         name: name,
         hexCode: hexCode,
       },
       setToastList,
-      setErrors
+      setErrors,
+      setLoading
     );
   };
+  useEffect(() => {
+    fetchSingleItem("color/id/", searchParams.get("colorId"), setExistingColor);
+    // todo declear product state and use useeffect([product])
+  }, [searchParams.get("colorId")]);
+  useDidUpdateEffect(existingColorFormSetter, [existingColor]);
   return (
     <form
+      ref={form}
       onSubmit={submitFormHandler}
       className="insert-product-form flex flex-col gap-y-10"
     >
@@ -50,11 +77,12 @@ const InsertColorForm = ({ errors, setToastList, setErrors }) => {
       </div>
 
       <Button
-        bgColor={"bg-sky-100"}
-        txtColor={"text-sky-800"}
-        moreCss={"border-sky-400"}
+        bgColor="bg-rose-500"
+        txtColor="text-white"
+        shape="rounded-lg"
+        disabled={loading}
       >
-        ثبت رنگ
+        {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت رنگ"}
       </Button>
     </form>
   );

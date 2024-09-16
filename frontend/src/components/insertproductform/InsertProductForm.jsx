@@ -15,6 +15,7 @@ import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 import { findColorByName } from "../../api/color";
 import { findBrandByName } from "../../api/brand";
 import { getAllCategories } from "../../api/category";
+import Loading from "../icons/Loading";
 // const ValidationSchema = Yup.object().shape({
 //   email: Yup.string()
 //     .email("Invalid email address")
@@ -33,32 +34,33 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [categories, setCategories] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     getAllCategories(setCategories);
   }, []);
   useEffect(() => {
     fetchSingleProduct(searchParams.get("productId"), setExistingProduct);
     // todo declear product state and use useeffect([product])
-  }, []);
+  }, [searchParams.get("productId")]);
   const ExistingProductFormSetter = () => {
     try {
       const currentForm = form.current;
-      currentForm.code.value = product.code;
-      currentForm.code.value = product.code;
-      currentForm.productName.value = product.productName;
-      currentForm.description.value = product.description;
-      currentForm.price.value = product.price;
-      currentForm.offPercent.value = product.offPercent;
-      currentForm.material.value = product.material;
-      currentForm.height.value = product.height;
+      currentForm.code.value = existingProduct.code;
+      currentForm.code.value = existingProduct.code;
+      currentForm.productName.value = existingProduct.productName;
+      currentForm.description.value = existingProduct.description;
+      currentForm.price.value = existingProduct.price;
+      currentForm.offPercent.value = existingProduct.offPercent;
+      currentForm.material.value = existingProduct.material;
+      currentForm.height.value = existingProduct.height;
       // todo categoy lis is comming we fucked
       // e.target.categoryId.value = product.category;
       setSearchParams((prev) =>
-        prev.set("categoryId", product?.mainCategory?.id)
+        prev.set("categoryId", existingProduct?.mainCategory?.id)
       );
-      currentForm.brandId.value = product.brandId;
-      currentForm.colorId.value = product.colorId;
-      setUploadedImages(product?.images, product?.mainImage);
+      currentForm.brandId.value = existingProduct.brandId;
+      currentForm.colorId.value = existingProduct.colorId;
+      setUploadedImages(product?.images, existingProduct?.mainImage);
       setMainImage(product?.mainImage);
     } catch (error) {}
   };
@@ -104,6 +106,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
 
     const mainImageId = mainImage.id;
     // todo validation
+    setLoading(true);
     formApiHandler(
       searchParams.get("productId")
         ? "product/admin/update/" + searchParams.get("productId")
@@ -125,7 +128,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         mainImageId: mainImageId,
       },
       setToastList,
-      setErrors
+      setErrors,
+      setLoading
     );
   };
   const loadcolorOptions = useCallback(findColorByName);
@@ -416,7 +420,14 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
           </div> */}
         </div>
       </div>
-      <Button type="submit">da</Button>
+      <Button
+        bgColor="bg-rose-500"
+        txtColor="text-white"
+        shape="rounded-lg"
+        disabled={loading}
+      >
+        {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت کالا"}
+      </Button>
     </form>
   );
 };

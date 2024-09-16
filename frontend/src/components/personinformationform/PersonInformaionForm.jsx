@@ -3,6 +3,7 @@ import Button from "../Button/Button";
 import Input from "../input/Input";
 import Modal from "../modal/Modal";
 import formApiHandler from "../../api/form";
+import Loading from "../icons/Loading";
 
 const PersonInformaionForm = ({
   setPersonFormModalActive,
@@ -13,6 +14,7 @@ const PersonInformaionForm = ({
   setErrors,
 }) => {
   const [formValues, setFormValues] = useState();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setFormValues(person);
   }, [person]);
@@ -30,6 +32,7 @@ const PersonInformaionForm = ({
     const phoneNumber = e.target.phoneNumber.value;
     const postalCode = e.target.postalCode.value;
     const addressLine = e.target.addressLine.value;
+    setLoading(true);
     formApiHandler(
       "person/save",
       {
@@ -40,7 +43,8 @@ const PersonInformaionForm = ({
         addressLine: addressLine,
       },
       setToastList,
-      setErrors
+      setErrors,
+      setLoading
     );
     e.preventDefault();
   };
@@ -112,13 +116,15 @@ const PersonInformaionForm = ({
             iMessage={errors?.addressLine}
           ></Input>
         </div>
+
         <Button
           size="lg"
-          shape="rounded-xl"
-          txtColor="text-rose-500"
           moreCss="border-rose-500"
+          txtColor="text-rose-500"
+          shape="rounded-xl"
+          disabled={loading}
         >
-          ثبت اطلاعات
+          {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت اطلاعات"}
         </Button>
       </form>
     </Modal>

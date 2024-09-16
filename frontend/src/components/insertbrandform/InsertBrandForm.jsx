@@ -6,13 +6,17 @@ import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
 import formApiHandler from "../../api/form";
+import { useState } from "react";
+import Loading from "../icons/Loading";
 const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
+  const [loading, setLoading] = useState(false);
   const submitFormHandler = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const explanation = e.target.explanation.value;
 
     // todo validation
+    setLoading(true);
     formApiHandler(
       "brand/admin/save",
       {
@@ -20,7 +24,8 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
         explanation: explanation,
       },
       setToastList,
-      setErrors
+      setErrors,
+      setLoading
     );
   };
   return (
@@ -50,11 +55,12 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
       </div>
 
       <Button
-        bgColor={"bg-sky-100"}
-        txtColor={"text-sky-800"}
-        moreCss={"border-sky-400"}
+        bgColor="bg-rose-500"
+        txtColor="text-white"
+        shape="rounded-lg"
+        disabled={loading}
       >
-        ثبت برند
+        {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت برند"}
       </Button>
     </form>
   );

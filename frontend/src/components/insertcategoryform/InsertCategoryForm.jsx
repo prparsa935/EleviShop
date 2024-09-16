@@ -7,26 +7,59 @@ import SelectBox from "../selectbox/SelectBox";
 import Button from "../Button/Button";
 import { useSearchParams } from "react-router-dom";
 import formApiHandler from "../../api/form";
+import Loading from "../icons/Loading";
+import { useEffect, useRef, useState } from "react";
+import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
+import fetchSingleItem from "../../api/fetchSingleItem";
 const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
+  const [existingCategory, setExistingCategory] = useState(null);
+
+  const form = useRef();
+
+  const existingCategoryFormSetter = () => {
+    try {
+      const currentForm = form.current;
+      currentForm.name.value = existingCategory.name;
+      setSearchParams((prev) => {
+        prev.set("eCategoryId", existingCategory.id);
+        return prev;
+      });
+    } catch (error) {}
+  };
   const submitFormHandler = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const categoryId = searchParams.get("categoryId");
 
     // todo validation
+    setLoading(true);
     formApiHandler(
-      "category/admin/save",
+      searchParams.get("eCategoryId")
+        ? "category/admin/update/" + searchParams.get("eCategoryId")
+        : "category/admin/save",
       {
         name: name,
         parentId: categoryId,
       },
       setToastList,
-      setErrors
+      setErrors,
+      setLoading
     );
   };
+  useEffect(() => {
+    fetchSingleItem(
+      "category/id/",
+      searchParams.get("eCategoryId"),
+      setExistingCategory
+    );
+    // todo declear product state and use useeffect([product])
+  }, [searchParams.get("eCategoryId")]);
+  useDidUpdateEffect(existingCategoryFormSetter, [existingCategory]);
   return (
     <form
+      ref={form}
       onSubmit={submitFormHandler}
       className="insert-product-form flex flex-col gap-y-10"
     >
@@ -54,12 +87,14 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
         </div>
         <Input name="name" iMessage={errors?.name} />
       </div>
+
       <Button
-        bgColor={"bg-sky-100"}
-        txtColor={"text-sky-800"}
-        moreCss={"border-sky-400"}
+        bgColor="bg-rose-500"
+        txtColor="text-white"
+        shape="rounded-lg"
+        disabled={loading}
       >
-        ثبت گروه کالایی
+        {loading ? <Loading className="w-6 h-6"></Loading> : " ثبت گروه کالایی"}
       </Button>
     </form>
   );

@@ -6,18 +6,21 @@ import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
 import Alert from "../components/alert/Alert";
+import Loading from "../components/icons/Loading";
 
 const Login = () => {
   const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [errors, setErrors] = useState([]);
   const [toastList, setToastList] = useState([]);
+  const [loading, setLoading] = useState();
   const loginSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
     const username = form.get("username");
     const password = form.get("password");
-    login(username, password, setErrors, setToastList);
+    setLoading(true);
+    login(username, password, setErrors, setToastList, setLoading);
   };
   useEffect(() => {
     if (user !== null) {
@@ -87,8 +90,9 @@ const Login = () => {
               txtColor="text-white"
               moreCss="w-full"
               shape="rounded-lg"
+              disabled={loading}
             >
-              ورود
+              {loading ? <Loading className="w-5 h-5"></Loading> : "ورود"}
             </Button>
           </div>
 

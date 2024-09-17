@@ -14,7 +14,7 @@ const formApiHandler = async (
     const response = await Axios.post(serverAddress + address, object);
 
     if (response.status === 200 && response.data.success === true) {
-      setToastList(() => [
+      setToastList((prev) => [
         ...prev,
         {
           type: "success",

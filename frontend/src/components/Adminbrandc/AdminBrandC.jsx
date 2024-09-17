@@ -89,7 +89,7 @@ const AdminBrandC = ({ handleDeleteItem }) => {
             return (
               <AdminItemBox
                 onDelete={() => handleDeleteItem(brand?.id)}
-                onEdit={() => navigate(`admin/brand/save?${brand?.id}`)}
+                onEdit={() => navigate(`admin/brand/save?brandId=${brand?.id}`)}
               >
                 <div className="flex">
                   <h3 className=" font-semibold mx-4">{brand?.name}</h3>

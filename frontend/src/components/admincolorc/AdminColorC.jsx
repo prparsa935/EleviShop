@@ -88,7 +88,7 @@ const AdminColorC = ({ handleDeleteItem }) => {
           return (
             <AdminItemBox
               onDelete={() => handleDeleteItem(color?.id)}
-              onEdit={() => navigate(`admin/color/save?${color?.id}`)}
+              onEdit={() => navigate(`admin/color/save?colorId=${color?.id}`)}
             >
               <div className="flex items-center gap-x-5">
                 <div

@@ -45,8 +45,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     try {
       const currentForm = form.current;
       currentForm.code.value = existingProduct.code;
-      currentForm.code.value = existingProduct.code;
-      currentForm.productName.value = existingProduct.productName;
+      currentForm.name.value = existingProduct.name;
       currentForm.description.value = existingProduct.description;
       currentForm.price.value = existingProduct.price;
       currentForm.offPercent.value = existingProduct.offPercent;
@@ -54,11 +53,25 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       currentForm.height.value = existingProduct.height;
       // todo categoy lis is comming we fucked
       // e.target.categoryId.value = product.category;
-      setSearchParams((prev) =>
-        prev.set("categoryId", existingProduct?.mainCategory?.id)
-      );
-      currentForm.brandId.value = existingProduct.brandId;
-      currentForm.colorId.value = existingProduct.colorId;
+      setSearchParams((prev) => {
+        prev.set("categoryId", existingProduct?.mainCategory?.id);
+        return prev;
+      });
+      currentForm.brandId.value = existingProduct?.brand?.id;
+      currentForm.colorId.value = existingProduct?.color?.id;
+      setInventories(() => {
+        return existingProduct?.inventories;
+        // let localInventoryList = [];
+
+        // for (inventory of existingProduct?.inventories) {
+        //   existingProduct.inventories;
+        //   localInventoryList.push({
+        //     size: inventory.size,
+        //     quantity: inventory.quantity,
+        //   });
+        // }
+        // return localInventoryList;
+      });
       setUploadedImages(product?.images, existingProduct?.mainImage);
       setMainImage(product?.mainImage);
     } catch (error) {}

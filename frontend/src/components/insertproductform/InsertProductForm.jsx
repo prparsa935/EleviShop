@@ -72,7 +72,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         // }
         // return localInventoryList;
       });
-      setUploadedImages(existingProduct?.images, existingProduct?.mainImage);
+      setUploadedImages([existingProduct?.images, existingProduct?.mainImage]);
       setMainImage(existingProduct?.mainImage);
     } catch (error) {
       console.log(error);

@@ -74,7 +74,9 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       });
       setUploadedImages(product?.images, existingProduct?.mainImage);
       setMainImage(product?.mainImage);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
   useDidUpdateEffect(ExistingProductFormSetter, [existingProduct]);
 

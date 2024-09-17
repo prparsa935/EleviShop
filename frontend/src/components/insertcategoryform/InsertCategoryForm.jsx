@@ -20,9 +20,10 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
   const existingCategoryFormSetter = () => {
     try {
       const currentForm = form.current;
-      currentForm.name.value = existingCategory.name;
+      currentForm.name.value = existingCategory?.name;
       setSearchParams((prev) => {
-        prev.set("eCategoryId", existingCategory.id);
+        prev.set("eCategoryId", existingCategory?.id);
+        prev.set("categoryId", existingCategory?.parentCategory?.id);
         return prev;
       });
     } catch (error) {}

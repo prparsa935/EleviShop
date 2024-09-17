@@ -45,7 +45,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     try {
       const currentForm = form.current;
       currentForm.code.value = existingProduct.code;
-      currentForm.name.value = existingProduct.name;
+      currentForm.productName.value = existingProduct.name;
       currentForm.description.value = existingProduct.description;
       currentForm.price.value = existingProduct.price;
       currentForm.offPercent.value = existingProduct.offPercent;

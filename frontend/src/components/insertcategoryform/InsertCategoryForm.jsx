@@ -9,6 +9,7 @@ import Loading from "../icons/Loading";
 import { useEffect, useRef, useState } from "react";
 import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 import fetchSingleItem from "../../api/fetchSingleItem";
+import SelectCategories from "../selectcategories/SelectCategories";
 const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -69,7 +70,7 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
         <div className="grow flex flex-col gap-y-3">
           <div className=" text-lg font-semibold">انتخاب گروه پدر</div>
           <div className="mx-3">
-            <SelectCategoryList categories={categories} />
+            <SelectCategories allwaysActive={true} />
           </div>
           {errors["parentId"] ? (
             errors["parentId"]

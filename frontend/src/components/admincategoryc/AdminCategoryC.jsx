@@ -5,8 +5,9 @@ import AdminItemBox from "../adminitembox/AdminItemBox";
 import categories from "../../jsons/categories.json";
 import SelectCategoryList from "../selectcategorylist/SelectCategoryList";
 import { useSearchParams } from "react-router-dom";
+import SelectCategories from "../selectcategories/SelectCategories";
 
-const AdminCategoryC = () => {
+const AdminCategoryC = ({ setDeleteModalActive }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   return (
@@ -28,6 +29,15 @@ const AdminCategoryC = () => {
           <div className="flex justify-around gap-x-4">
             <div className=" cursor-pointer">
               <i
+                onClick={() => {
+                  if (searchParams.get("categoryId")) {
+                    navigate(
+                      `/admin/category/save?eCategoryId=${searchParams.get(
+                        "categoryId"
+                      )}`
+                    );
+                  }
+                }}
                 class={
                   "fal fa-edit " +
                   (!searchParams.get("categoryId")
@@ -38,6 +48,11 @@ const AdminCategoryC = () => {
             </div>
             <div className=" cursor-pointer">
               <i
+                onClick={() => {
+                  if (searchParams.get("categoryId")) {
+                    setDeleteModalActive(true);
+                  }
+                }}
                 class={
                   "fa-solid fa-trash  " +
                   (!searchParams.get("categoryId")
@@ -50,7 +65,7 @@ const AdminCategoryC = () => {
         </div>
       </div>
       <div className="mx-10">
-        <SelectCategoryList categories={categories} />
+        <SelectCategories allwaysActive={true} />
       </div>
     </div>
   );

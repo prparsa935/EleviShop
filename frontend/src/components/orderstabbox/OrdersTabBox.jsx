@@ -31,13 +31,21 @@ const OrdersTabBox = ({ setToastList }) => {
           <TabsTrigger className={"lg:grow-0 grow "} value="current">
             <span className="ml-1 lg:text-base text-sm">جاری</span>
 
-            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">۳</span>
+            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
+              {currentOrders?.length}
+            </span>
           </TabsTrigger>
           <TabsTrigger className={"lg:grow-0 grow"} value="delivered">
             <span className="ml-1 lg:text-base text-sm ">تحویل شده</span>
+            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
+              {deliveredOrders?.length}
+            </span>
           </TabsTrigger>
           <TabsTrigger className={"lg:grow-0 grow"} value="canceled">
             <span className="ml-1 lg:text-base text-sm">لغو شده</span>
+            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
+              {canceledOrders?.length}
+            </span>
           </TabsTrigger>
         </TabsList>
         <TabsContent data-state="active" value="current">
@@ -45,7 +53,6 @@ const OrdersTabBox = ({ setToastList }) => {
             {currentOrders?.map((order) => {
               return <OrderBox order={order} />;
             })}
-            <OrderBox />
           </div>
         </TabsContent>
         <TabsContent data-state="active" value="delivered">

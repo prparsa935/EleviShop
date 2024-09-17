@@ -5,7 +5,9 @@ const ProductInOrderBox = ({ orderInventory }) => {
   const navigate = useNavigate();
   return (
     <div
-      onClick={() => navigate("/product/" + orderInventory?.id)}
+      onClick={() =>
+        navigate("/product/" + orderInventory?.inventory?.product?.id)
+      }
       className=" border-b px-1 py-5 cursor-pointer"
     >
       <div className="flex">
@@ -29,7 +31,16 @@ const ProductInOrderBox = ({ orderInventory }) => {
           <div className="flex flex-col text-sm font-medium text-neutral-500">
             <span>گارانتی اصالت و سلامت فیزیکی کالا</span>
             <span>سایز {orderInventory?.inventory?.size}</span>
-            <span>رنگ</span>
+            <div className="flex items-center">
+              <span>{orderInventory?.inventory?.product?.color?.name}</span>
+              <span
+                className="w-4 h-4"
+                style={{
+                  backgroundColor:
+                    orderInventory?.inventory?.product?.color?.hexCode,
+                }}
+              ></span>
+            </div>
           </div>
           <div>
             <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">

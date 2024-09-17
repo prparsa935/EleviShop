@@ -14,15 +14,16 @@ const OrderDetailsC = ({ order }) => {
         {/* order ovarall details */}
         <div className="flex lg:flex-row flex-col lg:gap-x-10 gap-y-3">
           <div className="flex gap-x-2 items-center justify-between">
-            <span className=" text-slate-500 ">کد سفارش</span>
-            <span className="font-semibold">۳۵۹۴۵۳۱۷</span>
+            <span className=" text-slate-500 ">کد پیگیری سفارش</span>
+            <span className="font-semibold">{order?.trackingCode}</span>
           </div>
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">تاریخ ثبت سفارش</span>
             <div className="flex gap-x-1 font-semibold">
-              <span>۱۸</span>
+              {order?.getFaDateCreated}
+              {/* <span>۱۸</span>
               <span> شهریور</span>
-              <span>۱۳۹۷</span>
+              <span>۱۳۹۷</span> */}
             </div>
           </div>
           <div className="flex gap-x-2 items-center justify-between">
@@ -37,7 +38,9 @@ const OrderDetailsC = ({ order }) => {
         <div className="flex lg:flex-row flex-col gap-x-10 gap-y-2">
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">تحویل گیرنده</span>
-            <span className="font-semibold">{order?.user?.person?.name}</span>
+            <span className="font-semibold">
+              {order?.user?.person?.firstName} {order?.user?.person?.lastName}
+            </span>
           </div>
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">شماره موبایل</span>
@@ -48,9 +51,29 @@ const OrderDetailsC = ({ order }) => {
         </div>
         <div className="flex gap-x-2 items-center justify-between lg:justify-normal">
           <span className=" text-slate-500 ">ادرس</span>
-          <span className="font-semibold">{order?.address?.addressLine}</span>
+          <span className="font-semibold">{order?.person?.addressLine}</span>
         </div>
       </div>
+
+      <div className=" flex flex-col gap-y-10 p-5 border-b text-sm lg:text-base font-semibold">
+        {/* order ovarall details */}
+        <div className="flex lg:flex-row flex-col lg:gap-x-10 gap-y-3">
+          <div className="flex gap-x-2 items-center justify-between">
+            <span className=" text-slate-500 ">مبلغ</span>
+            <span className="font-semibold">{order?.getTotalOrderPrice}</span>
+          </div>
+          <div className="flex gap-x-2 items-center justify-between">
+            <span className=" text-slate-500 ">سود شما از خرید</span>
+            <div className="flex gap-x-1 font-semibold">
+              {order?.getTotalOrderOffPrice}
+              {/* <span>۱۸</span>
+              <span> شهریور</span>
+              <span>۱۳۹۷</span> */}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="p-3">
         <div className="border">
           {order?.orderInventories?.map((orderInventory) => {

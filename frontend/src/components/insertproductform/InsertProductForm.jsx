@@ -72,10 +72,10 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         // }
         // return localInventoryList;
       });
-      setUploadedImages(product?.images, existingProduct?.mainImage);
-      setMainImage(product?.mainImage);
+      setUploadedImages(existingProduct?.images, existingProduct?.mainImage);
+      setMainImage(existingProduct?.mainImage);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   useDidUpdateEffect(ExistingProductFormSetter, [existingProduct]);

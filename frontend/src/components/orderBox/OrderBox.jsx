@@ -15,7 +15,7 @@ const OrderBox = ({ order }) => {
 
         <div className="flex lg:flex-row flex-col text-neutral-400 gap-x-4 m-4">
           <div className="flex gap-x-2 items-center">
-            {order?.getFaDateCreated}
+            {order?.faDateCreated}
           </div>
           <div className="flex gap-x-2 items-center ">
             <span>کد سفارش</span>
@@ -23,12 +23,12 @@ const OrderBox = ({ order }) => {
           </div>
           <div className="flex gap-x-2 items-center">
             <span>مبلغ</span>
-            <span className="text-black">{order?.getTotalOrderPrice}</span>
+            <span className="text-black">{order?.totalOrderPrice}</span>
             <span className="text-black">تومان</span>
           </div>
           <div className="flex gap-x-2 items-center">
             <span>تخفیف</span>
-            <span className="text-black">{order?.getTotalOrderOffPrice}</span>
+            <span className="text-black">{order?.totalOrderOffPrice}</span>
             <span className="text-black">تومان</span>
           </div>
         </div>

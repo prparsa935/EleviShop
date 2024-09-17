@@ -20,7 +20,7 @@ const OrderDetailsC = ({ order }) => {
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">تاریخ ثبت سفارش</span>
             <div className="flex gap-x-1 font-semibold">
-              {order?.getFaDateCreated}
+              {order?.faDateCreated}
               {/* <span>۱۸</span>
               <span> شهریور</span>
               <span>۱۳۹۷</span> */}
@@ -39,13 +39,13 @@ const OrderDetailsC = ({ order }) => {
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">تحویل گیرنده</span>
             <span className="font-semibold">
-              {order?.user?.person?.firstName} {order?.user?.person?.lastName}
+              {order?.person?.firstName} {order?.person?.lastName}
             </span>
           </div>
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">شماره موبایل</span>
             <div className="font-semibold">
-              <span>{order?.user?.person?.phoneNumber}</span>
+              <span>{order?.person?.phoneNumber}</span>
             </div>
           </div>
         </div>
@@ -60,12 +60,12 @@ const OrderDetailsC = ({ order }) => {
         <div className="flex lg:flex-row flex-col lg:gap-x-10 gap-y-3">
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">مبلغ</span>
-            <span className="font-semibold">{order?.getTotalOrderPrice}</span>
+            <span className="font-semibold">{order?.totalOrderPrice}</span>
           </div>
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">سود شما از خرید</span>
             <div className="flex gap-x-1 font-semibold">
-              {order?.getTotalOrderOffPrice}
+              {order?.totalOrderOffPrice}
               {/* <span>۱۸</span>
               <span> شهریور</span>
               <span>۱۳۹۷</span> */}

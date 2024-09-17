@@ -31,15 +31,15 @@ const ProductInOrderBox = ({ orderInventory }) => {
           <div className="flex flex-col text-sm font-medium text-neutral-500">
             <span>گارانتی اصالت و سلامت فیزیکی کالا</span>
             <span>سایز {orderInventory?.inventory?.size}</span>
-            <div className="flex items-center">
-              <span>{orderInventory?.inventory?.product?.color?.name}</span>
+            <div className="flex items-center gap-x-2">
               <span
-                className="w-4 h-4"
+                className=" w-5 h-5 rounded-full"
                 style={{
                   backgroundColor:
                     orderInventory?.inventory?.product?.color?.hexCode,
                 }}
               ></span>
+              <span>{orderInventory?.inventory?.product?.color?.name}</span>
             </div>
           </div>
           <div>

@@ -97,7 +97,7 @@ const AdminProductC = ({ handleDeleteItem }) => {
             return (
               <AdminItemBox
                 onDelete={() => handleDeleteItem(product?.id)}
-                onEdit={() => navigate(`admin/product/save?productId=${product?.id}`)}
+                onEdit={() => navigate(`/admin/product/save?productId=${product?.id}`)}
               >
                 <div className="flex items-center">
                   <div>

@@ -9,7 +9,7 @@ const OrderBox = ({ order }) => {
             <i class="fa-solid fa-check text-green-400 ml-1"></i>
             <span>تحویل شده</span>
           </div>
-          <i class="fa-solid fa-angle-left"></i>
+          <i class="fa-solid fa-angle-left cursor-pointer"></i>
         </div>
 
         <div className="flex lg:flex-row flex-col text-neutral-400 gap-x-4 m-4">

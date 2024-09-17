@@ -62,21 +62,21 @@ const ProductInCartBox = ({ productInCart, key }) => {
         <div className="flex flex-col mr-3">
           {/* title */}
           <span className=" font-semibold mb-2">
-            {productInCart?.productInCart.product?.name}
+            {productInCart?.productInCart?.product?.name}
           </span>
           <div className="flex flex-col text-sm font-medium text-neutral-500">
             <span>گارانتی اصالت و سلامت فیزیکی کالا</span>
-            <span>سایز {productInCart?.productInCart.inventory?.size}</span>
+            <span>سایز {productInCart?.productInCart?.inventory?.size}</span>
             <span>ارسال دیجی‌کالا از ۲ روز کاری دیگر</span>
           </div>
           <div>
             <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
-              <span>{productInCart?.productInCart.product?.offPercent}</span>
+              <span>{productInCart?.productInCart?.product?.offPercent}</span>
               <span>%</span>
               <span>تخفیف</span>
             </div>
             <div className=" flex text-lg gap-x-1  mt-3 font-semibold">
-              <span>{productInCart?.productInCart.product?.price}</span>
+              <span>{productInCart?.productInCart?.product?.price}</span>
               <span>تومان</span>
             </div>
           </div>

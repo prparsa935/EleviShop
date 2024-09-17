@@ -3,14 +3,14 @@ import OrderBox from "../orderBox/OrderBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ordertab/OrderTab";
 import { findOrderByState } from "../../api/order";
 
-const OrdersTabBox = () => {
+const OrdersTabBox = ({ setToastList }) => {
   const [currentOrders, setCurrentOrders] = useState([]);
   const [deliveredOrders, setDeliveredOrders] = useState([]);
   const [canceledOrders, setCanceledOrders] = useState([]);
   useEffect(() => {
-    findOrderByState("current", setCurrentOrders);
-    findOrderByState("canceled", setCanceledOrders);
-    findOrderByState("delivered", setDeliveredOrders);
+    findOrderByState("current", setCurrentOrders, setToastList);
+    findOrderByState("canceled", setCanceledOrders, setToastList);
+    findOrderByState("delivered", setDeliveredOrders, setToastList);
   }, []);
   return (
     <div className="border p-4 flex flex-col">

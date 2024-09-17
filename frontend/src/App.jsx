@@ -19,6 +19,7 @@ const Cart = lazy(() => import("./pages/Cart.jsx"));
 const Payment = lazy(() => import("./pages/Payment.jsx"));
 const Profile = lazy(() => import("./pages/Profile.jsx"));
 const Orders = lazy(() => import("./pages/Orders.jsx"));
+const OrderDetails = lazy(() => import("./pages/OrderDetails.jsx"));
 const Admin = lazy(() => import("./pages/Admin.jsx"));
 const AdminBrand = lazy(() => import("./pages/AdminBrand.jsx"));
 const AdminColor = lazy(() => import("./pages/AdminColor.jsx"));
@@ -32,7 +33,7 @@ const InsertBrand = lazy(() => import("./pages/InsertBrand.jsx"));
 const serverAddress = "http://localhost/api/";
 const imageServerAddress = "http://localhost";
 
-export { serverAddress,imageServerAddress };
+export { serverAddress, imageServerAddress };
 function App() {
   return (
     <BrowserRouter>
@@ -107,6 +108,14 @@ function App() {
             element={
               <Suspense>
                 <Orders></Orders>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/profile/orders/:orderId"
+            element={
+              <Suspense>
+                <OrderDetails></OrderDetails>
               </Suspense>
             }
           />

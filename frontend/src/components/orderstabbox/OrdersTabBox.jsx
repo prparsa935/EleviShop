@@ -60,6 +60,7 @@ const OrdersTabBox = ({ setToastList }) => {
             {deliveredOrders?.map((order) => {
               return <OrderBox order={order} />;
             })}
+            <OrderBox  />
           </div>
         </TabsContent>
         <TabsContent data-state="active" value="canceled">

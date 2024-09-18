@@ -10,7 +10,7 @@ const OrderDetailsC = ({ order }) => {
         <span className=" font-semibold text-lg">جزیات سفارش</span>
       </div>
       {/* order ovarall details and person details */}
-      <div className=" flex flex-col gap-y-10 p-5 border-b text-sm lg:text-base font-semibold">
+      <div className=" flex flex-col gap-y-10 p-5 border-b text-xs lg:text-base font-semibold">
         {/* order ovarall details */}
         <div className="flex lg:flex-row flex-col lg:gap-x-10 gap-y-3">
           <div className="flex gap-x-2 items-center justify-between">

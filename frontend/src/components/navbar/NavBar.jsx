@@ -66,11 +66,12 @@ const NavBar = () => {
                 </g>
               </svg>
             </div>
-            <form onSubmit={(e) => searchHandler(e)}>
+            <form onSubmit={(e) => searchHandler(e)} className=" ">
               <Input
                 name="searchInput"
                 placeHolder="جستجو"
-                inputclassName="text-slate-500 lg:w-96 md:w-90 "
+              
+                inputclassName="text-slate-500  lg:w-96 md:w-90  "
                 preffix={<i className="fal fa-search"></i>}
               />
             </form>

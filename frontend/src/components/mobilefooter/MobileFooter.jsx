@@ -10,7 +10,7 @@ const MobileFooter = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-100 fixed flex justify-around items-center  lg:hidden bottom-0 left-0 px-7 py-3 border-t-2 bg-white z-50">
+    <div className="w-100 fixed flex justify-around items-center  lg:hidden bottom-0 left-0 px-7 py-1 border-t-2 bg-white z-50">
       <Button
         onClick={() => navigate("/")}
         col

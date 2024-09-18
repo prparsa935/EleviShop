@@ -13,20 +13,20 @@ const OrderBox = ({ order }) => {
           <i class="fa-solid fa-angle-left cursor-pointer"></i>
         </div>
 
-        <div className="flex lg:flex-row flex-col text-neutral-400 gap-x-4 m-4">
+        <div className="flex lg:flex-row flex-col text-neutral-400 gap-x-4 m-4 lg:text-base  text-sm">
           <div className="flex gap-x-2 items-center">
             {order?.faDateCreated}
           </div>
-          <div className="flex gap-x-2 items-center ">
+          <div className="flex gap-x-2 items-center lg:justify-normal justify-between ">
             <span>کد سفارش</span>
             <span className="text-black">{order?.trackingCode}</span>
           </div>
-          <div className="flex gap-x-2 items-center">
+          <div className="flex gap-x-2 items-center lg:justify-normal justify-between">
             <span>مبلغ</span>
             <span className="text-black">{order?.totalOrderPrice}</span>
             <span className="text-black">تومان</span>
           </div>
-          <div className="flex gap-x-2 items-center">
+          <div className="flex gap-x-2 items-center lg:justify-normal justify-between ">
             <span>تخفیف</span>
             <span className="text-black">{order?.totalOrderOffPrice}</span>
             <span className="text-black">تومان</span>

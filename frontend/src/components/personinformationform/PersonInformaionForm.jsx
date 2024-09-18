@@ -100,7 +100,7 @@ const PersonInformaionForm = ({
           <Input
             name="postalCode"
             onChange={updateFormValue}
-            value={person?.address?.postalCode}
+            value={person?.postalCode}
             iMessage={errors?.postalCode}
           ></Input>
         </div>
@@ -112,7 +112,7 @@ const PersonInformaionForm = ({
             name="addressLine"
             type="textarea"
             onChange={updateFormValue}
-            value={person?.address?.addressLine}
+            value={person?.addressLine}
             iMessage={errors?.addressLine}
           ></Input>
         </div>

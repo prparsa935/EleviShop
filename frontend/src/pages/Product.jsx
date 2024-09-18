@@ -1,13 +1,11 @@
 import CategoryPath from "../components/categorypath/CategoryPath";
 import { useEffect, useState } from "react";
-import imageTest1 from "../assets/img/4fb1ba5a6b5d981ce357ddf1db20048ba2cd1587_1692516449.webp";
+
 import { useParams } from "react-router-dom";
 // import product from '../jsons/product.json'
-import Button from "../components/Button/Button";
-import Separator from "../components/separator/Separator";
+
 import NavBar from "../components/navbar/NavBar";
-import MobileFooter from "../components/mobilefooter/MobileFooter";
-import AddToCart from "../components/addtocart/AddToCart";
+
 import ProductUpperSection from "../components/productuppersection/ProductUpperSection";
 import {
   Carousel,
@@ -17,22 +15,26 @@ import {
   CarouselPrevious,
 } from "../components/Carousel/Carousel";
 import ProductImageShow from "../components/productimageshow/ProductImageShow";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../components/tab/Tab";
+
 import ProductLowerSection from "../components/productlowersection/ProductLowerSection";
 import { fetchSingleProduct } from "../api/productApi";
 const Product = () => {
   const { id } = useParams();
   const [imageSiderActive, setImageSiderActive] = useState(false);
+  const [selectedSize, setSelectedSize] = useState(null);
 
   const [product, setProduct] = useState(null);
   useEffect(() => {
     fetchSingleProduct(id, setProduct);
-  }, []);
+  }, [id]);
+
+
+  useEffect(() => {
+    setSelectedSize({
+      label: product?.inventories[0]?.size,
+      value: product?.inventories[0],
+    });
+  }, [product]);
 
   return (
     <div className="product-page">
@@ -47,6 +49,8 @@ const Product = () => {
         <CategoryPath />
         {/* unit product */}
         <ProductUpperSection
+          selectedSize={selectedSize}
+          setSelectedSize={selectedSize}
           imageSiderActive={imageSiderActive}
           setImageSiderActive={setImageSiderActive}
           product={product}
@@ -92,7 +96,12 @@ const Product = () => {
             </CarouselItem>
           </CarouselContent>
         </Carousel>
-        <ProductLowerSection></ProductLowerSection>
+        <ProductLowerSection
+          selectedSize={selectedSize}
+          setSelectedSize={selectedSize}
+          product={product}>
+
+        </ProductLowerSection>
       </div>
     </div>
   );

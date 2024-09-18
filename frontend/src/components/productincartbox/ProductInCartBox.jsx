@@ -4,17 +4,15 @@ import specialSellImage from "../../assets/img/SpecialSell.svg";
 
 import AuthContext from "../../context/AuthContext";
 import { useNavigate } from "react-router";
+import { imageServerAddress } from "../../App";
 
 const ProductInCartBox = ({ productInCart, key }) => {
   const navigate = useNavigate();
   const {
-    shoppingCart,
-    findProductInCart,
-    addToCart,
+
     sumProductInCart,
     subtractProductInCart,
-    isProductInCartValid,
-    deleteProductFromCart,
+
   } = useContext(AuthContext);
 
   return (
@@ -27,7 +25,7 @@ const ProductInCartBox = ({ productInCart, key }) => {
         <div className="flex flex-col items-center">
           <img
             className="w-[114px] h-[114px] mb-3"
-            src={productInCart?.productInCart.product?.mainImage?.filePath}
+            src={imageServerAddress + productInCart?.productInCart.product?.mainImage?.filePath}
           ></img>
           <img className="w-[60px] " src={specialSellImage}></img>
           <div
@@ -36,16 +34,22 @@ const ProductInCartBox = ({ productInCart, key }) => {
             }}
             className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center cursor-pointer select-none "
           >
-            <span
-              onClick={() => {
-                sumProductInCart(
-                  productInCart,
-                  productInCart?.productInCart.inventory.quantity
-                );
-              }}
-            >
-              +
-            </span>
+            {productInCart.productInCart.quantity === productInCart?.productInCart.inventory.quantity ? (
+              <div className="w-2"></div>
+            ) : (
+              <span
+                onClick={() => {
+                  sumProductInCart(
+                    productInCart,
+                    productInCart?.productInCart.inventory.quantity
+                  );
+                }}
+              >
+                +
+              </span>
+
+            )}
+
 
             <span>{productInCart?.productInCart?.quantity}</span>
 

@@ -5,18 +5,10 @@ import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import SelectBox from "../selectbox/SelectBox";
 import { imageServerAddress } from "../../App";
-const ProductUpperSection = ({ setImageSiderActive, product }) => {
+const ProductUpperSection = ({ setImageSiderActive, product,selectedSize,setSelectedSize }) => {
   const [liked, setLiked] = useState(false);
-  const [selectedSize, setSelectedSize] = useState({
-    label: product?.inventories[0]?.size,
-    value: product?.inventories[0],
-  });
-  useEffect(() => {
-    setSelectedSize({
-      label: product?.inventories[0]?.size,
-      value: product?.inventories[0],
-    });
-  }, [product]);
+
+
 
   return (
     <div className="flex flex-col lg:flex-row justify-between">
@@ -63,7 +55,7 @@ const ProductUpperSection = ({ setImageSiderActive, product }) => {
         {/* title */}
         <div className="p-3  ">
           <p className=" font-medium  sm:text-xl text-base  ">
-            سویشرت مردانه مدل F120 رنگ مشکی
+            {product?.name}
           </p>
         </div>
         {/* detail and add to cart */}

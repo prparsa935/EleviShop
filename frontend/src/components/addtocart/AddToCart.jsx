@@ -72,7 +72,13 @@ const AddToCart = ({ className, product, inventory }) => {
           </div>
         </div>
         <div className=" select-none">
-          {!productInCart ? (
+          {inventory?.quantity === 0 ? (
+            <div className="flex justify-center text-red-500">
+              موجود نیست
+
+
+            </div>
+          ) : !productInCart ? (
             <Button
               onClick={() => {
                 if (inventory?.quantity !== 0) {
@@ -89,14 +95,19 @@ const AddToCart = ({ className, product, inventory }) => {
             </Button>
           ) : (
             <div className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center w-20 font-semibold text-lg ">
-              <span
-                onClick={() => {
-                  sumProductInCart(productInCart, inventory?.quantity);
-                }}
-                className=" cursor-pointer"
-              >
-                +
-              </span>
+              {productInCart.productInCart.quantity === inventory?.quantity ? (
+                  <div className="w-2"></div>
+              ) : (
+                <span
+                  onClick={() => {
+                    sumProductInCart(productInCart, inventory?.quantity);
+                  }}
+                  className=" cursor-pointer"
+                >
+                  +
+                </span>
+              )}
+
 
               <span>{productInCart.productInCart.quantity}</span>
 
@@ -110,6 +121,7 @@ const AddToCart = ({ className, product, inventory }) => {
               </span>
             </div>
           )}
+
         </div>
       </div>
     </div>

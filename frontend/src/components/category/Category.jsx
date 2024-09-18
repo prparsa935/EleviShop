@@ -17,6 +17,7 @@ const Category = ({ categoryData, isSub }) => {
       >
         {categoryData.name}
       </span>
+      
 
       <CategoryList categoryListData={categoryData.childCategories} />
     </div>

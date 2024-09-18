@@ -1,8 +1,13 @@
+import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
 import productImg from "../../assets/img/947920b7e5d1b87552bff471172eb45237b15a03_1660396852.jpg";
 const OrderBox = ({ order }) => {
+  const navigate = useNavigate()
   return (
-    <div className="flex flex-col border">
+    <div className="flex flex-col border cursor-pointer" onClick={() => {
+      navigate("/profile/orders/" + order?.id)
+
+    }}>
       {/* header */}
       <div className="flex flex-col border-b  ">
         <div className="flex justify-between items-center gap-y-2    m-4">
@@ -13,7 +18,7 @@ const OrderBox = ({ order }) => {
           <i class="fa-solid fa-angle-left cursor-pointer"></i>
         </div>
 
-        <div className="flex lg:flex-row flex-col text-neutral-400 gap-x-4 m-4 lg:text-base  text-sm">
+        <div className="flex lg:flex-row flex-col text-neutral-400 gap-x-4 gap-y-2 m-4 lg:text-sm  text-xs">
           <div className="flex gap-x-2 items-center">
             {order?.faDateCreated}
           </div>
@@ -23,13 +28,21 @@ const OrderBox = ({ order }) => {
           </div>
           <div className="flex gap-x-2 items-center lg:justify-normal justify-between">
             <span>مبلغ</span>
-            <span className="text-black">{order?.totalOrderPrice}</span>
-            <span className="text-black">تومان</span>
+            <div>
+              <span className="text-black">{order?.totalOrderPrice}</span>
+              <span className="text-black">تومان</span>
+
+            </div>
+
           </div>
           <div className="flex gap-x-2 items-center lg:justify-normal justify-between ">
             <span>تخفیف</span>
-            <span className="text-black">{order?.totalOrderOffPrice}</span>
-            <span className="text-black">تومان</span>
+            <div>
+              <span className="text-black">{order?.totalOrderOffPrice}</span>
+              <span className="text-black">تومان</span>
+
+            </div>
+
           </div>
         </div>
       </div>

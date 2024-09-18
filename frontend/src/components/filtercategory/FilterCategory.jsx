@@ -31,7 +31,7 @@ const FilterCategory = ({ category }) => {
             
         })} className="grow flex justify-between items-center">
           <span> {category.name}</span>
-          {searchParam.get("category") === String(category.id) ? (
+          {searchParam.get("categoryId") === String(category.id) ? (
             <i class="fa-solid fa-check text-sky-400"></i>
           ) : (
             ""

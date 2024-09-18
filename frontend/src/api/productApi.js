@@ -40,14 +40,32 @@ const searchProducts = async (
   }
 };
 const fetchSingleProduct = async (productId, setProduct) => {
-  const res = await Axios.get(serverAddress + "product/id/" + productId);
-  if (res.status === 200) {
-    const resData = await res.data;
-    console.log(resData);
-    setProduct(resData);
-  } else {
-    console.log("hello");
-  }
-};
+  try {
+    const res = await Axios.get(serverAddress + "product/id/" + productId);
+    if (res.status === 200) {
+      const resData = await res.data;
+      console.log(resData);
+      setProduct(resData);
+    }
 
-export { searchProducts, fetchSingleProduct };
+  } catch (error) {
+
+  }
+
+};
+const fetchRelatedProducts = async (productId, productCode, setProducts) => {
+  try {
+    const res = await Axios.get(serverAddress + "product/id/" + productId + "/code/" + productCode);
+    if (res.status === 200) {
+      const resData = await res.data;
+      setProducts(resData);
+    }
+
+  } catch (error) {
+
+
+  }
+
+}
+
+export { searchProducts, fetchSingleProduct, fetchRelatedProducts };

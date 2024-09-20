@@ -177,14 +177,14 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         <div className="grow flex flex-col gap-y-10">
           <div className=" text-lg font-semibold">گام دوم:درج اطلاعات کالا</div>
           <div className="mx-3 grid grid-cols-12 gap-x-3 gap-y-4 items-center">
-            <div className="flex flex-col col-span-6 ">
+            <div className="flex flex-col lg:col-span-6 col-span-12  ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">نام فارسی کالا</span>
               </div>
               <Input iMessage={errors?.productName} name="productName" />
             </div>
-            <div className="flex flex-col col-span-3 ">
+            <div className="flex flex-col lg:col-span-3 col-span-12 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">قیمت</span>

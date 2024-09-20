@@ -79,6 +79,7 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
         bgColor="bg-rose-500"
         txtColor="text-white"
         shape="rounded-lg"
+        
         disabled={loading}
       >
         {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت برند"}

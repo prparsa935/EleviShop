@@ -1,30 +1,36 @@
 import { useEffect, useState } from "react";
 
 const Button = (props) => {
-  const [sizeCss, setSizeCss] = useState(" px-4 py-2 h6 ");
-  const [shapeCss, setShapeCss] = useState(" rounded ");
-
-  useEffect(() => {
-    console.log(props.moreCss);
+  const sizeSetter = () => {
+    if (props.shape === "rounded-full") {
+      return "h6 p-2";
+    }
     if (props.size) {
       const size = props.size;
+
       if (size === "lg") {
-        setSizeCss("px-8 py-3 text-base font-bold ");
+        return "px-8 py-3 text-base font-bold ";
       } else if (size === "md") {
-        setSizeCss("px-6 py-2 text-sm font-semibold");
+        console.log("helooooooooooo");
+        return "px-6 py-2 text-sm font-semibold";
       } else if (size === "sm") {
-        setSizeCss("px-4  py-2 text-sm font-medium");
+        return "px-4  py-2 text-sm font-medium";
       } else if (size === "xs") {
-        setSizeCss("px-4  py-1 text-xs font-normal ");
+        return "px-4  py-1 text-xs font-normal ";
       }
+    } else {
+      return "px-6 py-2 text-sm font-semibold";
     }
+  };
+  const shapeSetter = () => {
     if (props.shape) {
-      setShapeCss(props.shape);
-      if (props.shape === "rounded-full") {
-        setSizeCss("h6 p-2");
-      }
+      return props.shape;
+    } else {
+      return " rounded ";
     }
-  }, []);
+  };
+  const [sizeCss, setSizeCss] = useState(sizeSetter());
+  const [shapeCss, setShapeCss] = useState(shapeSetter());
 
   return (
     <button

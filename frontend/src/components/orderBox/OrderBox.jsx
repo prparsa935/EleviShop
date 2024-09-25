@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
 import productImg from "../../assets/img/947920b7e5d1b87552bff471172eb45237b15a03_1660396852.jpg";
+import { Carousel, CarouselContent, CarouselItem } from "../Carousel/Carousel";
 const OrderBox = ({ order }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-col border cursor-pointer" onClick={() => {
-      navigate("/profile/orders/" + order?.id)
-
-    }}>
+    <div
+      className="flex flex-col border cursor-pointer"
+      onClick={() => {
+        navigate("/profile/orders/" + order?.id);
+      }}
+    >
       {/* header */}
       <div className="flex flex-col border-b  ">
         <div className="flex justify-between items-center gap-y-2    m-4">
@@ -31,23 +34,39 @@ const OrderBox = ({ order }) => {
             <div>
               <span className="text-black">{order?.totalOrderPrice}</span>
               <span className="text-black">تومان</span>
-
             </div>
-
           </div>
           <div className="flex gap-x-2 items-center lg:justify-normal justify-between ">
             <span>تخفیف</span>
             <div>
               <span className="text-black">{order?.totalOrderOffPrice}</span>
               <span className="text-black">تومان</span>
-
             </div>
-
           </div>
         </div>
       </div>
+
+      <Carousel
+        opts={{ direction: "rtl", dragFree: true }}
+        className=" w-full   "
+      >
+        <CarouselContent className={" h-100 py-4 pr-4"}>
+          {order?.orderInventories?.map((orderInventory, index) => (
+            <CarouselItem key={index} className={" px-2  "}>
+              <img
+                className="w-[64px] h-[64px]"
+                src={
+                  imageServerAddress +
+                  orderInventory?.inventory?.product?.mainImage?.filePath
+                }
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
       <div className="flex p-4 gap-x-4">
-        {order?.orderInventories?.map((orderInventory) => {
+        {/* {order?.orderInventories?.map((orderInventory) => {
           return (
             <img
               className="w-[64px] h-[64px]"
@@ -57,7 +76,7 @@ const OrderBox = ({ order }) => {
               }
             />
           );
-        })}
+        })} */}
       </div>
     </div>
   );

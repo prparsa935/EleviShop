@@ -48,7 +48,7 @@ const Product = () => {
       ></ProductImageShow>
       <div className="flex flex-col gap-y-5  mt-7 mx-auto max-w-screen-2xl">
         {/* category path */}
-        <CategoryPath />
+        <CategoryPath categoryPath={product?.mainCategory?.categoryPath} />
         {/* unit product */}
         <ProductUpperSection
           selectedSize={selectedSize}
@@ -104,6 +104,7 @@ const Product = () => {
           product={product}
         ></ProductLowerSection>
       </div>
+      <div className="h-[200px]"></div>
     </div>
   );
 };

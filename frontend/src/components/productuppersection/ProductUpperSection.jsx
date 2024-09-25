@@ -5,10 +5,13 @@ import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import SelectBox from "../selectbox/SelectBox";
 import { imageServerAddress } from "../../App";
-const ProductUpperSection = ({ setImageSiderActive, product,selectedSize,setSelectedSize }) => {
+const ProductUpperSection = ({
+  setImageSiderActive,
+  product,
+  selectedSize,
+  setSelectedSize,
+}) => {
   const [liked, setLiked] = useState(false);
-
-
 
   return (
     <div className="flex flex-col lg:flex-row justify-between">

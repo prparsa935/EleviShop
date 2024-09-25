@@ -34,8 +34,9 @@ const MobileFooter = () => {
         size="md"
         border="none "
         icon={<i class="fa-light fa-objects-column"></i>}
+        onClick={() => navigate("/search")}
       >
-        دسته بندی
+        جست و جو
       </Button>
       <Badge
         position="top-1/2 right-0"
@@ -67,13 +68,15 @@ const MobileFooter = () => {
             ? "text-black"
             : "text-slate-500"
         }
-        onClick={() => navigate("/profile")}
+        onClick={() => {
+          user ? navigate("/profile") : navigate("/login");
+        }}
         col
         size="md"
         border="none "
         icon={<i class="fa-light fa-user"></i>}
       >
-        پروفایل
+        {user ? "پروفایل" : "ورود"}
       </Button>
     </div>
   );

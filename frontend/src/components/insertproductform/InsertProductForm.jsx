@@ -59,21 +59,28 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       });
       currentForm.brandId.value = existingProduct?.brand?.id;
       currentForm.colorId.value = existingProduct?.color?.id;
-      setInventories(() => {
-        return existingProduct?.inventories;
-        // let localInventoryList = [];
+      if (inventories) {
+        setInventories(() => {
+          return existingProduct?.inventories;
+          // let localInventoryList = [];
 
-        // for (inventory of existingProduct?.inventories) {
-        //   existingProduct.inventories;
-        //   localInventoryList.push({
-        //     size: inventory.size,
-        //     quantity: inventory.quantity,
-        //   });
-        // }
-        // return localInventoryList;
-      });
-      setUploadedImages([existingProduct?.images, existingProduct?.mainImage]);
-      setMainImage(existingProduct?.mainImage);
+          // for (inventory of existingProduct?.inventories) {
+          //   existingProduct.inventories;
+          //   localInventoryList.push({
+          //     size: inventory.size,
+          //     quantity: inventory.quantity,
+          //   });
+          // }
+          // return localInventoryList;
+        });
+      }
+
+      setUploadedImages([
+        ...(existingProduct?.images || []),
+        ...(existingProduct?.mainImage?[existingProduct?.mainImage] : []),
+      ]);
+
+      setMainImage(existingProduct?.mainImage || null);
     } catch (error) {
       console.log(error);
     }

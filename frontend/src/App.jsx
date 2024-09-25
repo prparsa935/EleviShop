@@ -31,7 +31,7 @@ const InsertCategory = lazy(() => import("./pages/InsertCategory.jsx"));
 const InsertColor = lazy(() => import("./pages/InsertColor.jsx"));
 const InsertBrand = lazy(() => import("./pages/InsertBrand.jsx"));
 const serverAddress = "https://elevishop.onrender.com/api/";
-const imageServerAddress = "https://elevishop.onrender.com/";
+const imageServerAddress = "https://elevishop.onrender.com";
 
 export { serverAddress, imageServerAddress };
 function App() {

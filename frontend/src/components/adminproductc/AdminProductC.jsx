@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { searchProducts } from "../../api/productApi";
 import SearchSkeleton from "../searchskeleton/SearchSkeleton";
 import Loading from "../icons/Loading";
+import { imageServerAddress } from "../../App";
 const AdminProductC = ({ handleDeleteItem }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -97,11 +98,16 @@ const AdminProductC = ({ handleDeleteItem }) => {
             return (
               <AdminItemBox
                 onDelete={() => handleDeleteItem(product?.id)}
-                onEdit={() => navigate(`/admin/product/save?productId=${product?.id}`)}
+                onEdit={() =>
+                  navigate(`/admin/product/save?productId=${product?.id}`)
+                }
               >
                 <div className="flex items-center">
                   <div>
-                    <img className="w-[80px]" src={productImageTest}></img>
+                    <img
+                      className="w-[80px]"
+                      src={imageServerAddress + product?.mainImage.filePath}
+                    ></img>
                   </div>
                   <h3 className=" lg:font-semibold">{product?.name}</h3>
                 </div>

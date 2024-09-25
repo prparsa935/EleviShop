@@ -4,11 +4,13 @@ import Select from "react-select";
 const SelectBox = (props) => {
   return (
     <Select
+      
       onChange={props.onChange}
       options={props.options}
       placeholder={props.placeHolder}
       className={props.className}
       defaultValue={props.defaultValue}
+      value={props.value}
       isDisabled={props.disabled}
       isLoading={props.isLoading}
       isClearable={props.isClearable}

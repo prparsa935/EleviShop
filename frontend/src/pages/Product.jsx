@@ -21,13 +21,15 @@ import { fetchSingleProduct } from "../api/productApi";
 const Product = () => {
   const { id } = useParams();
   const [imageSiderActive, setImageSiderActive] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(null);
 
   const [product, setProduct] = useState(null);
+  const [selectedSize, setSelectedSize] = useState({
+    label: product?.inventories[0]?.size,
+    value: product?.inventories[0],
+  });
   useEffect(() => {
     fetchSingleProduct(id, setProduct);
   }, [id]);
-
 
   useEffect(() => {
     setSelectedSize({
@@ -50,7 +52,7 @@ const Product = () => {
         {/* unit product */}
         <ProductUpperSection
           selectedSize={selectedSize}
-          setSelectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
           imageSiderActive={imageSiderActive}
           setImageSiderActive={setImageSiderActive}
           product={product}
@@ -98,10 +100,9 @@ const Product = () => {
         </Carousel>
         <ProductLowerSection
           selectedSize={selectedSize}
-          setSelectedSize={selectedSize}
-          product={product}>
-
-        </ProductLowerSection>
+          setSelectedSize={setSelectedSize}
+          product={product}
+        ></ProductLowerSection>
       </div>
     </div>
   );

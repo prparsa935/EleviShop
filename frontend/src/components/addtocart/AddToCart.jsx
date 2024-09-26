@@ -2,6 +2,7 @@ import Tag from "../tag/Tag";
 import Button from "../Button/Button";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
+import { useNavigate } from "react-router";
 
 const AddToCart = ({ className, product, inventory }) => {
   const {
@@ -14,6 +15,7 @@ const AddToCart = ({ className, product, inventory }) => {
     deleteProductFromCart,
   } = useContext(AuthContext);
   const [productInCart, setProductInCart] = useState(null);
+  const navigate=useNavigate()
   useEffect(() => {
     setProductInCart(() => {
       const iProductInCart = findProductInCart(product?.id, inventory?.id);
@@ -71,13 +73,9 @@ const AddToCart = ({ className, product, inventory }) => {
             </div>
           </div>
         </div>
-        <div className=" select-none">
+        <div className=" select-none flex flex-col ">
           {inventory?.quantity === 0 ? (
-            <div className="flex justify-center text-red-500">
-              موجود نیست
-
-
-            </div>
+            <div className="flex justify-center text-red-500">موجود نیست</div>
           ) : !productInCart ? (
             <Button
               onClick={() => {
@@ -96,7 +94,7 @@ const AddToCart = ({ className, product, inventory }) => {
           ) : (
             <div className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center w-20 font-semibold text-lg ">
               {productInCart.productInCart.quantity === inventory?.quantity ? (
-                  <div className="w-2"></div>
+                <div className="w-2"></div>
               ) : (
                 <span
                   onClick={() => {
@@ -107,7 +105,6 @@ const AddToCart = ({ className, product, inventory }) => {
                   +
                 </span>
               )}
-
 
               <span>{productInCart.productInCart.quantity}</span>
 
@@ -121,7 +118,8 @@ const AddToCart = ({ className, product, inventory }) => {
               </span>
             </div>
           )}
-
+          {productInCart?<span onClick={()=>navigate('/cart')} className="lg:hidden p-3  text-green-600  self-end font-semibold " >برو به سبد خرید</span>:<></>}
+         
         </div>
       </div>
     </div>

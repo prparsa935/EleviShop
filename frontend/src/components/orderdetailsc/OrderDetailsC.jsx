@@ -1,12 +1,17 @@
+import { useNavigate } from "react-router";
 import ProductInCartBox from "../productincartbox/ProductInCartBox";
 import ProductInOrderBox from "../productinorderbox/ProductInOrderBox";
 
 const OrderDetailsC = ({ order }) => {
+  const navigate = useNavigate();
   return (
     <div className=" border rounded flex flex-col">
       {/* header */}
       <div className=" border-b  p-5 flex items-center">
-        <i class="ml-2  fa-solid fa-arrow-right"></i>
+        <i
+          onClick={() => navigate("/profile/orders")}
+          class="ml-2  fa-solid fa-arrow-right cursor-pointer"
+        ></i>
         <span className=" font-semibold text-lg">جزیات سفارش</span>
       </div>
       {/* order ovarall details and person details */}
@@ -60,12 +65,15 @@ const OrderDetailsC = ({ order }) => {
         <div className="flex lg:flex-row flex-col lg:gap-x-10 gap-y-3">
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">مبلغ</span>
-            <span className="font-semibold">{order?.totalOrderPrice}</span>
+            <span className="font-semibold">
+              {" "}
+              {order?.totalOrderPrice} تومان
+            </span>
           </div>
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">سود شما از خرید</span>
             <div className="flex gap-x-1 font-semibold">
-              {order?.totalOrderOffPrice}
+              {order?.totalOrderOffPrice} تومان
               {/* <span>۱۸</span>
               <span> شهریور</span>
               <span>۱۳۹۷</span> */}

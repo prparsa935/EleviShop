@@ -5,13 +5,19 @@ import MobileFooter from "../components/mobilefooter/MobileFooter";
 import ProfileSidebar from "../components/profilesidebar/ProfileSidebar";
 import fetchSingleItem from "../api/fetchSingleItem";
 import OrderDetailsC from "../components/orderdetailsc/OrderDetailsC";
+import PageLoading from "../components/pageloading/PageLoading";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetchSingleItem("order/id/", orderId, setOrder);
+    setLoading(true);
+    fetchSingleItem("order/id/", orderId, setOrder, setLoading);
   }, [orderId]);
+  if (loading) {
+    return <PageLoading></PageLoading>;
+  }
   return (
     <div className="profile-page">
       <NavBar />

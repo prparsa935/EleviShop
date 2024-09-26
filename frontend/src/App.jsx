@@ -9,6 +9,7 @@ import { Route, Router, Routes, BrowserRouter } from "react-router-dom";
 import NavBar from "./components/navbar/NavBar.jsx";
 import MobileFooter from "./components/mobilefooter/MobileFooter.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import PageLoading from "./components/pageloading/PageLoading.jsx";
 
 const Product = lazy(() => import("./pages/Product.jsx"));
 const Home = lazy(() => import("./pages/Home.jsx"));
@@ -42,7 +43,7 @@ function App() {
           <Route
             path="/"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Home></Home>
               </Suspense>
             }
@@ -50,7 +51,7 @@ function App() {
           <Route
             path="/search"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Search></Search>
               </Suspense>
             }
@@ -58,7 +59,7 @@ function App() {
           <Route
             path="/product/:id"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Product></Product>
               </Suspense>
             }
@@ -66,7 +67,7 @@ function App() {
           <Route
             path="/login"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Login></Login>
               </Suspense>
             }
@@ -74,7 +75,7 @@ function App() {
           <Route
             path="/register"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Register></Register>
               </Suspense>
             }
@@ -82,7 +83,7 @@ function App() {
           <Route
             path="/cart"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Cart></Cart>
               </Suspense>
             }
@@ -90,7 +91,7 @@ function App() {
           <Route
             path="/payment"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Payment></Payment>
               </Suspense>
             }
@@ -98,7 +99,7 @@ function App() {
           <Route
             path="/profile"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Profile></Profile>
               </Suspense>
             }
@@ -106,7 +107,7 @@ function App() {
           <Route
             path="/profile/orders"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Orders></Orders>
               </Suspense>
             }
@@ -114,7 +115,7 @@ function App() {
           <Route
             path="/profile/orders/:orderId"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <OrderDetails></OrderDetails>
               </Suspense>
             }
@@ -122,7 +123,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <Admin></Admin>
               </Suspense>
             }
@@ -130,7 +131,7 @@ function App() {
           <Route
             path="/admin/brand"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <AdminBrand></AdminBrand>
               </Suspense>
             }
@@ -146,7 +147,7 @@ function App() {
           <Route
             path="/admin/category"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <AdminCategory></AdminCategory>
               </Suspense>
             }
@@ -154,7 +155,7 @@ function App() {
           <Route
             path="/admin/product"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <AdminProduct></AdminProduct>
               </Suspense>
             }
@@ -163,7 +164,7 @@ function App() {
           <Route
             path="/admin/product/save"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <InsertProduct></InsertProduct>
               </Suspense>
             }
@@ -171,7 +172,7 @@ function App() {
           <Route
             path="/admin/category/save"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <InsertCategory></InsertCategory>
               </Suspense>
             }
@@ -179,7 +180,7 @@ function App() {
           <Route
             path="/admin/color/save"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <InsertColor></InsertColor>
               </Suspense>
             }
@@ -187,7 +188,7 @@ function App() {
           <Route
             path="/admin/brand/save"
             element={
-              <Suspense>
+              <Suspense fallback={<PageLoading></PageLoading>}>
                 <InsertBrand></InsertBrand>
               </Suspense>
             }

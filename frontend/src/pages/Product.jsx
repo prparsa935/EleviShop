@@ -18,17 +18,20 @@ import ProductImageShow from "../components/productimageshow/ProductImageShow";
 
 import ProductLowerSection from "../components/productlowersection/ProductLowerSection";
 import { fetchSingleProduct } from "../api/productApi";
+import PageLoading from "../components/pageloading/PageLoading";
 const Product = () => {
   const { id } = useParams();
   const [imageSiderActive, setImageSiderActive] = useState(false);
 
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState({
     label: product?.inventories[0]?.size,
     value: product?.inventories[0],
   });
   useEffect(() => {
-    fetchSingleProduct(id, setProduct);
+    setLoading(true)
+    fetchSingleProduct(id, setProduct, setLoading);
   }, [id]);
 
   useEffect(() => {
@@ -37,7 +40,9 @@ const Product = () => {
       value: product?.inventories[0],
     });
   }, [product]);
-
+  if (loading) {
+    return <PageLoading></PageLoading>;
+  }
   return (
     <div className="product-page">
       <NavBar />

@@ -1,11 +1,13 @@
 import Axios from "axios";
 import { serverAddress } from "../App";
 
-const findOrderByState = async (state, setOrders, setToastList) => {
+const findOrderByState = async (state, setOrders, setToastList, setLoading) => {
   try {
+    console.log("afterfetch");
     const response = await Axios.get(serverAddress + "order/" + state);
 
     if (response.status === 200) {
+      console.log("setorders");
       setOrders(response.data);
     }
   } catch (error) {
@@ -35,6 +37,9 @@ const findOrderByState = async (state, setOrders, setToastList) => {
         ];
       });
     }
+  } finally {
+    console.log("loading");
+    setLoading(false);
   }
 };
 export { findOrderByState };

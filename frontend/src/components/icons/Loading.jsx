@@ -10,7 +10,7 @@ const Loading = (props) => {
       <svg
         aria-hidden="true"
         class={
-          " text-gray-200 animate-spin dark:text-gray-600 fill-blue-600 " +
+          " text-gray-400 animate-spin dark:text-gray-600  fill-red-500 " +
           props.className
         }
         viewBox="0 0 100 101"

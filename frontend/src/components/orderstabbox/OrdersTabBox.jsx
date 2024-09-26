@@ -3,15 +3,7 @@ import OrderBox from "../orderBox/OrderBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ordertab/OrderTab";
 import { findOrderByState } from "../../api/order";
 
-const OrdersTabBox = ({ setToastList }) => {
-  const [currentOrders, setCurrentOrders] = useState([]);
-  const [deliveredOrders, setDeliveredOrders] = useState([]);
-  const [canceledOrders, setCanceledOrders] = useState([]);
-  useEffect(() => {
-    findOrderByState("current", setCurrentOrders, setToastList);
-    findOrderByState("canceled", setCanceledOrders, setToastList);
-    findOrderByState("delivered", setDeliveredOrders, setToastList);
-  }, []);
+const OrdersTabBox = ({ currentOrders, deliveredOrders, canceledOrders }) => {
   return (
     <div className="border p-4 flex flex-col">
       <div className="mb-10">
@@ -60,7 +52,7 @@ const OrdersTabBox = ({ setToastList }) => {
             {deliveredOrders?.map((order) => {
               return <OrderBox order={order} />;
             })}
-            <OrderBox  />
+            <OrderBox />
           </div>
         </TabsContent>
         <TabsContent data-state="active" value="canceled">

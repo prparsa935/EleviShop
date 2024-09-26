@@ -39,7 +39,7 @@ const searchProducts = async (
     }
   }
 };
-const fetchSingleProduct = async (productId, setProduct) => {
+const fetchSingleProduct = async (productId, setProduct,setLoading) => {
   try {
     const res = await Axios.get(serverAddress + "product/id/" + productId);
     if (res.status === 200) {
@@ -50,6 +50,9 @@ const fetchSingleProduct = async (productId, setProduct) => {
 
   } catch (error) {
 
+  }
+  finally{
+    setLoading(false)
   }
 
 };

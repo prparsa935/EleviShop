@@ -34,14 +34,14 @@ const ProductInCartBox = ({ productInCart, key }) => {
             }}
             className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center cursor-pointer select-none "
           >
-            {productInCart.productInCart.quantity === productInCart?.productInCart.inventory.quantity ? (
+            {productInCart?.productInCart?.quantity === productInCart?.productInCart?.inventory?.quantity ? (
               <div className="w-2"></div>
             ) : (
               <span
                 onClick={() => {
                   sumProductInCart(
                     productInCart,
-                    productInCart?.productInCart.inventory.quantity
+                    productInCart?.productInCart?.inventory?.quantity
                   );
                 }}
               >

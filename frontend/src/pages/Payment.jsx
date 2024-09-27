@@ -12,6 +12,7 @@ import AddressInOrder from "../components/addressinorder/AddressInOrder";
 import Alert from "../components/alert/Alert";
 import PersonInformaionForm from "../components/personinformationform/PersonInformaionForm";
 import { getPerson } from "../api/personApi";
+import PageLoading from "../components/pageloading/PageLoading";
 const Payment = () => {
   const { access } = useContext(AuthContext);
   const [person, setPerson] = useState(null);
@@ -29,15 +30,20 @@ const Payment = () => {
   });
 
   const [personFormModalActive, setPersonFormModalActive] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setLoading(true);
+    updateShoppingCart(setLoading);
+  }, []);
   useEffect(() => {
     getPerson(setPerson, setErrors, setToastList);
-    updateShoppingCart();
   }, [personFormModalActive]);
   useEffect(() => {
     calculatePrice(setPrice);
   }, [shoppingCart]);
-
+  if (loading) {
+    return <PageLoading></PageLoading>;
+  }
   return (
     <div className="payment-page ">
       {/* alerts container */}

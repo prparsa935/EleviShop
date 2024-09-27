@@ -28,49 +28,57 @@ const AuthProvider = (props) => {
   const url = useLocation();
   // todo not first time
   useDidUpdateEffect(() => {
-    console.log(shoppingCart);
     // window.localStorage.removeItem("shoppingCart");
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
-  const updateShoppingCart = async () => {
-    console.log("hello im updating");
+  const updateShoppingCart = async (setLoading) => {
     let productInCartIndex = 0;
     let invalidList = [];
+    try {
+      // Set loading to true before starting the operation
+      const checkPromises = shoppingCart.map(async (productInCart, index) => {
+        await checkItemInCart(productInCart, index, invalidList);
+      });
 
-    for (const productInCart of shoppingCart) {
-      const res = await Axios.get(
-        serverAddress + "product/id/" + productInCart.product.id
-      );
-      if (res.status === 200) {
-        const product = await res.data;
-        const iSelectedInventory = product?.inventories.find((inventory) => {
-          return inventory.id === productInCart.inventory.id;
-        });
-
-        if (
-          isProductInCartValid(
-            iSelectedInventory?.quantity,
-            productInCart?.quantity
-          ) ||
-          iSelectedInventory?.quantity !== 0
-        ) {
-          updateItemInCart(
-            productInCartIndex,
-            productInCart,
-            product,
-            iSelectedInventory
-          );
-        } else {
-          invalidList.push(iSelectedInventory.id);
-        }
-      } else {
-        console.log("hello");
-      }
-      productInCartIndex += 1;
+      await Promise.all(checkPromises); // Wait for all checkItemInCart calls to complete
+      deleteInvalidItems(invalidList);
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
-    deleteInvalidItems(invalidList);
-    console.log(shoppingCart);
-    console.log(invalidList);
+  };
+  const checkItemInCart = async (
+    productInCart,
+    productInCartIndex,
+    invalidList
+  ) => {
+    const res = await Axios.get(
+      serverAddress + "product/id/" + productInCart.product.id
+    );
+    if (res.status === 200) {
+      const product = await res.data;
+      const iSelectedInventory = product?.inventories.find((inventory) => {
+        return inventory.id === productInCart.inventory.id;
+      });
+
+      if (
+        isProductInCartValid(
+          iSelectedInventory?.quantity,
+          productInCart?.quantity
+        ) ||
+        iSelectedInventory?.quantity !== 0
+      ) {
+        updateItemInCart(
+          productInCartIndex,
+          productInCart,
+          product,
+          iSelectedInventory
+        );
+      } else {
+        invalidList.push(iSelectedInventory.id);
+      }
+    } else {
+    }
   };
   const updateItemInCart = (
     productInCartIndex,

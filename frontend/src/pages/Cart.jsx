@@ -5,6 +5,7 @@ import ProductInCartBox from "../components/productincartbox/ProductInCartBox";
 import SubmitCartBox from "../components/submitcartbox/SubmitCartBox";
 import AuthContext from "../context/AuthContext";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
+import PageLoading from "../components/pageloading/PageLoading";
 
 const Cart = () => {
   const { shoppingCart, updateShoppingCart, calculatePrice } =
@@ -14,14 +15,18 @@ const Cart = () => {
     totalPrice: 0,
     totalOff: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    updateShoppingCart();
+    setLoading(true);
+    updateShoppingCart(setLoading);
   }, []);
   useEffect(() => {
     calculatePrice(setPrice);
   }, [shoppingCart]);
-
+  if (loading) {
+     return <PageLoading></PageLoading>;
+  }
   return (
     <div className="cart-page">
       <NavBar />

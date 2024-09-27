@@ -20,6 +20,7 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
   const existingBrandFormSetter = () => {
     try {
       const currentForm = form.current;
+
       currentForm.name.value = existingBrand.name;
       currentForm.explanation.value = existingBrand.explanation;
     } catch (error) {}
@@ -51,6 +52,7 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
   useDidUpdateEffect(existingBrandFormSetter, [existingBrand]);
   return (
     <form
+      ref={form}
       onSubmit={submitFormHandler}
       className="insert-product-form flex flex-col gap-y-10"
     >
@@ -79,7 +81,6 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
         bgColor="bg-rose-500"
         txtColor="text-white"
         shape="rounded-lg"
-        
         disabled={loading}
       >
         {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت برند"}

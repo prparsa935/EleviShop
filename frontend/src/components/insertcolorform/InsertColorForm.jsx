@@ -17,6 +17,7 @@ const InsertColorForm = ({ errors, setToastList, setErrors }) => {
   const existingColorFormSetter = () => {
     try {
       const currentForm = form.current;
+  
       currentForm.name.value = existingColor.name;
       currentForm.hexCode.value = existingColor.hexCode;
     } catch (error) {}

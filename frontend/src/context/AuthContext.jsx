@@ -31,17 +31,27 @@ const AuthProvider = (props) => {
     // window.localStorage.removeItem("shoppingCart");
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
+
   const updateShoppingCart = async (setLoading) => {
-    let productInCartIndex = 0;
     let invalidList = [];
+    let lShoppingCart = JSON.parse(JSON.stringify(shoppingCart));
     try {
       // Set loading to true before starting the operation
       const checkPromises = shoppingCart.map(async (productInCart, index) => {
-        await checkItemInCart(productInCart, index, invalidList);
+        return await checkItemInCart(
+          productInCart,
+          index,
+          invalidList,
+          lShoppingCart
+        );
       });
-
-      await Promise.all(checkPromises); // Wait for all checkItemInCart calls to complete
-      deleteInvalidItems(invalidList);
+      console.log("this");
+      await Promise.all(checkPromises);
+      console.log(invalidList);
+      console.log(lShoppingCart);
+      console.log("process ended"); // Wait for all checkItemInCart calls to complete
+      deleteInvalidItems(invalidList,lShoppingCart);
+      setShoppingCart(lShoppingCart)
     } catch (error) {
     } finally {
       setLoading(false);
@@ -50,7 +60,8 @@ const AuthProvider = (props) => {
   const checkItemInCart = async (
     productInCart,
     productInCartIndex,
-    invalidList
+    invalidList,
+    lShoppingCart
   ) => {
     const res = await Axios.get(
       serverAddress + "product/id/" + productInCart.product.id
@@ -72,7 +83,8 @@ const AuthProvider = (props) => {
           productInCartIndex,
           productInCart,
           product,
-          iSelectedInventory
+          iSelectedInventory,
+          lShoppingCart
         );
       } else {
         invalidList.push(iSelectedInventory.id);
@@ -84,40 +96,37 @@ const AuthProvider = (props) => {
     productInCartIndex,
     productInCart,
     product,
-    iSelectedInventory
+    iSelectedInventory,
+    lShoppingCart
   ) => {
-    setShoppingCart((prev) => {
-      console.log(prev);
-      console.log(productInCartIndex);
-      console.log(prev[productInCartIndex]);
-      prev[productInCartIndex]["product"] = product;
-      prev[productInCartIndex]["inventory"] = iSelectedInventory;
-      if (
-        iSelectedInventory?.quantity !== 0 &&
-        !isProductInCartValid(
-          iSelectedInventory?.quantity,
-          productInCart?.quantity
-        )
-      ) {
-        prev[productInCartIndex]["quantity"] = iSelectedInventory?.quantity;
-      }
-      return JSON.parse(JSON.stringify(prev));
-    });
+    console.log(lShoppingCart);
+    console.log(productInCartIndex);
+    console.log(lShoppingCart[productInCartIndex]);
+    lShoppingCart[productInCartIndex]["product"] = product;
+    lShoppingCart[productInCartIndex]["inventory"] = iSelectedInventory;
+    if (
+      iSelectedInventory?.quantity !== 0 &&
+      !isProductInCartValid(
+        iSelectedInventory?.quantity,
+        productInCart?.quantity
+      )
+    ) {
+      lShoppingCart[productInCartIndex]["quantity"] =
+        iSelectedInventory?.quantity;
+    }
   };
-  const deleteInvalidItems = (invalidList) => {
+  const deleteInvalidItems = (invalidList, lShoppingCart) => {
     console.log("deleteing invalid shit");
-    setShoppingCart((prev) => {
-      for (const invalidItemId of invalidList) {
-        const invalidItemIndex = prev?.findIndex((iProductInCart) => {
-          return iProductInCart.inventory?.id === invalidItemId;
-        });
-        console.log(prev);
-        console.log(invalidItemIndex);
 
-        prev.splice(invalidItemIndex, 1);
-      }
-      return JSON.parse(JSON.stringify(prev));
-    });
+    for (const invalidItemId of invalidList) {
+      const invalidItemIndex = lShoppingCart?.findIndex((iProductInCart) => {
+        return iProductInCart.inventory?.id === invalidItemId;
+      });
+      console.log(lShoppingCart);
+      console.log(invalidItemIndex);
+
+      lShoppingCart.splice(invalidItemIndex, 1);
+    }
   };
   const calculatePrice = (setPrice) => {
     let price = { totalPurePrice: 0, totalPrice: 0, totalOff: 0 };

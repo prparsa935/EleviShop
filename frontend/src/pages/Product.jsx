@@ -1,5 +1,5 @@
 import CategoryPath from "../components/categorypath/CategoryPath";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 // import product from '../jsons/product.json'
@@ -19,27 +19,50 @@ import ProductImageShow from "../components/productimageshow/ProductImageShow";
 import ProductLowerSection from "../components/productlowersection/ProductLowerSection";
 import { fetchSingleProduct } from "../api/productApi";
 import PageLoading from "../components/pageloading/PageLoading";
+import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
+import AuthContext from "../context/AuthContext";
 const Product = () => {
   const { id } = useParams();
   const [imageSiderActive, setImageSiderActive] = useState(false);
-
+  const { shoppingCart } = useContext(AuthContext);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedSize, setSelectedSize] = useState({
-    label: product?.inventories[0]?.size,
-    value: product?.inventories[0],
-  });
+  const [selectedSize, setSelectedSize] = useState();
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     fetchSingleProduct(id, setProduct, setLoading);
   }, [id]);
-
-  useEffect(() => {
-    setSelectedSize({
-      label: product?.inventories[0]?.size,
-      value: product?.inventories[0],
+  useDidUpdateEffect(() => {
+    let lastAvailableInv = null;
+    const inventory = product?.inventories?.find((inventory) => {
+      const productInCartIndex = shoppingCart.findIndex((productInCart) => {
+        return productInCart.inventory.id === inventory.id;
+      });
+      console.log(inventory.quantity);
+      if (inventory.quantity !== 0) {
+        lastAvailableInv = inventory;
+      }
+      return productInCartIndex !== -1;
     });
+
+    if (inventory) {
+      setSelectedSize({
+        label: inventory.size,
+        value: inventory,
+      });
+    } else if (lastAvailableInv) {
+      setSelectedSize({
+        label: lastAvailableInv.size,
+        value: lastAvailableInv,
+      });
+    } else {
+      setSelectedSize({
+        label: product?.inventories[0]?.size,
+        value: product?.inventories[0],
+      });
+    }
   }, [product]);
+
   if (loading) {
     return <PageLoading></PageLoading>;
   }

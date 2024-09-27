@@ -34,7 +34,7 @@ const InsertBrandForm = ({ errors, setToastList, setErrors }) => {
     setLoading(true);
     formApiHandler(
       searchParams.get("brandId")
-        ? "brand/admin/apdate/" + searchParams.get("brandId")
+        ? "brand/admin/update/" + searchParams.get("brandId")
         : "brand/admin/save",
       {
         name: name,

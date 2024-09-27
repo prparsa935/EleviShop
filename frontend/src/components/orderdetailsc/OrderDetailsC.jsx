@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import ProductInCartBox from "../productincartbox/ProductInCartBox";
 import ProductInOrderBox from "../productinorderbox/ProductInOrderBox";
+import { formatNumber } from "../../utils/helperMehods";
 
 const OrderDetailsC = ({ order }) => {
   const navigate = useNavigate();
@@ -67,13 +68,13 @@ const OrderDetailsC = ({ order }) => {
             <span className=" text-slate-500 ">مبلغ</span>
             <span className="font-semibold">
               {" "}
-              {order?.totalOrderPrice} تومان
+              {formatNumber(order?.totalOrderPrice)} تومان
             </span>
           </div>
           <div className="flex gap-x-2 items-center justify-between">
             <span className=" text-slate-500 ">سود شما از خرید</span>
             <div className="flex gap-x-1 font-semibold">
-              {order?.totalOrderOffPrice} تومان
+              {formatNumber(order?.totalOrderOffPrice)} تومان
               {/* <span>۱۸</span>
               <span> شهریور</span>
               <span>۱۳۹۷</span> */}

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Button from "../Button/Button";
 import AuthContext from "../../context/AuthContext";
 import formApiHandler from "../../api/form";
+import { formatNumber } from "../../utils/helperMehods";
 
 const SubmitOrderBox = ({ price, setToastList, setErrors }) => {
   const { shoppingCart } = useContext(AuthContext);
@@ -11,21 +12,21 @@ const SubmitOrderBox = ({ price, setToastList, setErrors }) => {
       <div className="lg:flex   hidden justify-between text-neutral-500 font-semibold border-b-2 py-3  ">
         <span>قیمت کالا ها </span>
         <div>
-          <span className="ml-1">{price?.totalPurePrice}</span>
+          <span className="ml-1">{formatNumber(price?.totalPurePrice)}</span>
           <span>تومان</span>
         </div>
       </div>
       <div className="lg:flex hidden justify-between  items-center  font-semibold  border-b-2  py-3   ">
         <span>هزینه ارسال</span>
         <div>
-          <span className="ml-1">{49000}</span>
+          <span className="ml-1">{formatNumber(49000)}</span>
           <span>تومان</span>
         </div>
       </div>
       <div className="flex lg:flex-row flex-col justify-between items-center lg:order-none order-2  font-semibold border-b-2 text-neutral-500 py-3    ">
         <span>قابل پرداخت</span>
         <div>
-          <span className="ml-1">{price?.totalPrice + 49000}</span>
+          <span className="ml-1">{formatNumber(price?.totalPrice + 49000)}</span>
           <span>تومان</span>
         </div>
       </div>

@@ -46,5 +46,9 @@ const deleteInvetory = (size, inventories, setInventories) => {
     });
   }
 };
+const formatNumber = (num) => {
+  const persianNumber = num?.toLocaleString('fa-IR');
+  return persianNumber;
+};
 
-export { getFieldMessage, insertInventory, deleteInvetory };
+export { getFieldMessage, insertInventory, deleteInvetory ,formatNumber};

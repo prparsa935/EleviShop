@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Button from "../Button/Button";
 import { useNavigate } from "react-router";
+import { formatNumber } from "../../utils/helperMehods";
 
 const SubmitCartBox = ({price}) => {
   const navigate=useNavigate()
@@ -9,21 +10,21 @@ const SubmitCartBox = ({price}) => {
       <div className="lg:flex   hidden justify-between text-neutral-500 font-semibold  ">
         <span>قیمت کالا ها </span>
         <div>
-          <span className="ml-1">{price?.totalPurePrice}</span>
+          <span className="ml-1">{formatNumber(price?.totalPurePrice)}</span>
           <span>تومان</span>
         </div>
       </div>
       <div className="flex lg:flex-row flex-col justify-between items-center  font-semibold lg:order-none order-2  ">
         <span>جمع سبد خرید</span>
         <div>
-          <span className="ml-1">{price?.totalPrice}</span>
+          <span className="ml-1">{formatNumber(price?.totalPrice)}</span>
           <span>تومان</span>
         </div>
       </div>
       <div className="lg:flex hidden justify-between text-rose-600 font-semibold   ">
         <span>سود شما از خرید</span>
         <div>
-          <span className="ml-1">{price?.totalOff}</span>
+          <span className="ml-1">{formatNumber(price?.totalOff)}</span>
           <span>تومان</span>
         </div>
       </div>

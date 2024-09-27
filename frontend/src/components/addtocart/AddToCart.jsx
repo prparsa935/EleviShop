@@ -3,6 +3,7 @@ import Button from "../Button/Button";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { useNavigate } from "react-router";
+import { formatNumber } from "../../utils/helperMehods";
 
 const AddToCart = ({ className, product, inventory }) => {
   const {
@@ -15,7 +16,7 @@ const AddToCart = ({ className, product, inventory }) => {
     deleteProductFromCart,
   } = useContext(AuthContext);
   const [productInCart, setProductInCart] = useState(null);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     setProductInCart(() => {
       const iProductInCart = findProductInCart(product?.id, inventory?.id);
@@ -56,7 +57,7 @@ const AddToCart = ({ className, product, inventory }) => {
           <div className="flex flex-col ">
             <div className="flex align-bottom ">
               <span className="line-through mx-3 text-xs text-slate-400 flex items-center">
-                ۲۳۰,۰۰۰
+                {formatNumber(product?.price)}
               </span>
               <Tag
                 size="xs"
@@ -64,11 +65,13 @@ const AddToCart = ({ className, product, inventory }) => {
                 txtColor="text-white"
                 morCss=""
               >
-                ۵۷٪
+                {formatNumber(product?.offPercent)} %
               </Tag>
             </div>
             <div className=" font-bold">
-              <span className="mx-1  text-lg">۹۷,۰۰۰</span>
+              <span className="mx-1  text-lg tracking-wide">
+                {formatNumber(((100 - product?.offPercent)/100) * product?.price)}
+              </span>
               <span>تومان</span>
             </div>
           </div>
@@ -106,7 +109,7 @@ const AddToCart = ({ className, product, inventory }) => {
                 </span>
               )}
 
-              <span>{productInCart.productInCart.quantity}</span>
+              <span>{formatNumber(productInCart.productInCart.quantity)}</span>
 
               <span
                 onClick={() => {
@@ -118,8 +121,16 @@ const AddToCart = ({ className, product, inventory }) => {
               </span>
             </div>
           )}
-          {productInCart?<span onClick={()=>navigate('/cart')} className="lg:hidden p-3  text-green-600  self-end font-semibold " >برو به سبد خرید</span>:<></>}
-         
+          {productInCart ? (
+            <span
+              onClick={() => navigate("/cart")}
+              className="lg:hidden p-3  text-green-600  self-end font-semibold "
+            >
+              برو به سبد خرید
+            </span>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

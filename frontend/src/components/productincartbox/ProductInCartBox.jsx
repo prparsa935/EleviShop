@@ -5,6 +5,7 @@ import specialSellImage from "../../assets/img/SpecialSell.svg";
 import AuthContext from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
+import { formatNumber } from "../../utils/helperMehods";
 
 const ProductInCartBox = ({ productInCart, key }) => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const ProductInCartBox = ({ productInCart, key }) => {
             )}
 
 
-            <span>{productInCart?.productInCart?.quantity}</span>
+            <span>{formatNumber(productInCart?.productInCart?.quantity)}</span>
 
             <span
               onClick={() => {
@@ -75,12 +76,12 @@ const ProductInCartBox = ({ productInCart, key }) => {
           </div>
           <div>
             <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
-              <span>{productInCart?.productInCart?.product?.offPercent}</span>
+              <span>{formatNumber(productInCart?.productInCart?.product?.offPercent)}</span>
               <span>%</span>
               <span>تخفیف</span>
             </div>
             <div className=" flex text-lg gap-x-1  mt-3 font-semibold">
-              <span>{productInCart?.productInCart?.product?.price}</span>
+              <span>{formatNumber(productInCart?.productInCart?.product?.price)}</span>
               <span>تومان</span>
             </div>
           </div>

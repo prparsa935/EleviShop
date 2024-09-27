@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
 import productImg from "../../assets/img/947920b7e5d1b87552bff471172eb45237b15a03_1660396852.jpg";
 import { Carousel, CarouselContent, CarouselItem } from "../Carousel/Carousel";
+import { formatNumber } from "../../utils/helperMehods";
 const OrderBox = ({ order }) => {
   const navigate = useNavigate();
   return (
@@ -23,24 +24,26 @@ const OrderBox = ({ order }) => {
 
         <div className="flex lg:flex-row flex-col text-neutral-400 gap-x-4 gap-y-2 m-4 lg:text-sm  text-xs">
           <div className="flex gap-x-2 items-center">
-            {order?.faDateCreated}
+            {formatNumber(order?.faDateCreated)}
           </div>
           <div className="flex gap-x-2 items-center lg:justify-normal justify-between ">
             <span>کد سفارش</span>
-            <span className="text-black">{order?.trackingCode}</span>
+            <span className="text-black">
+              {formatNumber(order?.trackingCode)}
+            </span>
           </div>
           <div className="flex gap-x-2 items-center lg:justify-normal justify-between">
             <span>مبلغ</span>
             <div>
-              <span className="text-black">{order?.totalOrderPrice}</span>
+              <span className="text-black">{formatNumber(order?.totalOrderPrice)}</span>
               <span className="text-black">تومان</span>
             </div>
           </div>
           <div className="flex gap-x-2 items-center lg:justify-normal justify-between ">
             <span>تخفیف</span>
-            <div>
-              <span className="text-black">{order?.totalOrderOffPrice}</span>
-              <span className="text-black">تومان</span>
+            <div className="">
+              <span className="text-black">{formatNumber(order?.totalOrderOffPrice)}</span>
+              <span className="text-black">تومان </span>
             </div>
           </div>
         </div>

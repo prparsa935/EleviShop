@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
+import { formatNumber } from "../../utils/helperMehods";
 
 const ProductInOrderBox = ({ orderInventory }) => {
   const navigate = useNavigate();
@@ -44,12 +45,12 @@ const ProductInOrderBox = ({ orderInventory }) => {
           </div>
           <div>
             <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
-              <span>{orderInventory?.singleProductOffPercent}</span>
+              <span>{formatNumber(orderInventory?.singleProductOffPercent)}</span>
               <span>%</span>
               <span>تخفیف</span>
             </div>
             <div className=" flex text-lg gap-x-1  mt-3 font-semibold">
-              <span>{orderInventory?.singleProductPrice}</span>
+              <span>{formatNumber(orderInventory?.singleProductPrice)}</span>
               <span>تومان</span>
             </div>
           </div>

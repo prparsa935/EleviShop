@@ -1,7 +1,17 @@
 import Axios from "axios";
 import { serverAddress } from "../App";
 import formApiHandler from "./form";
-
+const fetchOffProducts = async (setProducts) => {
+  try {
+    const res = await Axios.get(serverAddress + "product", {
+      params: { enableOff: true, pageNumber: 1 },
+    });
+    if (res.status === 200) {
+      const resData = await res.data;
+      setProducts(resData);
+    }
+  } catch (error) {}
+};
 const searchProducts = async (
   searchParams,
   productList,
@@ -39,7 +49,7 @@ const searchProducts = async (
     }
   }
 };
-const fetchSingleProduct = async (productId, setProduct,setLoading) => {
+const fetchSingleProduct = async (productId, setProduct, setLoading) => {
   try {
     const res = await Axios.get(serverAddress + "product/id/" + productId);
     if (res.status === 200) {
@@ -47,28 +57,26 @@ const fetchSingleProduct = async (productId, setProduct,setLoading) => {
       console.log(resData);
       setProduct(resData);
     }
-
   } catch (error) {
-
+  } finally {
+    setLoading(false);
   }
-  finally{
-    setLoading(false)
-  }
-
 };
 const fetchRelatedProducts = async (productId, productCode, setProducts) => {
   try {
-    const res = await Axios.get(serverAddress + "product/id/" + productId + "/code/" + productCode);
+    const res = await Axios.get(
+      serverAddress + "product/id/" + productId + "/code/" + productCode
+    );
     if (res.status === 200) {
       const resData = await res.data;
       setProducts(resData);
     }
+  } catch (error) {}
+};
 
-  } catch (error) {
-
-
-  }
-
-}
-
-export { searchProducts, fetchSingleProduct, fetchRelatedProducts };
+export {
+  searchProducts,
+  fetchSingleProduct,
+  fetchRelatedProducts,
+  fetchOffProducts,
+};

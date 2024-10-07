@@ -10,9 +10,9 @@ import {
   CarouselPrevious,
 } from "../Carousel/Carousel";
 import { useEffect, useState } from "react";
-const OffProductsSlider = () => {
-  const [offProducts, setOffProducts] = useState([]);
-
+import { formatNumber } from "../../utils/helperMehods";
+import { imageServerAddress } from "../../App";
+const OffProductsSlider = ({ offProducts }) => {
   return (
     <div className=" mx-auto container max-w-screen-xl ">
       <Carousel
@@ -27,7 +27,7 @@ const OffProductsSlider = () => {
               <img src={image}></img>
             </div>
           </CarouselItem>
-          {Array.from({ length: 10 }).map((_, index) => (
+          {offProducts?.map((product, index) => (
             <CarouselItem
               key={index}
               className={
@@ -37,10 +37,12 @@ const OffProductsSlider = () => {
               }
             >
               <div className={" w-[114px] h-[114px] md:w-[132px] md:h-[132px]"}>
-                <img src={productImageTest}></img>
+                <img
+                  src={imageServerAddress + product?.mainImage?.filePath}
+                ></img>
               </div>
               <div className="w-[114px]  md:w-[132px] h-[42px] overflow-hidden text-xs text-slate-500 font-semibold">
-                قرص سلنیوم پلاس او پی دی فارما بسته 60 عددی
+                {product?.name}
               </div>
               <div className="flex justify-between items-center mb-3">
                 <Tag
@@ -49,9 +51,11 @@ const OffProductsSlider = () => {
                   morCss="text-sm font-basic"
                   size="xs"
                 >
-                  ۸۴٪
+                  {formatNumber(product?.offPercent)}%
                 </Tag>
-                <div className=" font-bold text-xs">۲۳.۸۱۰ تومان</div>
+                <div className=" font-bold text-xs">
+                  {formatNumber(product?.price)} تومان
+                </div>
               </div>
             </CarouselItem>
           ))}

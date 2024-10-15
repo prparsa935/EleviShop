@@ -17,10 +17,10 @@ const Login = () => {
   const loginSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    const username = form.get("username");
-    const password = form.get("password");
+    const phoneNumber = form.get("phoneNumber");
+
     setLoading(true);
-    login(username, password, setErrors, setToastList, setLoading);
+    login(phoneNumber, setErrors, setToastList, setLoading);
   };
   useEffect(() => {
     if (user !== null) {
@@ -69,21 +69,12 @@ const Login = () => {
           </div>
           <div className=" text-sm text-slate-600 mt-5 flex flex-col gap-y-1">
             <span>سلام!</span>
-            <span>لطفا نام کاربری خود را وارد کنید</span>
+            <span>لطفا شماره همراه خود را وارد کنید</span>
           </div>
           <div className="mt-2">
-            <Input iMessage={errors?.username} name="username"></Input>
+            <Input iMessage={errors?.phoneNumber} name="phoneNumber"></Input>
           </div>
-          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
-            <span>لطفا کلمه عبور خود را وارد کنید</span>
-          </div>
-          <div className="mt-2">
-            <Input
-              iMessage={errors?.password}
-              name="password"
-              type="password"
-            ></Input>
-          </div>
+
           <div className="mt-7">
             <Button
               bgColor="bg-rose-500"
@@ -105,16 +96,6 @@ const Login = () => {
 
           <div className="text-xs mt-6 flex justify-center text-slate-500">
             ورود شما به معنای پذیرش شرایط دیجی‌کالاو قوانین حریم‌خصوصی است
-          </div>
-          <div className="text-sm mt-6 flex justify-center text-slate-500">
-            <span>جهت ثبت نام</span>
-            <span
-              className=" text-sky-500 mx-1 cursor-pointer "
-              onClick={() => navigate("/register")}
-            >
-              اینجا
-            </span>
-            <span>کلیک کنید</span>
           </div>
         </form>
       </div>

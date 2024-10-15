@@ -16,6 +16,7 @@ const AuthProvider = (props) => {
   const [access, setAccess] = useState(
     cookies?.access ? cookies?.access : null
   );
+  const [phoneNumber, setPhoneNumber] = useState(null);
   const [shoppingCart, setShoppingCart] = useState(
     JSON.parse(localStorage?.getItem("shoppingCart")) || []
   );
@@ -50,8 +51,8 @@ const AuthProvider = (props) => {
       console.log(invalidList);
       console.log(lShoppingCart);
       console.log("process ended"); // Wait for all checkItemInCart calls to complete
-      deleteInvalidItems(invalidList,lShoppingCart);
-      setShoppingCart(lShoppingCart)
+      deleteInvalidItems(invalidList, lShoppingCart);
+      setShoppingCart(lShoppingCart);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -240,25 +241,15 @@ const AuthProvider = (props) => {
     Axios.defaults.headers.common["Authorization"] = `Bearer ${access}`;
   }, [access]);
 
-  const register = async (
-    email,
-    username,
-    password,
-    confirmPassword,
-    setErrors,
-    setToastList,
-    setLoading
-  ) => {
+  const login = async (phoneNumber, setErrors, setToastList, setLoading) => {
     try {
-      const response = await Axios.post(serverAddress + "auth/register", {
-        email: email,
-        username: username,
-        password: password,
-        confirmPassword: confirmPassword,
+      const response = await Axios.post(serverAddress + "auth/login", {
+        phoneNumber: phoneNumber,
       });
 
       if (response.status === 200) {
-        navigate("login");
+        setPhoneNumber(phoneNumber);
+        navigate("/verify");
       }
     } catch (error) {
       if (error.response) {
@@ -290,23 +281,23 @@ const AuthProvider = (props) => {
       setLoading(false);
     }
   };
-  const login = async (
-    username,
-    password,
+  const verify = async (
+    phoneNumber,
+    code,
     setErrors,
     setToastList,
     setLoading
   ) => {
     try {
-      const response = await Axios.post(serverAddress + "auth/login", {
-        username: username,
-        password: password,
+      const response = await Axios.post(serverAddress + "auth/verify", {
+        phoneNumber: phoneNumber,
+        code: code,
       });
 
       if (response.status === 200) {
         if (response.data.success === true) {
           const data = response.data;
-          userSetter(data.data.jwt);
+          userSetter(data.data);
         }
       }
     } catch (error) {
@@ -351,7 +342,7 @@ const AuthProvider = (props) => {
         user: user,
         access: access,
         login: login,
-        register: register,
+        verify: verify,
         logout: logout,
         userSetter: userSetter,
         shoppingCart: shoppingCart,
@@ -364,6 +355,7 @@ const AuthProvider = (props) => {
         deleteProductFromCart: deleteProductFromCart,
         updateShoppingCart: updateShoppingCart,
         calculatePrice: calculatePrice,
+        phoneNumber: phoneNumber,
       }}
     >
       {props.children}

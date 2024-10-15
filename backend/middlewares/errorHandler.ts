@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult, ResultFactory } from "express-validator";
 import ResponseDTO from "../dtos/response.dto";
+import { OverallError } from "../errors/orderSaveError";
+
 const fieldErrorHandler = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   const fieldErrors = {};
@@ -18,4 +20,22 @@ const fieldErrorHandler = (req: Request, res: Response, next: NextFunction) => {
     next();
   }
 };
-export {fieldErrorHandler}
+const overallErrorHandler = (
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log("hellossssssso");
+  console.log(new ResponseDTO(null, { message: error.message }, false));
+  if (error instanceof OverallError) {
+    return res
+      .status(error.statusCode)
+      .json(new ResponseDTO(null, { message: error.message }, false));
+  } else {
+    return res
+      .status(500)
+      .json(new ResponseDTO(null, { message: "خطا داخلی سرور" }, false));
+  }
+};
+export { fieldErrorHandler, overallErrorHandler };

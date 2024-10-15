@@ -8,7 +8,7 @@ import AuthContext from "../../context/AuthContext";
 import Badge from "../badge/Badge";
 import Tag from "../tag/Tag";
 import Categories from "../categories/Categories";
-import { getAllCategories } from "../../api/category";
+import logo from "../../assets/img/digi.png";
 const NavBar = () => {
   const navEl = useRef();
   const navigate = useNavigate();
@@ -44,7 +44,12 @@ const NavBar = () => {
           {/* right */}
           <div className="flex items-center  w-100 lg:w-fit ">
             <div className="ml-5">
-              <svg
+              <img
+                src={logo}
+                onClick={() => navigate("/")}
+                className=" cursor-pointer w-[150px] h-[50px]"
+              ></img>
+              {/* <svg
                 onClick={() => navigate("/")}
                 className=" cursor-pointer"
                 xmlns="http://www.w3.org/2000/svg"
@@ -64,13 +69,12 @@ const NavBar = () => {
                     </g>
                   </g>
                 </g>
-              </svg>
+              </svg> */}
             </div>
             <form onSubmit={(e) => searchHandler(e)} className=" ">
               <Input
                 name="searchInput"
                 placeHolder="جستجو"
-              
                 inputclassName="text-slate-500  lg:w-96 md:w-90  "
                 preffix={<i className="fal fa-search"></i>}
               />

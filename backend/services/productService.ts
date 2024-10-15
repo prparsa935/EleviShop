@@ -27,7 +27,7 @@ class ProductService {
       options.where["name"] = Like(`%${filter.name}%`);
     }
     if (filter.maxPrice && filter.minPrice) {
-      options.where["price"] = Between(filter.maxPrice, filter.minPrice);
+      options.where["price"] = Between(filter.minPrice, filter.maxPrice);
     }
 
     return await this.productRepo.find(options);
@@ -45,5 +45,8 @@ class ProductService {
       ],
     });
   }
+  // async saveProduct(id: number): Promise<Product> {
+    
+  // }
 }
 export default new ProductService();

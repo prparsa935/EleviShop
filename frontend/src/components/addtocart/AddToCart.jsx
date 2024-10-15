@@ -70,7 +70,9 @@ const AddToCart = ({ className, product, inventory }) => {
             </div>
             <div className=" font-bold">
               <span className="mx-1  text-lg tracking-wide">
-                {formatNumber(((100 - product?.offPercent)/100) * product?.price)}
+                {formatNumber(
+                  ((100 - product?.offPercent) / 100) * product?.price
+                )}
               </span>
               <span>تومان</span>
             </div>

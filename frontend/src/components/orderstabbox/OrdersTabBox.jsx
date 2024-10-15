@@ -17,7 +17,7 @@ const OrdersTabBox = ({ currentOrders, deliveredOrders, canceledOrders }) => {
       >
         <TabsList
           className={
-            "w-100 lg:justify-start justify-around sticky top-[96px] mb-8  "
+            "w-100 lg:justify-start justify-around sticky top-[96px] mb-8 z-20  "
           }
         >
           <TabsTrigger className={"lg:grow-0 grow "} value="current">

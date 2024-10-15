@@ -16,3 +16,4 @@ export class Inventory {
   @ManyToOne(() => Product)
   product: Product;
 }
+enumSize.md

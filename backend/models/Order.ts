@@ -9,10 +9,14 @@ import {
   Timestamp,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
+  AfterInsert,
 } from "typeorm";
-import moment = require("moment");
+import moment = require("moment-jalaali");
 import { User } from "./User";
 import { OrderInventory } from "./OrderInventory ";
+import { Person } from "./Person ";
+import { Expose } from "class-transformer";
 export enum orderStatus {
   waitingForPayment = "در انتظار پرداخت",
   successfulPayOrValidated = "پرداخت تایید شده",
@@ -32,7 +36,8 @@ export enum orderStatus {
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
-
+  @Column({ unique: true })
+  trackingCode: string;
   @OneToMany(() => OrderInventory, (orderInventory) => orderInventory.order, {
     nullable: false,
   })
@@ -41,7 +46,7 @@ export class Order {
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP(6)",
   })
-  created_at: Date;
+  dateCreated: Date;
   @ManyToOne(() => User)
   user: User;
   @UpdateDateColumn({
@@ -50,36 +55,46 @@ export class Order {
     onUpdate: "CURRENT_TIMESTAMP(6)",
   })
   updated_at: Date;
+  @ManyToOne(() => Person, { nullable: true })
+  person: Person;
 
   @Column({ type: "enum", enum: orderStatus, nullable: false })
   orderStatus: orderStatus;
-  @Column()
-  price: number;
-  @Column()
-  bankCode: number;
 
-  @Column()
-  bankMessage: string;
-  // @OneToOne(()=>User)
-  // @JoinColumn()
-  // user:User;
+  // @Column()
+  // bankCode: number;
 
-  @Column({ unique: true })
-  authority: string;
+  // @Column()
+  // bankMessage: string;
+  // // @OneToOne(()=>User)
+  // // @JoinColumn()
+  // // user:User;
 
-  @Column({ nullable: true })
-  cardHash: string;
-  @Column({ nullable: true })
-  refId: number;
-  @Column({ nullable: true })
-  cardPan: string;
-  @Column({ nullable: true })
-  errors: string;
+  // @Column({ unique: true })
+  // authority: string;
 
-  get faDate(): string {
-    return moment(this.created_at).format("jYYYY/jMM/jDD");
+  // @Column({ nullable: true })
+  // cardHash: string;
+  // @Column({ nullable: true })
+  // refId: number;
+  // @Column({ nullable: true })
+  // cardPan: string;
+  // @Column({ nullable: true })
+  // errors: string;
+  @BeforeInsert()
+  generateTrackingCode() {
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD format
+    const randomSuffix = Math.floor(1000 + Math.random() * 90000); // Random 4-digit suffix
+    this.trackingCode = `${formattedDate}${randomSuffix}`;
   }
-  get TotalOrderPrice() {
+
+  @Expose()
+  get faDateCreated(): string {
+    return moment(this.dateCreated).format("jYYYY/jMM/jDD");
+  }
+  @Expose()
+  get totalOrderPrice() {
     let sum: number = 0;
     const orderInventories = this.orderInventories;
     for (let orderInventory of orderInventories) {
@@ -87,7 +102,8 @@ export class Order {
     }
     return sum;
   }
-  get TotalOrderOffPrice(): number {
+  @Expose()
+  get totalOrderOffPrice(): number {
     let sum: number = 0;
     const orderInventories = this.orderInventories;
     for (let orderInventory of orderInventories) {

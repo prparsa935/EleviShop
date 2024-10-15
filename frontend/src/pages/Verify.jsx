@@ -1,32 +1,33 @@
 import { useNavigate } from "react-router";
 import Button from "../components/Button/Button";
 import Input from "../components/input/Input";
-import Separator from "../components/separator/Separator";
+
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import Alert from "../components/alert/Alert";
 import Loading from "../components/icons/Loading";
+
 const Register = () => {
-  const { register, user } = useContext(AuthContext);
+  const { verify, user, phoneNumber } = useContext(AuthContext);
   const [errors, setErrors] = useState([]);
   const [toastList, setToastList] = useState([]);
   const [loading, setLoading] = useState();
+
   const navigate = useNavigate();
-  const registerSubmit = (e) => {
+
+  const verifySubmit = (e) => {
     e.preventDefault();
+    if (!phoneNumber) {
+      return navigate("/login");
+    }
     const form = new FormData(e.target);
 
-    const username = form.get("username");
-    const password = form.get("password");
-    const confirmPassword = form.get("confirmPassword");
-
-    const email = form.get("email");
+    const code = form.get("code");
     setLoading(true);
-    register(
-      email,
-      username,
-      password,
-      confirmPassword,
+    verify(
+      phoneNumber,
+      code,
+
       setErrors,
       setToastList,
       setLoading
@@ -36,7 +37,10 @@ const Register = () => {
     if (user !== null) {
       return navigate("/");
     }
-  }, [user]);
+    if (!phoneNumber) {
+      return navigate("/login");
+    }
+  }, [user, phoneNumber]);
 
   return (
     <div className="login-page flex items-center justify-center h-screen">
@@ -73,46 +77,21 @@ const Register = () => {
           </svg>
         </div>
         {/* body */}
-        <form onSubmit={registerSubmit} className="flex flex-col">
+        <form onSubmit={verifySubmit} className="flex flex-col">
           <div className=" font-semibold text-slate-700 text-2xl flex items-center gap-x-2 mt-5">
-            <span>ثبت نام</span>
+            <span>ورود</span>
           </div>
           <div className=" text-sm text-slate-600 mt-5 flex flex-col gap-y-1">
-            <span>سلام لطفا اطلاعات خود را وارد کنید!</span>
+            <span>سلام لطفا کد دریافتی خود را وارد کنید!</span>
           </div>
 
           <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
-            <span>ایمیل</span>
+            <span>کد</span>
           </div>
           <div className="mt-2">
-            <Input iMessage={errors?.email} name="email"></Input>
+            <Input iMessage={errors?.code} name="code" type="password"></Input>
           </div>
-          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
-            <span>نام کاربری</span>
-          </div>
-          <div className="mt-2">
-            <Input iMessage={errors?.username} name="username"></Input>
-          </div>
-          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
-            <span>رمز عبور</span>
-          </div>
-          <div className="mt-2">
-            <Input
-              iMessage={errors?.password}
-              name="password"
-              type="password"
-            ></Input>
-          </div>
-          <div className=" text-sm text-slate-600 mt-1 flex flex-col gap-y-1">
-            <span>تکرار رمز عبور </span>
-          </div>
-          <div className="mt-2">
-            <Input
-              iMessage={errors?.confirmPassword}
-              name="confirmPassword"
-              type="password"
-            ></Input>
-          </div>
+
           <div className="mt-7">
             <Button
               bgColor="bg-rose-500"
@@ -121,7 +100,7 @@ const Register = () => {
               shape="rounded-lg"
               disabled={loading}
             >
-              {loading ? <Loading className="w-5 h-5"></Loading> : "ثبت نام"}
+              {loading ? <Loading className="w-5 h-5"></Loading> : "ورود "}
             </Button>
           </div>
           <div className="flex flex-col font-semibold text-sm mt-3 text-red-500">
@@ -134,7 +113,7 @@ const Register = () => {
             ورود شما به معنای پذیرش شرایط دیجی‌کالاو قوانین حریم‌خصوصی است
           </div>
           <div className="text-sm mt-6 flex justify-center text-slate-500">
-            <span>جهت ورود</span>
+            <span>جهت تغییر شماره</span>
             <span
               className=" text-sky-500 mx-1 cursor-pointer "
               onClick={() => navigate("/login")}

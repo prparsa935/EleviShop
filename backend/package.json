@@ -4,10 +4,11 @@
   "main": "server.ts",
   "type": "commonjs",
   "scripts": {
-    "start": "nodemon server.ts",
+    "start": "nodemon --exec ts-node src/server.ts",
     "startjs": "nodemon dist/server.js",
     "build": "tsc --build",
-    "clean": "tsc --build --clean"
+    "clean": "tsc --build --clean",
+    "debug": "nodemon --exec ts-node --inspect server.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +31,8 @@
     "bcrypt": "^5.0.1",
     "better-npm-audit": "^3.7.3",
     "body-parser": "^1.20.2",
-    "class-validator": "^0.14.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

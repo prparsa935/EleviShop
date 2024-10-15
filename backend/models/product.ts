@@ -34,7 +34,7 @@ export class Product {
   @Column({ nullable: false, length: 20 })
   code: string;
   @Column({ length: 50 })
-  descripion: string;
+  description: string;
   @Column({ nullable: true })
   weight: number;
   @OneToOne(() => Image, { nullable: false })

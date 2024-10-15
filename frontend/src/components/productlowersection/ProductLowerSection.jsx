@@ -9,7 +9,7 @@ const ProductLowerSection = ({ selectedSize,
       <div className="flex w-100 ">
         <Tabs
           activationMode={"manual"}
-          defaultValue="tab2"
+          defaultValue="properties"
           orientation="vertical"
           className="grow "
         >

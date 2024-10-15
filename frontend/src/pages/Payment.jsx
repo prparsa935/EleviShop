@@ -4,7 +4,7 @@ import ProductInCartBox from "../components/productincartbox/ProductInCartBox";
 
 import AuthContext from "../context/AuthContext";
 
-import digiImg from "../assets/img/digi.svg";
+import digiImg from "../assets/img/digi.png";
 import { useNavigate } from "react-router";
 import SubmitOrderBox from "../components/submitorderbox/SubmitOrderBox";
 import AddressInOrder from "../components/addressinorder/AddressInOrder";
@@ -18,7 +18,7 @@ const Payment = () => {
   const [person, setPerson] = useState(null);
   const [prices, setPrices] = useState();
   const [versionId, setVersionId] = useState(0);
-  const [errors, setErrors] = useState([]);
+
   const [toastList, setToastList] = useState([]);
   const navigate = useNavigate();
   const { shoppingCart, updateShoppingCart, calculatePrice } =
@@ -36,7 +36,7 @@ const Payment = () => {
     updateShoppingCart(setLoading);
   }, []);
   useEffect(() => {
-    getPerson(setPerson, setErrors, setToastList);
+    getPerson(setPerson, setToastList);
   }, [personFormModalActive]);
   useEffect(() => {
     calculatePrice(setPrice);
@@ -59,8 +59,6 @@ const Payment = () => {
 
       <PersonInformaionForm
         setToastList={setToastList}
-        setErrors={setErrors}
-        errors={errors}
         person={person}
         setPersonFormModalActive={setPersonFormModalActive}
         personFormModalActive={personFormModalActive}
@@ -109,7 +107,6 @@ const Payment = () => {
           </div>
           <div>
             <SubmitOrderBox
-              setErrors={setErrors}
               setToastList={setToastList}
               price={price}
             ></SubmitOrderBox>

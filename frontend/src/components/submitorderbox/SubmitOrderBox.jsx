@@ -4,9 +4,9 @@ import AuthContext from "../../context/AuthContext";
 import formApiHandler from "../../api/form";
 import { formatNumber } from "../../utils/helperMehods";
 
-const SubmitOrderBox = ({ price, setToastList, setErrors }) => {
+const SubmitOrderBox = ({ price, setToastList }) => {
   const { shoppingCart } = useContext(AuthContext);
-
+  const [errors, setErrors] = useState([]);
   return (
     <div className="lg:w-[300px] w-screen left-0 bg-white  justify-between items-center lg:items-stretch fixed bottom-0 flex lg:flex-col gap-y-4 border p-5 lg:sticky lg:top-[155px]">
       <div className="lg:flex   hidden justify-between text-neutral-500 font-semibold border-b-2 py-3  ">
@@ -26,7 +26,9 @@ const SubmitOrderBox = ({ price, setToastList, setErrors }) => {
       <div className="flex lg:flex-row flex-col justify-between items-center lg:order-none order-2  font-semibold border-b-2 text-neutral-500 py-3    ">
         <span>قابل پرداخت</span>
         <div>
-          <span className="ml-1">{formatNumber(price?.totalPrice + 49000)}</span>
+          <span className="ml-1">
+            {formatNumber(price?.totalPrice + 49000)}
+          </span>
           <span>تومان</span>
         </div>
       </div>

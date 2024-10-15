@@ -47,8 +47,25 @@ const deleteInvetory = (size, inventories, setInventories) => {
   }
 };
 const formatNumber = (num) => {
-  const persianNumber = num?.toLocaleString('fa-IR');
-  return persianNumber;
+  if (num) {
+    const persianNumber = num?.toLocaleString("fa-IR");
+    return persianNumber;
+  }
 };
+function transformToPersianNumber(input) {
+  if (input) {
+    const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    return input
+      .split("")
+      .map((digit) => persianDigits[digit])
+      .join("");
+  }
+}
 
-export { getFieldMessage, insertInventory, deleteInvetory ,formatNumber};
+export {
+  getFieldMessage,
+  insertInventory,
+  deleteInvetory,
+  formatNumber,
+  transformToPersianNumber,
+};

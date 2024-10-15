@@ -13,8 +13,7 @@ class AuthService {
     const userToken = jsonwebtoken.sign(
       {
         id: user.id,
-
-        identified: user.isIdentified,
+        phoneNumber: user.phoneNumber,
       },
       process.env.SECRET_TOKEN_KEY
     );
@@ -33,5 +32,21 @@ class AuthService {
     //   to: phoneNumber,
     // });
   }
+  verifyToken = (access: string): Partial<User> => {
+    if (access == null) return null;
+    let user: Partial<User> = null;
+
+    jsonwebtoken.verify(
+      access,
+      process.env.SECRET_TOKEN_KEY,
+      (err, iuser: Partial<User>) => {
+        if (err) return null;
+        console.log(iuser);
+        user = iuser;
+      }
+    );
+
+    return user;
+  };
 }
 export default new AuthService();

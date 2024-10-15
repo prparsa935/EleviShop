@@ -15,7 +15,7 @@ const Product = lazy(() => import("./pages/Product.jsx"));
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Search = lazy(() => import("./pages/Search.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
-const Register = lazy(() => import("./pages/Register.jsx"));
+const Verify = lazy(() => import("./pages/Verify.jsx"));
 const Cart = lazy(() => import("./pages/Cart.jsx"));
 const Payment = lazy(() => import("./pages/Payment.jsx"));
 const Profile = lazy(() => import("./pages/Profile.jsx"));
@@ -31,8 +31,8 @@ const InsertProduct = lazy(() => import("./pages/InsertProduct.jsx"));
 const InsertCategory = lazy(() => import("./pages/InsertCategory.jsx"));
 const InsertColor = lazy(() => import("./pages/InsertColor.jsx"));
 const InsertBrand = lazy(() => import("./pages/InsertBrand.jsx"));
-const serverAddress = "https://elevishop.onrender.com/api/";
-const imageServerAddress = "https://elevishop.onrender.com";
+const serverAddress = "http://localhost:8000/api/";
+const imageServerAddress = "http://localhost:8000/";
 
 export { serverAddress, imageServerAddress };
 function App() {
@@ -73,10 +73,10 @@ function App() {
             }
           />
           <Route
-            path="/register"
+            path="/verify"
             element={
               <Suspense fallback={<PageLoading></PageLoading>}>
-                <Register></Register>
+                <Verify></Verify>
               </Suspense>
             }
           />

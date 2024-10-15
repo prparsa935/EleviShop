@@ -1,4 +1,4 @@
-import brandImage from "../../assets/img/digi.svg";
+import brandImage from "../../assets/img/digi.png";
 import Loading from "../icons/Loading";
 import MobileFooter from "../mobilefooter/MobileFooter";
 import NavBar from "../navbar/NavBar";

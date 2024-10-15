@@ -9,10 +9,10 @@ const PersonInformaionForm = ({
   setPersonFormModalActive,
   personFormModalActive,
   person,
-  errors,
+
   setToastList,
-  setErrors,
 }) => {
+  const [errors, setErrors] = useState(null);
   const [formValues, setFormValues] = useState();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -66,7 +66,7 @@ const PersonInformaionForm = ({
             <Input
               name="firstName"
               onChange={updateFormValue}
-              value={person?.firstName}
+              value={formValues?.firstName}
               iMessage={errors?.firstName}
             ></Input>
           </div>
@@ -77,7 +77,7 @@ const PersonInformaionForm = ({
             <Input
               name="lastName"
               onChange={updateFormValue}
-              value={person?.lastName}
+              value={formValues?.lastName}
               iMessage={errors?.lastName}
             ></Input>
           </div>
@@ -88,7 +88,7 @@ const PersonInformaionForm = ({
             <Input
               name="phoneNumber"
               onChange={updateFormValue}
-              value={person?.phoneNumber}
+              value={formValues?.phoneNumber}
               iMessage={errors?.phoneNumber}
             ></Input>
           </div>
@@ -100,7 +100,7 @@ const PersonInformaionForm = ({
           <Input
             name="postalCode"
             onChange={updateFormValue}
-            value={person?.postalCode}
+            value={formValues?.postalCode}
             iMessage={errors?.postalCode}
           ></Input>
         </div>
@@ -112,7 +112,7 @@ const PersonInformaionForm = ({
             name="addressLine"
             type="textarea"
             onChange={updateFormValue}
-            value={person?.addressLine}
+            value={formValues?.addressLine}
             iMessage={errors?.addressLine}
           ></Input>
         </div>

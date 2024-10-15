@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { serverAddress } from "../App";
 
-const getPerson = async (setPerson, setErrors, setToastList) => {
+const getPerson = async (setPerson, setToastList) => {
   try {
     const response = await Axios.get(serverAddress + "person");
 

@@ -10,5 +10,14 @@ class UserService {
 
     return await this.userRepo.save(user);
   }
+  async findUserByPhoneNumber(phoneNumber: string): Promise<User> {
+    return await this.userRepo.findOne({
+      where: {
+        phoneNumber: phoneNumber,
+      },
+      relations:['person']
+    });
+    
+  }
 }
 export default new UserService();

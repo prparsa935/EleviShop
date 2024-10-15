@@ -28,7 +28,7 @@ export class User {
   isSuperUser: boolean;
 
   @JoinColumn()
-  @OneToOne(() => Person)
+  @OneToOne(() => Person, (person) => person.user)
   person: Person;
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];

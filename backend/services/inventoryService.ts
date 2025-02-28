@@ -2,6 +2,8 @@ import dataSource from "../utils/dbConfiguration";
 
 import { Inventory } from "../models/Inventory";
 import { EntityManager, In } from "typeorm";
+import { InventorySaveDto } from "../dtos/product.dto";
+import { plainToClass, plainToInstance } from "class-transformer";
 class InventoryService {
   private inventoryRepo = dataSource.getRepository(Inventory);
 
@@ -16,6 +18,13 @@ class InventoryService {
       relations: ["product"],
     });
     return inventories;
+  }
+  async saveInventories(
+    entityManager: EntityManager,
+    inventoriesDto: InventorySaveDto[]
+  ): Promise<Inventory[]> {
+    const inventories = plainToInstance(Inventory, inventoriesDto);
+    return await entityManager.save(Inventory, inventories);
   }
 }
 export default new InventoryService();

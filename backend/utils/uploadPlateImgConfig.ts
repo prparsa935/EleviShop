@@ -4,7 +4,7 @@ import { mainDir } from "../server";
 import fs = require("fs");
 const storage = diskStorage({
   destination: (req, file, cb) => {
-    cb(null, mainDir + "/public/plateimages/");
+    cb(null, mainDir + "/public/");
   },
   filename: (req, file, cb) => {
     const uniqueSuffix =
@@ -30,7 +30,7 @@ const upload = multer({
     } else {
       fs.unlink(file.path, (error) => {
         if (error) {
-          console.log(error);
+          
         }
         cb(null, false);
       });

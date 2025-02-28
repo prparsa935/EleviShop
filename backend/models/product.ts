@@ -40,8 +40,10 @@ export class Product {
   @OneToOne(() => Image, { nullable: false })
   @JoinColumn()
   mainImage: Image;
-  @Column()
-  height: string;
+  @Column({ nullable: true })
+  height: number;
+  @Column({ nullable: true })
+  width: number;
   @Column({ nullable: true })
   ratio: number;
   @Column({ nullable: false })
@@ -53,6 +55,8 @@ export class Product {
 
   @Column({ nullable: false })
   material: string;
+  @Column({ nullable: true })
+  rate: number;
   @OneToOne(() => Color)
   @JoinColumn()
   color: Color;

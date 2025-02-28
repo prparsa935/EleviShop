@@ -1,9 +1,9 @@
 import AddToCart from "../addtocart/AddToCart";
+import Comments from "../Comments/Comments";
 import HorizentalProductList from "../horizentalproductlist/HorizentalProductList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tab/Tab";
 
-const ProductLowerSection = ({ selectedSize,
-  setSelectedSize, product }) => {
+const ProductLowerSection = ({ selectedSize, setSelectedSize, product,setCommentModalActive }) => {
   return (
     <div className="flex flex-col gap-y-10">
       <div className="flex w-100 ">
@@ -24,7 +24,7 @@ const ProductLowerSection = ({ selectedSize,
             <TabsTrigger className={"lg:grow-0 grow"} value="properties">
               مشخصات
             </TabsTrigger>
-            <TabsTrigger className={"lg:grow-0 grow"} value="tab3">
+            <TabsTrigger className={"lg:grow-0 grow"} value="comments">
               دیدگاه ها
             </TabsTrigger>
           </TabsList>
@@ -57,17 +57,21 @@ const ProductLowerSection = ({ selectedSize,
                   </span>
                   <span>{product?.height}</span>
                 </div>
-   
               </div>
             </div>
           </TabsContent>
-          <TabsContent data-state="active" value="tab3">
-            Tab three content
+          <TabsContent data-state="active" value="comments">
+            <Comments product={product} setCommentModalActive={setCommentModalActive}/>
+              
+       
           </TabsContent>
         </Tabs>
         <div>
           <div className="w-[333px] xl:block hidden mr-10">
-            <AddToCart inventory={selectedSize?.value} product={product}></AddToCart>
+            <AddToCart
+              inventory={selectedSize?.value}
+              product={product}
+            ></AddToCart>
           </div>
         </div>
       </div>

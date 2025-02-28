@@ -16,7 +16,6 @@ class AuthController {
 
       return res.status(200).json();
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
@@ -61,7 +60,7 @@ class AuthController {
     try {
       const accessToken = req.headers.authorization.split(" ")[1];
       const user = authService.verifyToken(accessToken);
-      console.log(user)
+
       if (!user)
         return res
           .status(403)
@@ -70,7 +69,7 @@ class AuthController {
       const fullUser = await userService.findUserByPhoneNumber(
         user.phoneNumber
       );
-      console.log(fullUser);
+
       if (!fullUser)
         return res
           .status(403)
@@ -81,7 +80,34 @@ class AuthController {
       req["user"] = fullUser;
       next();
     } catch (error) {
-      return res.status(403).json(new ResponseDTO({}));
+      return res
+        .status(403)
+        .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
+    }
+  }
+  async authorizeUserWithoutErr(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const accessToken = req.headers.authorization.split(" ")[1];
+      const user = authService.verifyToken(accessToken);
+      // todo need test
+      if (!user) return next();
+
+      const fullUser = await userService.findUserByPhoneNumber(
+        user.phoneNumber
+      );
+
+      if (!fullUser) return next();
+
+      req["user"] = fullUser;
+      next();
+    } catch (error) {
+      return res
+        .status(403)
+        .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
     }
   }
   async isAdmin(req: Request, res: Response, next: NextFunction) {

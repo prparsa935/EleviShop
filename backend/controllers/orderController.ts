@@ -78,7 +78,7 @@ class OrderController {
       const orderSaveDtos: OrderSaveDto[] = req.body.map((order) =>
         plainToInstance(OrderSaveDto, order)
       );
-      console.log(orderSaveDtos);
+
 
       const errors = await Promise.all(
         orderSaveDtos.map((orderSaveDto) => validate(orderSaveDto))
@@ -97,7 +97,7 @@ class OrderController {
         .status(200)
         .json(new ResponseDTO(null, null, true, "سفارش شما با موفقیت ثبت شد"));
     } catch (error) {
-      console.log("hello");
+      
       next(error);
     }
   }

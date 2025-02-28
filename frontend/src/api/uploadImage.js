@@ -6,7 +6,8 @@ const uploadImage = async (
   setUploadProgress,
   setUploadedImages,
   setIsUploading,
-  setErrors
+  setErrors,
+  setToastList
 ) => {
   try {
     setIsUploading(true);
@@ -33,21 +34,35 @@ const uploadImage = async (
     setUploadProgress(0);
     setIsUploading(false);
     if (res.status === 200) {
-      console.log("im uploaded LOL");
+      setToastList((prev) => {
+    
+        return [
+          ...prev,
+          {
+            type: "success",
+            message: res.data?.successMessage,
+          },
+        ];
+      });
+
       setUploadedImages((prev) => {
         return [...prev, res.data.data.image];
       });
     }
   } catch (error) {
-    console.log("hello");
+    
+
     setIsUploading(false);
     setUploadProgress(0);
     if (error.response) {
       setErrors(() => {
         return error.response.data.fieldErrors;
       });
+
       setToastList((prev) => {
+   
         return [
+          ...prev,
           {
             type: "danger",
             message: error.response.data?.overallError?.message,

@@ -21,7 +21,7 @@ const searchProducts = async (
   setHasMore
 ) => {
   try {
-    console.log("hellll");
+   
     const res = await Axios.get(serverAddress + "product", {
       params: { ...searchParams, pageNumber: page },
     });
@@ -54,7 +54,7 @@ const fetchSingleProduct = async (productId, setProduct, setLoading) => {
     const res = await Axios.get(serverAddress + "product/id/" + productId);
     if (res.status === 200) {
       const resData = await res.data;
-      console.log(resData);
+   
       setProduct(resData);
     }
   } catch (error) {

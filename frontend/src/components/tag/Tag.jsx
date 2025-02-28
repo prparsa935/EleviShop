@@ -21,7 +21,7 @@ const Tag = (props) => {
   const [sizeCss, setSizeCss] = useState(sizeSetter());
 
   useEffect(() => {
-    console.log(props.iconCss);
+  
   }, []);
   return (
     <div className="inline-block">

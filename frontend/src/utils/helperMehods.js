@@ -21,7 +21,6 @@ const insertInventory = (form, inventories, setInventories) => {
 
     if (existingInventoryIndex !== -1) {
       setInventories((prev) => {
-        console.log(prev[existingInventoryIndex]);
         prev[existingInventoryIndex].quantity = quantity;
         return JSON.parse(JSON.stringify(prev));
       });
@@ -52,6 +51,7 @@ const formatNumber = (num) => {
     return persianNumber;
   }
 };
+
 function transformToPersianNumber(input) {
   if (input) {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
@@ -61,11 +61,32 @@ function transformToPersianNumber(input) {
       .join("");
   }
 }
+function formatRelativeTime(date) {
+  const now = new Date();
+  const past = new Date(date);
+  const diffInSeconds = Math.floor((now - past) / 1000);
 
+  const units = [
+    { max: 60, value: 1, name: "ثانیه" }, // Seconds
+    { max: 3600, value: 60, name: "دقیقه" }, // Minutes
+    { max: 86400, value: 3600, name: "ساعت" }, // Hours
+    { max: 2592000, value: 86400, name: "روز" }, // Days
+    { max: 31104000, value: 2592000, name: "ماه" }, // Months
+    { max: Infinity, value: 31104000, name: "سال" }, // Years
+  ];
+
+  for (let unit of units) {
+    if (diffInSeconds < unit.max) {
+      const value = Math.floor(diffInSeconds / unit.value);
+      return `${value} ${unit.name} پیش`;
+    }
+  }
+}
 export {
   getFieldMessage,
   insertInventory,
   deleteInvetory,
   formatNumber,
   transformToPersianNumber,
+  formatRelativeTime
 };

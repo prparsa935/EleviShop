@@ -10,7 +10,7 @@ const Categories = () => {
   return (
     <div className="flex gap-x-5 p-8 ">
       {categories?.map((categoryData) => {
-        return <Category categoryData={categoryData} />;
+        return <Category  categoryData={categoryData} />;
       })}
     </div>
   );

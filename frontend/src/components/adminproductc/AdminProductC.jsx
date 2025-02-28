@@ -18,7 +18,7 @@ const AdminProductC = ({ handleDeleteItem }) => {
   const [productList, setProductList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
-    console.log("meow");
+
     searchProducts(
       Object.fromEntries([...searchParams]),
       [],
@@ -94,9 +94,10 @@ const AdminProductC = ({ handleDeleteItem }) => {
             </div>
           }
         >
-          {productList?.map((product) => {
+          {productList?.map((product,index) => {
             return (
               <AdminItemBox
+                key={index}
                 onDelete={() => handleDeleteItem(product?.id)}
                 onEdit={() =>
                   navigate(`/admin/product/save?productId=${product?.id}`)

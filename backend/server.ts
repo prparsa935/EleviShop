@@ -12,7 +12,7 @@ dotenv.config({ path: __dirname + "/.env" });
 
 import apiRouter from "./routes/api";
 
-// console.log()
+
 app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -20,7 +20,7 @@ const Modal = (props) => {
     }
   };
   useEffect(() => {
-    console.log(props.enable);
+  
     modalControl(props.enable);
   }, [props.enable]);
   return (

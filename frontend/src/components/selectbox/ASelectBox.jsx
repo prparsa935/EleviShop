@@ -10,7 +10,7 @@ const ASelectBox= (props) => {
   
 // sample for load options
   // const loadOptions=(inputValue,callback)=>{
-  //   console.log('hello')
+
   //   callback([{value:Math.random(),label:'تخم سگ'}])
   //   }
 

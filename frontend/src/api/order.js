@@ -3,15 +3,15 @@ import { serverAddress } from "../App";
 
 const findOrderByState = async (state, setOrders, setToastList, setLoading) => {
   try {
-    console.log("afterfetch");
+
     const response = await Axios.get(serverAddress + "order/" + state);
 
     if (response.status === 200) {
-      console.log("setorders");
+    
       setOrders(response.data);
     }
   } catch (error) {
-    console.log(error);
+
     if (error.response) {
       // setErrors(() => {
       //   return error.response.data.fieldErrors;
@@ -38,7 +38,7 @@ const findOrderByState = async (state, setOrders, setToastList, setLoading) => {
       });
     }
   } finally {
-    console.log("loading");
+
     setLoading(false);
   }
 };

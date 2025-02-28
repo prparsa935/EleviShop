@@ -84,9 +84,10 @@ const AdminColorC = ({ handleDeleteItem }) => {
             </div>
           }
         ></InfiniteScroll>
-        {colorList?.map((color) => {
+        {colorList?.map((color, index) => {
           return (
             <AdminItemBox
+              key={index}
               onDelete={() => handleDeleteItem(color?.id)}
               onEdit={() => navigate(`/admin/color/save?colorId=${color?.id}`)}
             >

@@ -46,11 +46,9 @@ const AuthProvider = (props) => {
           lShoppingCart
         );
       });
-      console.log("this");
+  
       await Promise.all(checkPromises);
-      console.log(invalidList);
-      console.log(lShoppingCart);
-      console.log("process ended"); // Wait for all checkItemInCart calls to complete
+
       deleteInvalidItems(invalidList, lShoppingCart);
       setShoppingCart(lShoppingCart);
     } catch (error) {
@@ -100,9 +98,7 @@ const AuthProvider = (props) => {
     iSelectedInventory,
     lShoppingCart
   ) => {
-    console.log(lShoppingCart);
-    console.log(productInCartIndex);
-    console.log(lShoppingCart[productInCartIndex]);
+
     lShoppingCart[productInCartIndex]["product"] = product;
     lShoppingCart[productInCartIndex]["inventory"] = iSelectedInventory;
     if (
@@ -117,14 +113,13 @@ const AuthProvider = (props) => {
     }
   };
   const deleteInvalidItems = (invalidList, lShoppingCart) => {
-    console.log("deleteing invalid shit");
+
 
     for (const invalidItemId of invalidList) {
       const invalidItemIndex = lShoppingCart?.findIndex((iProductInCart) => {
         return iProductInCart.inventory?.id === invalidItemId;
       });
-      console.log(lShoppingCart);
-      console.log(invalidItemIndex);
+
 
       lShoppingCart.splice(invalidItemIndex, 1);
     }
@@ -135,7 +130,7 @@ const AuthProvider = (props) => {
       const quantity = productInCart?.quantity;
       const off = productInCart?.product?.offPercent;
       const purePrice = productInCart?.product?.price;
-      console.log(price);
+
       price.totalPurePrice += quantity * purePrice;
       price.totalPrice += quantity * (purePrice - (purePrice * off) / 100);
       price.totalOff = price.totalPurePrice - price.totalPrice;
@@ -160,7 +155,7 @@ const AuthProvider = (props) => {
   };
   const subtractProductInCart = (productInCart) => {
     if (productInCart.productInCart.quantity <= 1) {
-      console.log(productInCart);
+
       deleteProductFromCart(productInCart?.productInCart?.inventory?.id);
     } else {
       setShoppingCart((prev) => {
@@ -170,8 +165,7 @@ const AuthProvider = (props) => {
     }
   };
   const isProductInCartValid = (quantity, quantitySelected) => {
-    console.log(quantitySelected);
-    console.log(quantity);
+
     if (quantitySelected > quantity) {
       return false;
     }
@@ -181,9 +175,7 @@ const AuthProvider = (props) => {
     const productInCartIndex = shoppingCart?.findIndex(
       (iProductInCart) => iProductInCart.inventory?.id === inventoryId
     );
-    console.log(shoppingCart);
-    console.log(productInCartIndex);
-    console.log(inventoryId);
+
 
     if (productInCartIndex !== -1) {
       setShoppingCart((prev) => {
@@ -205,10 +197,7 @@ const AuthProvider = (props) => {
   };
   const addToCart = (product, inventory) => {
     setShoppingCart((prev) => {
-      console.log([
-        ...prev,
-        { product: product, inventory: inventory, quantity: 1 },
-      ]);
+
       return [...prev, { product: product, inventory: inventory, quantity: 1 }];
     });
   };

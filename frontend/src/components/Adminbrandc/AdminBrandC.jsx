@@ -85,9 +85,10 @@ const AdminBrandC = ({ handleDeleteItem }) => {
             </div>
           }
         >
-          {brandList?.map((brand) => {
+          {brandList?.map((brand,index) => {
             return (
               <AdminItemBox
+              key={index}
                 onDelete={() => handleDeleteItem(brand?.id)}
                 onEdit={() => navigate(`/admin/brand/save?brandId=${brand?.id}`)}
               >

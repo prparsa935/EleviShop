@@ -26,7 +26,7 @@ const findColorByNamePaging = async (
   setHasMore
 ) => {
   try {
-    console.log("hellll");
+   
     const res = await axios.get(serverAddress + "color", {
       params: { colorName: colorName, pageNumber: page },
     });

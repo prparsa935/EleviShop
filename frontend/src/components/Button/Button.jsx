@@ -11,7 +11,7 @@ const Button = (props) => {
       if (size === "lg") {
         return "px-8 py-3 text-base font-bold ";
       } else if (size === "md") {
-        console.log("helooooooooooo");
+
         return "px-6 py-2 text-sm font-semibold";
       } else if (size === "sm") {
         return "px-4  py-2 text-sm font-medium";

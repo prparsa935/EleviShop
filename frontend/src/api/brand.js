@@ -27,7 +27,7 @@ const findBrandByNamePaging = async (
   setHasMore
 ) => {
   try {
-    console.log("hellll");
+  
     const res = await axios.get(serverAddress + "brand", {
       params: { brandName: brandName, pageNumber: page },
     });

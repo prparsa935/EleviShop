@@ -17,10 +17,10 @@ class PersonService {
       person.postalCode = personDto.postalCode;
       person.addressLine = personDto.addressLine;
       person.user = user;
-      console.log(user);
+
       this.personRepo.save(person);
     } catch (error) {
-      console.log(error);
+    
     }
   }
   async findPersonByUser(user: User): Promise<Person> {

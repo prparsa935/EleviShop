@@ -4,7 +4,7 @@
   "main": "server.ts",
   "type": "commonjs",
   "scripts": {
-    "start": "nodemon --exec ts-node src/server.ts",
+    "start": "nodemon --exec ts-node server.ts",
     "startjs": "nodemon dist/server.js",
     "build": "tsc --build",
     "clean": "tsc --build --clean",

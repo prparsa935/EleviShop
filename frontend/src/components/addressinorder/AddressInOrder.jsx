@@ -10,9 +10,9 @@ const AddressInOrder = ({ setPersonFormModalActive, person }) => {
           <div className="flex flex-col font-medium">
             <span className=" text-neutral-400">آدرس تحویل سفارش</span>
             <span className="font-medium ">
-              بل رسول زاده، خ. سرو، خ. نیلوفر دوم
+              {person?.addressLine}
             </span>
-            <span className=" text-neutral-400"> پارسا رجبی</span>
+            <span className=" text-neutral-400">{person?.firstName} {person?.lastName}</span>
           </div>
         </div>
       ) : (

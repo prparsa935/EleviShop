@@ -9,8 +9,6 @@ const formApiHandler = async (
   setLoading
 ) => {
   try {
-    console.log(address);
-    console.log(object);
     const response = await Axios.post(serverAddress + address, object);
 
     if (response.status === 200 && response.data.success === true) {
@@ -23,6 +21,7 @@ const formApiHandler = async (
       ]);
     }
   } catch (error) {
+    console.log(error)
     if (error.response) {
       setErrors(() => {
         return error.response.data.fieldErrors;
@@ -37,7 +36,7 @@ const formApiHandler = async (
         ];
       });
     } else {
-      console.log(error);
+      
       // Something happened in setting up the request that triggered an Error
       setToastList((prev) => {
         return [

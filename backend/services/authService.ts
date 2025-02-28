@@ -41,7 +41,7 @@ class AuthService {
       process.env.SECRET_TOKEN_KEY,
       (err, iuser: Partial<User>) => {
         if (err) return null;
-        console.log(iuser);
+     
         user = iuser;
       }
     );

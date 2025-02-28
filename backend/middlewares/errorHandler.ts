@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult, ResultFactory } from "express-validator";
 import ResponseDTO from "../dtos/response.dto";
-import { OverallError } from "../errors/orderSaveError";
+import { FieldErrors, OverallError } from "../errors/orderSaveError";
+import FieldErrorsType from "../types/fieldErrors";
 
 const fieldErrorHandler = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
@@ -26,12 +27,18 @@ const overallErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("hellossssssso");
-  console.log(new ResponseDTO(null, { message: error.message }, false));
+
+
   if (error instanceof OverallError) {
     return res
       .status(error.statusCode)
       .json(new ResponseDTO(null, { message: error.message }, false));
+  } else if (error instanceof FieldErrors) {
+    const fieldErrors: FieldErrorsType = {};
+    error.validationErrors.forEach((error) => {
+      fieldErrors[error.property] = Object.values(error.constraints)[0];
+    });
+    return res.status(400).json(new ResponseDTO(fieldErrors, null, false));
   } else {
     return res
       .status(500)

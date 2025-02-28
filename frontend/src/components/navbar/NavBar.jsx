@@ -9,6 +9,7 @@ import Badge from "../badge/Badge";
 import Tag from "../tag/Tag";
 import Categories from "../categories/Categories";
 import logo from "../../assets/img/digi.png";
+import { imageServerAddress } from "../../App";
 const NavBar = () => {
   const navEl = useRef();
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ const NavBar = () => {
 
   const Navigate = useNavigate();
   const controlNavbar = () => {
-    console.log(window.scrollY);
     if (window.scrollY > 200) {
       navEl.current.setAttribute("data-scrolled", "true");
     } else {
@@ -161,6 +161,7 @@ const NavBar = () => {
 
             <NavTab>
               <Button
+                onClick={() => navigate("/search?enableOff=true")}
                 txtColor="text-slate-600"
                 size="xs"
                 border="none "
@@ -181,6 +182,7 @@ const NavBar = () => {
             </NavTab>
             <NavTab>
               <Button
+                onClick={() => navigate("/search?enableOff=true")}
                 txtColor="text-slate-600"
                 size="xs"
                 border="none "

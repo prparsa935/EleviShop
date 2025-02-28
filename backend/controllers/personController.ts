@@ -48,7 +48,7 @@ class PersonController {
 
       return res.status(200).json(person);
     } catch (error) {
-      console.log(error);
+
       return res
         .status(500)
         .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));

@@ -6,10 +6,10 @@ const fetchSingleItem = async (address, id, setItem, setLoading) => {
     const res = await axios.get(serverAddress + address + id);
     if (res.status === 200) {
       const resData = await res.data;
-      console.log(resData);
+    
       setItem(resData);
     } else {
-      console.log("hello");
+     
     }
   } catch (error) {
   } finally {

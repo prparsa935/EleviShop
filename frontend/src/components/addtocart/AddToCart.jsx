@@ -20,9 +20,9 @@ const AddToCart = ({ className, product, inventory }) => {
   useEffect(() => {
     setProductInCart(() => {
       const iProductInCart = findProductInCart(product?.id, inventory?.id);
-      console.log(product);
+    
       if (iProductInCart === null) {
-        console.log("not found in cart");
+      
         return null;
       } else {
         if (
@@ -33,8 +33,7 @@ const AddToCart = ({ className, product, inventory }) => {
         ) {
           return iProductInCart;
         } else {
-          console.log("wtf why are you here");
-          console.log(iProductInCart);
+
           deleteProductFromCart(inventory?.id);
         }
       }

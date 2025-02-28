@@ -3,8 +3,7 @@ import { serverAddress } from "../App";
 
 const deleteItem = async (address, id, setToastList, setErrors) => {
   try {
-    console.log(address);
-    console.log(id);
+
     const response = await Axios.delete(serverAddress + address + id);
 
     if (response.status === 200 && response.data.success === true) {
@@ -30,7 +29,7 @@ const deleteItem = async (address, id, setToastList, setErrors) => {
         ];
       });
     } else {
-      console.log(error);
+  
       // Something happened in setting up the request that triggered an Error
       setToastList((prev) => {
         return [

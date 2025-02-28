@@ -11,8 +11,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "../components/Carousel/Carousel";
 import ProductImageShow from "../components/productimageshow/ProductImageShow";
 
@@ -21,13 +19,20 @@ import { fetchSingleProduct } from "../api/productApi";
 import PageLoading from "../components/pageloading/PageLoading";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 import AuthContext from "../context/AuthContext";
+
+import CommentModalForm from "../components/commentmodalform/CommentModalForm";
+import Alert from "../components/alert/Alert";
 const Product = () => {
+  const [errors, setErrors] = useState([]);
+  const [toastList, setToastList] = useState([]);
   const { id } = useParams();
   const [imageSiderActive, setImageSiderActive] = useState(false);
   const { shoppingCart } = useContext(AuthContext);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState();
+  const [commentModalActive, setCommentModalActive] = useState(false);
+
   useEffect(() => {
     setLoading(true);
     fetchSingleProduct(id, setProduct, setLoading);
@@ -38,7 +43,7 @@ const Product = () => {
       const productInCartIndex = shoppingCart.findIndex((productInCart) => {
         return productInCart.inventory.id === inventory.id;
       });
-      console.log(inventory.quantity);
+
       if (inventory.quantity !== 0) {
         lastAvailableInv = inventory;
       }
@@ -69,11 +74,28 @@ const Product = () => {
   return (
     <div className="product-page">
       <NavBar />
+      <div className=" sticky top-24 w-100 h-0 z-50 ">
+        {toastList?.map((toast) => {
+          return (
+            <Alert duration={5000} type={toast.type}>
+              {toast.message}
+            </Alert>
+          );
+        })}
+      </div>
       <ProductImageShow
         productImageList={product?.images}
         active={imageSiderActive}
         setActive={setImageSiderActive}
       ></ProductImageShow>
+      {/* comment modal */}
+      <CommentModalForm
+        setErrors={setErrors}
+        product={product}
+        setToastList={setToastList}
+        commentModalActive={commentModalActive}
+        setCommentModalActive={setCommentModalActive}
+      />
       <div className="flex flex-col gap-y-5  mt-7 mx-auto max-w-screen-2xl">
         {/* category path */}
         <CategoryPath categoryPath={product?.mainCategory?.categoryPath} />
@@ -127,6 +149,8 @@ const Product = () => {
           </CarouselContent>
         </Carousel>
         <ProductLowerSection
+          setToastList={setToastList}
+          setCommentModalActive={setCommentModalActive}
           selectedSize={selectedSize}
           setSelectedSize={setSelectedSize}
           product={product}

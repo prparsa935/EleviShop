@@ -11,13 +11,13 @@ const getPerson = async (setPerson, setToastList) => {
       setPerson(person);
     }
   } catch (error) {
-    console.log(error);
+  
     if (error?.response) {
       // setErrors(() => {
       //   return error.response.data.apiExceptions;
       // });
     } else {
-      console.log(error);
+   
       // Something happened in setting up the request that triggered an Error
       setToastList((prev) => {
         return [

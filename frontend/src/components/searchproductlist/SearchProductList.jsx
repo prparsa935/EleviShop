@@ -14,7 +14,7 @@ const SearchProductList = () => {
   const [productList, setProductList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
-    console.log("meow");
+   
     searchProducts(
       Object.fromEntries([...searchParams]),
       [],

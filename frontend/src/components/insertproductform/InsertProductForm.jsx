@@ -17,6 +17,7 @@ import { findBrandByName } from "../../api/brand";
 import { getAllCategories } from "../../api/category";
 import Loading from "../icons/Loading";
 import SelectCategories from "../selectcategories/SelectCategories";
+import { imageServerAddress } from "../../App";
 // const ValidationSchema = Yup.object().shape({
 //   email: Yup.string()
 //     .email("Invalid email address")
@@ -77,12 +78,12 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
 
       setUploadedImages([
         ...(existingProduct?.images || []),
-        ...(existingProduct?.mainImage?[existingProduct?.mainImage] : []),
+        ...(existingProduct?.mainImage ? [existingProduct?.mainImage] : []),
       ]);
 
       setMainImage(existingProduct?.mainImage || null);
     } catch (error) {
-      console.log(error);
+
     }
   };
   useDidUpdateEffect(ExistingProductFormSetter, [existingProduct]);
@@ -94,12 +95,12 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   //   },
   //   validationSchema: ValidationSchema,
   //   onSubmit: (values) => {
-  //     console.log(values);
+
   //   },
   // });
   const submitFormHandler = (e) => {
     e.preventDefault();
-    console.log(form.current.description);
+
     const code = e.target.code.value;
     const productName = e.target.productName.value;
     const description = e.target.description.value;
@@ -359,7 +360,9 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                       e,
                       setUploadProgress,
                       setUploadedImages,
-                      setIsUploading
+                      setIsUploading,
+                      setErrors,
+                      setToastList
                     )
                   }
                   type="file"
@@ -380,7 +383,9 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                       e,
                       setUploadProgress,
                       setUploadedImages,
-                      setIsUploading
+                      setIsUploading,
+                      setErrors,
+                      setToastList
                     )
                   }
                   type="file"
@@ -403,7 +408,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 <div className="flex items-center">
                   <img
                     className="w-[80px]"
-                    src={"http://localhost/" + image?.filePath}
+                    src={imageServerAddress + image?.filePath}
                   ></img>
                   <span className=" text-sm text-slate-400">
                     {image?.filePath}

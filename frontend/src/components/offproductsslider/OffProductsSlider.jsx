@@ -12,7 +12,9 @@ import {
 import { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/helperMehods";
 import { imageServerAddress } from "../../App";
+import { useNavigate } from "react-router";
 const OffProductsSlider = ({ offProducts }) => {
+  const navigate=useNavigate()
   return (
     <div className=" mx-auto container max-w-screen-xl ">
       <Carousel
@@ -29,9 +31,10 @@ const OffProductsSlider = ({ offProducts }) => {
           </CarouselItem>
           {offProducts?.map((product, index) => (
             <CarouselItem
+              onClick={()=>navigate(`/product/${product?.id}`)}
               key={index}
               className={
-                " p-3  flex flex-col gap-y-2 bg-white" +
+                " p-3  flex flex-col gap-y-2 bg-white cursor-pointer" +
                 " " +
                 (index === 0 ? " rounded-r-2xl" : "")
               }

@@ -8,11 +8,11 @@ productApi.get("", ProductController.findProducts);
 productApi.get("/id/:id", ProductController.findSingleProduct);
 
 // admin
-productApi.post(
-  "/admin/save",
-  authController.authorizeUser,
-  authController.isAdmin,
-  ProductController.createproduct,
-  overallErrorHandler
-);
+// productApi.post(
+//   "/admin/save",
+//   authController.authorizeUser,
+//   authController.isAdmin,
+//   ProductController.createproduct,
+//   overallErrorHandler
+// );
 export default productApi;

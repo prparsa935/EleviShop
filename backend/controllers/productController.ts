@@ -37,21 +37,21 @@ class ProductController {
 
     return res.json(await ProductService.findProductById(productId));
   }
-  async createproduct(req: Request, res: Response, next: NextFunction) {
-    try {
-      const productSaveDto = plainToInstance(ProductSaveDto, req.body);
-      const errors = await validate(productSaveDto);
-      const flattenErrors = errors.flat();
+  // async createproduct(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const productSaveDto = plainToInstance(ProductSaveDto, req.body);
+  //     const errors = await validate(productSaveDto);
+  //     const flattenErrors = errors.flat();
 
   
-      if (flattenErrors.length > 0) {
-        throw new FieldErrors(flattenErrors);
-      }
-      const product = await productService.saveProduct(productSaveDto);
-      return res.json(product);
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     if (flattenErrors.length > 0) {
+  //       throw new FieldErrors(flattenErrors);
+  //     }
+  //     const product = await productService.saveProduct(productSaveDto);
+  //     return res.json(product);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 }
 export default new ProductController();

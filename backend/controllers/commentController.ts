@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
-import ResponseDTO from "../dtos/response.dto";
+import ResponseDTO from "../dtos/response.dto.js";
 
-import { FieldErrors, OverallError } from "../errors/orderSaveError";
-import commentService from "../services/commentService";
-import { CommentSaveDto } from "../dtos/comment.dto";
-import { User } from "../models/User";
+import { FieldErrors, OverallError } from "../errors/orderSaveError.js";
+import commentService from "../services/commentService.js";
+import { CommentSaveDto } from "../dtos/comment.dto.js";
+import { User } from "../models/User.js";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 

@@ -12,12 +12,12 @@ import {
   TableInheritance,
 } from "typeorm";
 
-import { Image } from "./Image";
-import { Comment } from "./Comment";
+import { Image } from "./Image.js";
+import { Comment } from "./Comment.js";
 
-import { Color } from "./Color";
-import { Category } from "./Category";
-import { Inventory } from "./Inventory";
+import { Color } from "./Color.js";
+import { Category } from "./Category.js";
+import { Inventory } from "./Inventory.js";
 
 // export enum color {
 //     yellow = 'yellow',

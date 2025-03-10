@@ -9,8 +9,9 @@ import {
   IntegerType,
   CreateDateColumn,
   UpdateDateColumn,
+  Relation,
 } from "typeorm";
-import { User } from "./User";
+import { User } from "./User.js";
 
 // export enum color {
 //     yellow = 'yellow',
@@ -21,7 +22,7 @@ export class TfLogin {
   @PrimaryGeneratedColumn()
   id: number;
   @OneToOne(() => User, { nullable: false })
-  user: User;
+  user: Relation<User>;
   @Column()
   code: number;
   @CreateDateColumn({

@@ -1,7 +1,7 @@
-import dataSource from "../utils/dbConfiguration";
+import dataSource from "../utils/dbConfiguration.js";
 
-import { ProductFilter } from "../types/productTypes";
-import { Category } from "../models/Category";
+import { ProductFilter } from "../types/productTypes.js";
+import { Category } from "../models/Category.js";
 class CategoryService {
   private categoryRepo = dataSource.getRepository(Category);
 

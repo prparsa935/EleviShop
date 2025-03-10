@@ -12,10 +12,10 @@ import {
   BeforeInsert,
   AfterInsert,
 } from "typeorm";
-import moment = require("moment-jalaali");
-import { User } from "./User";
-import { OrderInventory } from "./OrderInventory ";
-import { Person } from "./Person ";
+import moment from "moment-jalaali";
+import { User } from "./User.js";
+import { OrderInventory } from "./OrderInventory.js";
+import { Person } from "./Person.js";
 import { Expose } from "class-transformer";
 export enum orderStatus {
   waitingForPayment = "در انتظار پرداخت",

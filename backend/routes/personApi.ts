@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 
-import personController from "../controllers/personController";
-import authController from "../controllers/authController";
+import personController from "../controllers/personController.js";
+import authController from "../controllers/authController.js";
 
 const personApi = Router();
 // check user with identify

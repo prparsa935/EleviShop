@@ -1,9 +1,9 @@
-import { Comment } from "../models/Comment";
-import dataSource from "../utils/dbConfiguration";
-import { CommentOrders, CommentSaveDto } from "../dtos/comment.dto";
-import productService from "./productService";
-import { OverallError } from "../errors/orderSaveError";
-import { User } from "../models/User";
+import { Comment } from "../models/Comment.js";
+import dataSource from "../utils/dbConfiguration.js";
+import { CommentOrders, CommentSaveDto } from "../dtos/comment.dto.js";
+import productService from "./productService.js";
+import { OverallError } from "../errors/orderSaveError.js";
+import { User } from "../models/User.js";
 class CommentService {
   private commentRepo = dataSource.getRepository(Comment);
   async findComments(

@@ -1,6 +1,6 @@
-import { User } from "../models/User";
+import { User } from "../models/User.js";
 
-import jsonwebtoken = require("jsonwebtoken");
+import jsonwebtoken from "jsonwebtoken";
 class AuthService {
   // private tfLogin = dataSource.getRepository(TfLogin);
 
@@ -41,7 +41,7 @@ class AuthService {
       process.env.SECRET_TOKEN_KEY,
       (err, iuser: Partial<User>) => {
         if (err) return null;
-     
+
         user = iuser;
       }
     );

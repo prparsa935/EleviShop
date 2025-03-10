@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
-      "lib": ["es5", "ES6", "dom"],
-      "target": "ES6",
-      "module": "commonjs",
-      "outDir": "dist",
-      "moduleResolution": "node",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true
-  }
+    "target": "ES2020",                       // Output modern ES2020 code
+    "module": "ESNext",                    // Use "NodeNext" for ESM support in Node.js
+    "outDir": "dist",                        // Output compiled files to "dist"
+    "strict": false,                          // Enable all strict type-checking options
+    "esModuleInterop": true,                 // Allow default imports for CommonJS modules
+    "moduleResolution": "node",          // Resolve modules using Node.js-style resolution
+    "emitDecoratorMetadata": true,           // Emit decorator metadata (required for TypeORM)
+    "experimentalDecorators": true,          // Enable decorator support
+    "skipLibCheck": true,                    // Skip type checking of declaration files
+    "resolveJsonModule": true,               // Allow importing JSON files
+    "noEmit": false  ,                        // Allow emitting output files (default)
+    "rootDir": "./" // Ensure this points to the root of your projects
+  },
+  
+  
+
 }

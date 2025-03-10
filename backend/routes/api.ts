@@ -1,13 +1,13 @@
 import { Router } from "express";
-import productApi from "./productApi";
-import categoryApi from "./categoryApi";
-import authApi from "./authApi";
-import orderApi from "./orderApi";
-import authController from "../controllers/authController";
-import personApi from "./personApi";
-import imageApi from "./imageApi";
-import colorApi from "./colorApi";
-import commentApi from "./commentApi";
+import productApi from "./productApi.js";
+import categoryApi from "./categoryApi.js";
+import authApi from "./authApi.js";
+import orderApi from "./orderApi.js";
+import authController from "../controllers/authController.js";
+import personApi from "./personApi.js";
+import imageApi from "./imageApi.js";
+import colorApi from "./colorApi.js";
+import commentApi from "./commentApi.js";
 
 const apiRouter = Router();
 apiRouter.use("/product", productApi);

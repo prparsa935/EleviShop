@@ -1,5 +1,4 @@
 import { ValidationError } from "class-validator";
-import FieldErrorsType from "../types/fieldErrors";
 
 export class OverallError extends Error {
   public statusCode: number;

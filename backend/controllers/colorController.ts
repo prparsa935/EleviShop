@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { Color } from "../models/Color";
+import { Color } from "../models/Color.js";
 import { plainToInstance } from "class-transformer";
 import { validate, Validate } from "class-validator";
-import { FieldErrors, OverallError } from "../errors/orderSaveError";
-import colorService from "../services/colorService";
-import ResponseDTO from "../dtos/response.dto";
+import { FieldErrors, OverallError } from "../errors/orderSaveError.js";
+import colorService from "../services/colorService.js";
+import ResponseDTO from "../dtos/response.dto.js";
 
 class ColorController {
   async createColor(req: Request, res: Response, next: NextFunction) {

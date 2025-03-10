@@ -9,10 +9,9 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { Comment } from "./Comment";
-import { type } from "os";
-import { TfLogin } from "./TfLogin";
-import { Person } from "./Person ";
+import { Comment } from "./Comment.js";
+import { TfLogin } from "./TfLogin.js";
+import { Person } from "./Person.js";
 
 @Entity()
 export class User {

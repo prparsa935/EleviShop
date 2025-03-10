@@ -1,8 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Relation,
+} from "typeorm";
 
-import { Order } from "./Order";
+import { Order } from "./Order.js";
 
-import { Inventory } from "./Inventory";
+import { Inventory } from "./Inventory.js";
 
 @Entity()
 export class OrderInventory {
@@ -15,7 +21,7 @@ export class OrderInventory {
   @Column({ nullable: false, default: 0 })
   singleProductOffPercent: number;
   @ManyToOne(() => Order, (order) => order.orderInventories, { nullable: true })
-  order: Order;
+  order: Relation<Order>;
 
   @ManyToOne(() => Inventory, { nullable: false })
   inventory: Inventory;

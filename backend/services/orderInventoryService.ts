@@ -1,8 +1,8 @@
-import dataSource from "../utils/dbConfiguration";
+import dataSource from "../utils/dbConfiguration.js";
 
-import { User } from "../models/User";
+import { User } from "../models/User.js";
 import { instanceToPlain } from "class-transformer";
-import { OrderInventory } from "../models/OrderInventory ";
+import { OrderInventory } from "../models/OrderInventory.js";
 import { EntityManager } from "typeorm";
 class OrderInventoryService {
   private orderInventoryRepo = dataSource.getRepository(OrderInventory);

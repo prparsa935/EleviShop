@@ -1,6 +1,6 @@
 import { EntityManager } from "typeorm";
-import { Color } from "../models/Color";
-import dataSource from "../utils/dbConfiguration";
+import { Color } from "../models/Color.js";
+import dataSource from "../utils/dbConfiguration.js";
 
 class ColorService {
   private colorRepo = dataSource.getRepository(Color);

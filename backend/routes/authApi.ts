@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 import { body, validationResult, query } from "express-validator";
-import AuthController from "../controllers/authController";
-import { fieldErrorHandler } from "../middlewares/errorHandler";
+import AuthController from "../controllers/authController.js";
+import { fieldErrorHandler } from "../middlewares/errorHandler.js";
 const authApi = Router();
 authApi.post(
   "/login",

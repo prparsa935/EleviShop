@@ -1,14 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import { Product } from "../models/product";
-import { ProductFilter } from "../types/productTypes";
-import ResponseDTO from "../dtos/response.dto";
-import ProductService from "../services/productService";
-import { plainToInstance } from "class-transformer";
-import { ProductSaveDto } from "../dtos/product.dto";
-import { validate } from "class-validator";
-import { FieldErrors, OverallError } from "../errors/orderSaveError";
-import productService from "../services/productService";
-import FieldErrorsType from "../types/fieldErrors";
+import { Request, Response } from "express";
+
+import { ProductFilter } from "../types/productTypes.js";
+import ResponseDTO from "../dtos/response.dto.js";
+import ProductService from "../services/productService.js";
 
 class ProductController {
   async findProducts(req: Request, res: Response) {
@@ -19,7 +13,6 @@ class ProductController {
         .status(200)
         .json(await ProductService.findProductsByFillter(filter));
     } catch (error) {
-    
       return res
         .status(500)
         .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
@@ -43,7 +36,6 @@ class ProductController {
   //     const errors = await validate(productSaveDto);
   //     const flattenErrors = errors.flat();
 
-  
   //     if (flattenErrors.length > 0) {
   //       throw new FieldErrors(flattenErrors);
   //     }

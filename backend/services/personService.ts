@@ -1,9 +1,9 @@
-import dataSource from "../utils/dbConfiguration";
+import dataSource from "../utils/dbConfiguration.js";
 import {} from "typeorm";
 
-import { Person } from "../models/Person ";
-import { PersonSaveDto } from "../dtos/person.dto";
-import { User } from "../models/User";
+import { Person } from "../models/Person.js";
+import { PersonSaveDto } from "../dtos/person.dto.js";
+import { User } from "../models/User.js";
 class PersonService {
   private personRepo = dataSource.getRepository(Person);
 

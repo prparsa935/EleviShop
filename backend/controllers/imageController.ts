@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import imageService from "../services/imageService";
-import { Image } from "../models/Image";
-import ResponseDTO from "../dtos/response.dto";
+import imageService from "../services/imageService.js";
+import { Image } from "../models/Image.js";
+import ResponseDTO from "../dtos/response.dto.js";
 
 class ImageController {
   async saveimage(req: Request, res: Response, next: NextFunction) {

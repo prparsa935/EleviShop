@@ -3,16 +3,12 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
-  IsNumberString,
-  isNumberString,
-  IsString,
   Matches,
   Max,
-  MaxLength,
   Min,
   ValidateNested,
 } from "class-validator";
-import { enumSize } from "../models/Inventory";
+import { enumSize } from "../models/Inventory.js";
 import { Type } from "class-transformer";
 export class InventorySaveDto {
   @IsEnum(enumSize, { message: "سایز انتخابی وجود ندارد" })

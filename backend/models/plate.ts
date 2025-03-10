@@ -1,6 +1,6 @@
-import { Entity, Column, ChildEntity, ManyToOne } from "typeorm";
-import { Product } from "./product";
-import { Service } from "./Service";
+import { Entity, Column, ChildEntity, ManyToOne, Relation } from "typeorm";
+import { Product } from "./product.js";
+import { Service } from "./Service.js";
 
 @ChildEntity("plate")
 export class Plate extends Product {
@@ -11,5 +11,5 @@ export class Plate extends Product {
   @Column({ nullable: true })
   width: number;
   @ManyToOne(() => Service, (service) => service.plates)
-  service: Service;
+  service: Relation<Service>;
 }

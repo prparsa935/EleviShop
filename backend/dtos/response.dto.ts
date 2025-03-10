@@ -1,8 +1,8 @@
-import FieldErrorsType from "../types/fieldErrors";
+import FieldErrorsType from "../types/fieldErrors.js";
 
 type overallError = {
   message: string;
-};
+} | null;
 class ResponseDTO<dataT = null> {
   fieldErrors: FieldErrorsType | null;
   overallError: overallError | null;
@@ -10,11 +10,11 @@ class ResponseDTO<dataT = null> {
   successMessage: string | null;
   data: dataT | null;
   public constructor(
-    fieldErrors: FieldErrorsType = {},
+    fieldErrors: FieldErrorsType = null,
     overallError: overallError = null,
     success: boolean = false,
-    successMessage: string = null,
-    data: dataT = null
+    successMessage: string | null = null,
+    data: dataT | null = null
   ) {
     this.fieldErrors = fieldErrors;
     this.overallError = overallError;

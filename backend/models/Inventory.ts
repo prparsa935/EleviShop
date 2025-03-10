@@ -1,5 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Product } from "./product";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Relation,
+} from "typeorm";
+import { Product } from "./product.js";
 export enum enumSize {
   sm = "کوچک",
   md = "متوسط",
@@ -14,6 +20,6 @@ export class Inventory {
   @Column({ type: "enum", enum: enumSize })
   size: enumSize;
   @ManyToOne(() => Product)
-  product: Product;
+  product: Relation<Product>;
 }
-enumSize.md
+enumSize.md;

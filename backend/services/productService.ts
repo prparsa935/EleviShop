@@ -1,7 +1,7 @@
-import { Product } from "../models/product";
-import dataSource from "../utils/dbConfiguration";
+import { Product } from "../models/product.js";
+import dataSource from "../utils/dbConfiguration.js";
 import { Between, FindManyOptions, Like } from "typeorm";
-import { ProductFilter } from "../types/productTypes";
+import { ProductFilter } from "../types/productTypes.js";
 
 class ProductService {
   private productRepo = dataSource.getRepository(Product);

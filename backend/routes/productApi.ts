@@ -1,8 +1,8 @@
 import { Router } from "express";
-import ProductController from "../controllers/productController";
+import ProductController from "../controllers/productController.js";
 import { body, validationResult, query } from "express-validator";
-import { overallErrorHandler } from "../middlewares/errorHandler";
-import authController from "../controllers/authController";
+import { overallErrorHandler } from "../middlewares/errorHandler.js";
+import authController from "../controllers/authController.js";
 const productApi = Router();
 productApi.get("", ProductController.findProducts);
 productApi.get("/id/:id", ProductController.findSingleProduct);

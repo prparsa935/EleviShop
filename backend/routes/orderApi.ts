@@ -1,10 +1,10 @@
 import { Request, Response, Router } from "express";
-import ProductController from "../controllers/productController";
+import ProductController from "../controllers/productController.js";
 import { body, validationResult, query } from "express-validator";
-import orderController from "../controllers/orderController";
-import authController from "../controllers/authController";
-import { orderStatus } from "../models/Order";
-import { overallErrorHandler } from "../middlewares/errorHandler";
+import orderController from "../controllers/orderController.js";
+import authController from "../controllers/authController.js";
+import { orderStatus } from "../models/Order.js";
+import { overallErrorHandler } from "../middlewares/errorHandler.js";
 const orderApi = Router();
 // check user with identify
 orderApi.use(authController.authorizeUser);

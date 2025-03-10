@@ -1,7 +1,7 @@
 import { diskStorage } from "multer";
-import multer = require("multer");
-import { mainDir } from "../server";
-import fs = require("fs");
+import multer from "multer";
+import { mainDir } from "../server.js";
+import fs from "fs";
 const storage = diskStorage({
   destination: (req, file, cb) => {
     cb(null, mainDir + "/public/");
@@ -30,7 +30,6 @@ const upload = multer({
     } else {
       fs.unlink(file.path, (error) => {
         if (error) {
-          
         }
         cb(null, false);
       });

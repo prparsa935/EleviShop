@@ -1,14 +1,14 @@
-import dataSource from "../utils/dbConfiguration";
+import dataSource from "../utils/dbConfiguration.js";
 import {} from "typeorm";
-import { Order, orderStatus } from "../models/Order";
-import { User } from "../models/User";
+import { Order, orderStatus } from "../models/Order.js";
+import { User } from "../models/User.js";
 import { instanceToPlain } from "class-transformer";
-import { OrderSaveDto } from "../dtos/order.dto";
-import { OrderInventory } from "../models/OrderInventory ";
-import inventoryService from "./inventoryService";
-import ResponseDTO from "../dtos/response.dto";
-import orderInventoryService from "./orderInventoryService";
-import { OverallError } from "../errors/orderSaveError";
+import { OrderSaveDto } from "../dtos/order.dto.js";
+import { OrderInventory } from "../models/OrderInventory.js";
+import inventoryService from "./inventoryService.js";
+import ResponseDTO from "../dtos/response.dto.js";
+import orderInventoryService from "./orderInventoryService.js";
+import { OverallError } from "../errors/orderSaveError.js";
 class OrderService {
   private orderRepo = dataSource.getRepository(Order);
 

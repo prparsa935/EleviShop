@@ -1,6 +1,6 @@
 import axios from "axios"
-import { changeProductsInCartStatus } from "./commonFuncs"
-import dataSource from "./dbConfiguration"
+import { changeProductsInCartStatus } from "./commonFuncs.js"
+import dataSource from "./dbConfiguration.js"
 const transactionRepo=dataSource.getRepository('Transaction')
 const verifyTransaction=async(transaction)=>{
     const bankResponse=await axios.post('https://api.zarinpal.com/pg/v4/payment/verify.json',{

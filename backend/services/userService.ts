@@ -1,5 +1,5 @@
-import { User } from "../models/User";
-import dataSource from "../utils/dbConfiguration";
+import { User } from "../models/User.js";
+import dataSource from "../utils/dbConfiguration.js";
 
 class UserService {
   private userRepo = dataSource.getRepository(User);

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import ResponseDTO from "../dtos/response.dto";
-import authService from "../services/authService";
-import userService from "../services/userService";
-import { User } from "../models/User";
+import ResponseDTO from "../dtos/response.dto.js";
+import authService from "../services/authService.js";
+import userService from "../services/userService.js";
+import { User } from "../models/User.js";
 
 class AuthController {
   constructor() {}

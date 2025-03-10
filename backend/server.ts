@@ -1,17 +1,19 @@
-import express = require("express");
+import express from "express";
 
-import cors = require("cors");
+import cors from "cors";
 
 const app = express();
-import bodyParser = require("body-parser");
-import cookieParser = require("cookie-parser");
-import dotenv = require("dotenv");
-import dataSource from "./utils/dbConfiguration";
-
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import dataSource from "./utils/dbConfiguration.js";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config({ path: __dirname + "/.env" });
 
-import apiRouter from "./routes/api";
-
+import apiRouter from "./routes/api.js";
 
 app.use(cookieParser());
 

@@ -1,6 +1,6 @@
 import { In } from "typeorm";
-import { Image } from "../models/Image";
-import dataSource from "../utils/dbConfiguration";
+import { Image } from "../models/Image.js";
+import dataSource from "../utils/dbConfiguration.js";
 
 class ImageService {
   private imageRepo = dataSource.getRepository(Image);

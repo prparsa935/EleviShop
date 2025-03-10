@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult, ResultFactory } from "express-validator";
-import ResponseDTO from "../dtos/response.dto";
-import { FieldErrors, OverallError } from "../errors/orderSaveError";
-import FieldErrorsType from "../types/fieldErrors";
+import ResponseDTO from "../dtos/response.dto.js";
+import { FieldErrors, OverallError } from "../errors/orderSaveError.js";
+import FieldErrorsType from "../types/fieldErrors.js";
 
 const fieldErrorHandler = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);

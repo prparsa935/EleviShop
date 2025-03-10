@@ -1,19 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { Product } from "../models/product";
-import { ProductFilter } from "../types/productTypes";
-import ResponseDTO from "../dtos/response.dto";
-import ProductService from "../services/productService";
-import orderService from "../services/orderService";
-import { User } from "../models/User";
+import ResponseDTO from "../dtos/response.dto.js";
+
+import orderService from "../services/orderService.js";
+import { User } from "../models/User.js";
 import { isNumberString, validate } from "class-validator";
-import { plainToClass, plainToInstance } from "class-transformer";
-import { OrderSaveDto } from "../dtos/order.dto";
-import inventoryService from "../services/inventoryService";
-import { OrderInventory } from "../models/OrderInventory ";
-import { Order, orderStatus } from "../models/Order";
-import orderInventoryService from "../services/orderInventoryService";
-import dataSource from "../utils/dbConfiguration";
-import { OverallError } from "../errors/orderSaveError";
+import { plainToInstance } from "class-transformer";
+import { OrderSaveDto } from "../dtos/order.dto.js";
+
+import { OverallError } from "../errors/orderSaveError.js";
 
 class OrderController {
   async findCurrentOrders(req: Request, res: Response) {
@@ -79,7 +73,6 @@ class OrderController {
         plainToInstance(OrderSaveDto, order)
       );
 
-
       const errors = await Promise.all(
         orderSaveDtos.map((orderSaveDto) => validate(orderSaveDto))
       );
@@ -97,7 +90,6 @@ class OrderController {
         .status(200)
         .json(new ResponseDTO(null, null, true, "سفارش شما با موفقیت ثبت شد"));
     } catch (error) {
-      
       next(error);
     }
   }

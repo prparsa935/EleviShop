@@ -10,10 +10,11 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  Relation,
 } from "typeorm";
-import { Product } from "./product";
-import { User } from "./User";
-import { UserCommentLikes } from "./UserCommentLikes";
+import { Product } from "./product.js";
+import { User } from "./User.js";
+import { UserCommentLikes } from "./UserCommentLikes.js";
 
 @Entity()
 export class Comment {
@@ -39,7 +40,7 @@ export class Comment {
   })
   updated_at: Date;
   @ManyToOne(() => Product, (product) => product.comments, { nullable: false })
-  product: Product;
+  product: Relation<Product>;
   @ManyToOne(() => User, (user) => user.comments, { nullable: false })
   user: User;
   @OneToMany(

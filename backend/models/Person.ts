@@ -4,8 +4,9 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  Relation,
 } from "typeorm";
-import { User } from "./User";
+import { User } from "./User.js";
 
 @Entity()
 export class Person {
@@ -23,5 +24,5 @@ export class Person {
   postalCode: string;
 
   @OneToOne(() => User, (user) => user.person)
-  user: User;
+  user: Relation<User>;
 }

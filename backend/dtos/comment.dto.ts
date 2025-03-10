@@ -1,5 +1,4 @@
-import { IsEnum, IsNumber, Matches, Max, Min } from "class-validator";
-import { IsNull } from "typeorm";
+import { IsNumber, Matches, Max, Min } from "class-validator";
 export enum CommentOrders {
   earliest = "earliest",
   best = "best",

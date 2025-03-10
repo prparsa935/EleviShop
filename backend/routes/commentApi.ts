@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-import authController from "../controllers/authController";
+import authController from "../controllers/authController.js";
 
 import {
   fieldErrorHandler,
   overallErrorHandler,
-} from "../middlewares/errorHandler";
-import upload from "../utils/uploadPlateImgConfig";
-import imageController from "../controllers/imageController";
-import commentController from "../controllers/commentController";
+} from "../middlewares/errorHandler.js";
+import upload from "../utils/uploadPlateImgConfig.js";
+import imageController from "../controllers/imageController.js";
+import commentController from "../controllers/commentController.js";
 const commentApi = Router();
 // check user with identify
 commentApi.get(

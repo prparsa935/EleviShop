@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 
-import ResponseDTO from "../dtos/response.dto";
+import ResponseDTO from "../dtos/response.dto.js";
 
-import { User } from "../models/User";
-import { isNumberString, validate } from "class-validator";
-import personService from "../services/personService";
-import { plainToClass, plainToInstance } from "class-transformer";
-import { PersonSaveDto } from "../dtos/person.dto";
-import { Person } from "../models/Person ";
+import { User } from "../models/User.js";
+import { validate } from "class-validator";
+import personService from "../services/personService.js";
+import { plainToInstance } from "class-transformer";
+import { PersonSaveDto } from "../dtos/person.dto.js";
 
 class PersonController {
   async savePerson(req: Request, res: Response) {
@@ -20,7 +19,7 @@ class PersonController {
       if (errors.length > 0) {
         errors.forEach((error) => {
           // this is a FieldValidationError
-          fieldErrors[error.property] = error.constraints["matches"];
+          fieldErrors[error.property] = error.constraints?.["matches"];
         });
         return res.status(400).json(new ResponseDTO(fieldErrors, null, false));
       }
@@ -48,7 +47,6 @@ class PersonController {
 
       return res.status(200).json(person);
     } catch (error) {
-
       return res
         .status(500)
         .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));

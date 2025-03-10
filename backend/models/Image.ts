@@ -7,9 +7,10 @@ import {
   ManyToMany,
   JoinTable,
   ManyToOne,
+  Relation,
 } from "typeorm";
 
-import { Product } from "./product";
+import { Product } from "./product.js";
 
 // export enum color {
 //     yellow = 'yellow',
@@ -20,7 +21,7 @@ export class Image {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => Product)
-  product: Product;
+  product: Relation<Product>;
   @Column({ nullable: false })
   filePath: String;
 }

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 
-import ResponseDTO from "../dtos/response.dto";
+import ResponseDTO from "../dtos/response.dto.js";
 
-import CategoryService from "../services/categoryService";
+import CategoryService from "../services/categoryService.js";
 
 class CategoryController {
   async findAllCategoryTree(req: Request, res: Response) {

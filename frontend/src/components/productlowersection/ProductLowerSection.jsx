@@ -1,11 +1,57 @@
+import { useEffect, useState } from "react";
+import fetchSingleItem from "../../api/fetchSingleItem";
+import { fetchRelatedProducts } from "../../api/productApi";
 import AddToCart from "../addtocart/AddToCart";
 import Comments from "../Comments/Comments";
 import HorizentalProductList from "../horizentalproductlist/HorizentalProductList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tab/Tab";
+import { serverAddress } from "../../App";
+import { useNavigate } from "react-router";
+import schema from "../../schema/schema";
 
-const ProductLowerSection = ({ selectedSize, setSelectedSize, product,setCommentModalActive }) => {
+const ProductLowerSection = ({
+  selectedSize,
+  setSelectedSize,
+  product,
+  setCommentModalActive,
+}) => {
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [serviceLoading, setServiceLoading] = useState(true);
+  const [service, setService] = useState();
+  const navigate = useNavigate();
+  useEffect(() => {
+    fetchRelatedProducts(product?.id, product?.code, setRelatedProducts);
+    console.log(product.type);
+    console.log(product.service);
+    if (product.type === "service") {
+      fetchSingleItem("service/", product?.id, setService, setServiceLoading);
+    } else if (product.type === "plate") {
+      fetchSingleItem(
+        "service/",
+        product?.service?.id,
+        setService,
+        setServiceLoading
+      );
+    }
+  }, [product]);
+  useEffect(() => {
+    console.log(service);
+  }, [service]);
   return (
     <div className="flex flex-col gap-y-10">
+      {product?.type !== "service" ? (
+        <HorizentalProductList
+          title={"سرویس"}
+          products={[service]}
+        ></HorizentalProductList>
+      ) : (
+        <></>
+      )}
+
+      <HorizentalProductList
+        title={"اجزای سرویس"}
+        products={service?.plates}
+      ></HorizentalProductList>
       <div className="flex w-100 ">
         <Tabs
           activationMode={"manual"}
@@ -39,31 +85,24 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product,setComment
                 مشخصات
               </div>
               <div className="flex flex-col gap-y-8 ">
-                <div className="flex lg:text-base text-xs lg:justify-normal justify-between ">
-                  <span className=" text-neutral-400 font-semibold w-36  ">
-                    جنس
-                  </span>
-                  <span>{product?.material}</span>
-                </div>
-                <div className="flex  lg:text-base text-xs lg:justify-normal justify-between ">
-                  <span className=" text-neutral-400 font-semibold  w-36 ">
-                    طرح
-                  </span>
-                  <span>{product?.pattern}</span>
-                </div>
-                <div className="flex  lg:text-base text-xs lg:justify-normal justify-between">
-                  <span className=" text-neutral-400 font-semibold w-36 ">
-                    قد
-                  </span>
-                  <span>{product?.height}</span>
-                </div>
+                {schema[product?.type].map((attr) => {
+                  return (
+                    <div className="flex lg:text-base text-xs lg:justify-normal justify-between ">
+                      <span className=" text-neutral-400 font-semibold w-36  ">
+                        {attr.value}
+                      </span>
+                      <span>{product[attr.key]}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </TabsContent>
           <TabsContent data-state="active" value="comments">
-            <Comments product={product} setCommentModalActive={setCommentModalActive}/>
-              
-       
+            <Comments
+              product={product}
+              setCommentModalActive={setCommentModalActive}
+            />
           </TabsContent>
         </Tabs>
         <div>
@@ -75,7 +114,10 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product,setComment
           </div>
         </div>
       </div>
-      <HorizentalProductList product={product}></HorizentalProductList>
+      <HorizentalProductList
+        title={"محصولات مرتبط"}
+        product={relatedProducts}
+      ></HorizentalProductList>
     </div>
   );
 };

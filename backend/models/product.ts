@@ -25,11 +25,14 @@ import { Inventory } from "./Inventory.js";
 //   }
 @Entity()
 @TableInheritance({
-  column: { type: "varchar", name: "type", default: "plate" },
+  column: { type: "varchar", name: "type", default: "plate", length: 10 },
 })
 export abstract class Product {
   @PrimaryGeneratedColumn()
   id: number;
+  @Column({ type: "varchar", name: "type", default: "plate", length: 10 })
+  type: string; // Explicitly define it here!
+
   @OneToMany(() => Image, (image) => image.product)
   images: Image[];
   @Column({ nullable: false, length: 20 })
@@ -41,8 +44,8 @@ export abstract class Product {
   @OneToOne(() => Image, { nullable: false })
   @JoinColumn()
   mainImage: Image;
-  @Column({ nullable: true })
-  ratio: number;
+  // @Column({ nullable: true })
+  // ratio: number;
   @Column({ nullable: false })
   price: number;
   @Column({ length: 10, nullable: false })

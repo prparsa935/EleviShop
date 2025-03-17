@@ -27,8 +27,6 @@ const overallErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-
-
   if (error instanceof OverallError) {
     return res
       .status(error.statusCode)

@@ -1,0 +1,5 @@
+[
+  { "value": "جنس", "key": "material" },
+  { "value": "نوع", "key": "type" },
+  { "value": "طرح", "key": "pattern" }
+]

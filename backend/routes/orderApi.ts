@@ -1,9 +1,6 @@
-import { Request, Response, Router } from "express";
-import ProductController from "../controllers/productController.js";
-import { body, validationResult, query } from "express-validator";
+import { Router } from "express";
 import orderController from "../controllers/orderController.js";
 import authController from "../controllers/authController.js";
-import { orderStatus } from "../models/Order.js";
 import { overallErrorHandler } from "../middlewares/errorHandler.js";
 const orderApi = Router();
 // check user with identify

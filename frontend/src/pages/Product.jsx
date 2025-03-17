@@ -39,9 +39,10 @@ const Product = () => {
   }, [id]);
   useDidUpdateEffect(() => {
     let lastAvailableInv = null;
+    console.log(shoppingCart)
     const inventory = product?.inventories?.find((inventory) => {
       const productInCartIndex = shoppingCart.findIndex((productInCart) => {
-        return productInCart.inventory.id === inventory.id;
+        return productInCart.inventory?.id === inventory?.id;
       });
 
       if (inventory.quantity !== 0) {

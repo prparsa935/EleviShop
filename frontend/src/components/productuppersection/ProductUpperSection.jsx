@@ -5,6 +5,7 @@ import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import SelectBox from "../selectbox/SelectBox";
 import { imageServerAddress } from "../../App";
+import schema from "../../schema/schema";
 const ProductUpperSection = ({
   setImageSiderActive,
   product,
@@ -107,6 +108,7 @@ const ProductUpperSection = ({
                     <p className="  text-neutral-700">پشم، پلی استر، نخ</p>
                   </div>
                 ))} */}
+     
                 <div className="p-3 flex flex-col bg-neutral-100 rounded-xl m-1 text-sm font-semidbold">
                   <h5 className=" text-slate-400  ">جنس</h5>
                   <p className="  text-neutral-700">{product?.material}</p>

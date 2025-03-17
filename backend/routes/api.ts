@@ -8,6 +8,7 @@ import personApi from "./personApi.js";
 import imageApi from "./imageApi.js";
 import colorApi from "./colorApi.js";
 import commentApi from "./commentApi.js";
+import serviceApi from "./serviceApi.js";
 
 const apiRouter = Router();
 apiRouter.use("/product", productApi);
@@ -18,5 +19,6 @@ apiRouter.use("/auth", authApi);
 apiRouter.use("/image", imageApi);
 apiRouter.use("/color", colorApi);
 apiRouter.use("/comment", commentApi);
+apiRouter.use("/service", serviceApi);
 
 export default apiRouter;

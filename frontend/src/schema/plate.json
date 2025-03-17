@@ -1,0 +1,5 @@
+[
+  { "value": "وزن", "key": "weight" },
+  { "value": "طول", "key": "height" },
+  { "value": "عرض", "key": "width" }
+]

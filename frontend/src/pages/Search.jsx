@@ -17,7 +17,7 @@ const Search = () => {
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
   return (
-    <div className="search-page">
+    <div className="search-page app-bg min-h-screen">
       <NavBar />
       <MobileFooter />
       <Tag
@@ -27,19 +27,19 @@ const Search = () => {
         prefix={<i class="fa-solid fa-filter-list"></i>}
         border
         size={"sm"}
-        morCss="mt-2 lg:hidden !font-medium"
+        morCss="glass mt-2 lg:hidden !font-medium"
       >
         فیلتر
       </Tag>
-      <div className="container mx-auto max-w-screen-2xl flex  mt-5   ">
+      <div className="container mx-auto max-w-screen-2xl flex  mt-5 px-3  ">
         {/* filter */}
-        <div className="min-w-72 hidden lg:flex border">
+        <div className="min-w-72 hidden lg:flex">
           <SearchFilter />
         </div>
         <Sheet
           state={isFilterSheetOpen}
           setState={setIsFilterSheetOpen}
-          className=" lg:hidden z-50 bg-white h-100"
+          className=" lg:hidden z-50 glass-strong h-100"
         >
           <SearchFilter />
         </Sheet>

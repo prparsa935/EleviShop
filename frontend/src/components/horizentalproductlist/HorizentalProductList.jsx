@@ -16,7 +16,7 @@ const HorizentalProductList = ({ products, title }) => {
     <div className=" w-100 ">
       <Carousel
         opts={{ direction: "rtl", dragFree: true }}
-        className="w-full border border-[var(--border-color)] rounded-2xl p-5 bg-[var(--color-productcolor)]"
+        className="w-full glass rounded-2xl p-5"
       >
         <span className="font-semibold text-lg text-[var(--color-white)]">
           {title}
@@ -29,7 +29,7 @@ const HorizentalProductList = ({ products, title }) => {
               }}
               key={index}
               className={
-                "p-3 flex flex-col gap-y-2 bg-[var(--tp-b-color)] rounded-xl border border-[var(--color-bordercolorwhite)] cursor-pointer hover:border-[var(--bf-green)] transition-colors"
+                "p-3 flex flex-col gap-y-2 glass glass-hover rounded-xl border border-[var(--glass-border)] cursor-pointer"
               }
             >
               <div className={"mx-auto"}>

@@ -75,7 +75,7 @@ const InsertColorForm = ({ errors, setToastList, setErrors }) => {
       </div>
 
       <Button
-        bgColor="bg-rose-500"
+        bgColor="bg-[var(--color-gold)]"
         txtColor="text-white"
         shape="rounded-lg"
         disabled={loading}

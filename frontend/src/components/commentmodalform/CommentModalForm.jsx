@@ -27,7 +27,7 @@ const CommentModalForm = ({ commentModalActive, setCommentModalActive, setToastL
     <Modal
       enable={commentModalActive}
       setModalActive={setCommentModalActive}
-      className="md:h-[300px] h-100 md:w-[460px] w-100 p-6 rounded-3xl bg-[var(--color-productcolor)] border border-[var(--border-color)]"
+      className="md:h-[300px] h-100 md:w-[460px] w-100 p-6 rounded-3xl glass-strong"
     >
       <form onSubmit={commentFormSubmit} className="flex flex-col md:gap-y-4 gap-y-8 ">
         <h3 className="text-lg font-semibold text-[var(--color-white)]">ثبت دیدگاه</h3>
@@ -46,10 +46,10 @@ const CommentModalForm = ({ commentModalActive, setCommentModalActive, setToastL
           <Input
             name="content"
             type="textarea"
-            inputclassName="bg-[var(--tp-b-color)] border border-[var(--border-color)] text-[var(--color-white)] rounded-xl focus:ring-2 focus:ring-[var(--bf-orange)]/40"
+            inputclassName="bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--color-white)] rounded-xl focus:ring-2 focus:ring-[var(--color-gold)]/40"
           />
         </div>
-        <Button size="lg" bgColor="bg-[var(--bf-red)]" txtColor="text-white" shape="rounded-xl">
+        <Button size="lg" bgColor="bg-[var(--color-gold)]" txtColor="text-white" shape="rounded-xl" hoverClass="hover:brightness-105">
           {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت دیدگاه"}
         </Button>
       </form>

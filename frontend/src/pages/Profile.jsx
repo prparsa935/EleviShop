@@ -22,7 +22,7 @@ const Profile = () => {
     getPerson(setPerson, setToastList);
   }, []);
   return (
-    <div className="profile-page">
+    <div className="profile-page app-bg min-h-screen">
       <NavBar />
       <MobileFooter />
       <ToastList toastList={toastList}></ToastList>
@@ -32,7 +32,7 @@ const Profile = () => {
         person={person}
         setToastList={setToastList}
       ></PersonInformaionForm>
-      <div className="mx-auto max-w-screen-xl grid grid-cols-7  mt-10">
+      <div className="mx-auto max-w-screen-xl grid grid-cols-7  mt-10 px-3">
         <div className="lg:col-span-2 lg:order-1 col-span-12 order-2">
           <ProfileSidebar
             person={person}

@@ -36,13 +36,13 @@ const AdSlider = () => {
         moreCss={"absolute top-1/2  right-2"}
         shape={"rounded-full"}
         size="lg"
-        bgColor={"bg-white"}
+        bgColor={"bg-[var(--glass-bg-strong)]"}
       />
       <CarouselNext
         moreCss={"absolute top-1/2  left-2"}
         shape={"rounded-full"}
         size="lg"
-        bgColor={"bg-white"}
+        bgColor={"bg-[var(--glass-bg-strong)]"}
       />
     </Carousel>
   );

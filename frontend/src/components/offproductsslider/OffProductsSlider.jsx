@@ -19,7 +19,7 @@ const OffProductsSlider = ({ offProducts }) => {
     <div className=" mx-auto container max-w-screen-xl ">
       <Carousel
         opts={{ direction: "rtl", dragFree: true }}
-        className=" w-full bg-rose-500  lg:rounded-2xl  "
+        className=" w-full glass lg:rounded-2xl  "
       >
         <CarouselContent className={" h-100 py-4 pr-4"}>
           <CarouselItem
@@ -34,7 +34,7 @@ const OffProductsSlider = ({ offProducts }) => {
               onClick={()=>navigate(`/product/${product?.id}`)}
               key={index}
               className={
-                " p-3  flex flex-col gap-y-2 bg-white cursor-pointer" +
+                " p-3  flex flex-col gap-y-2 glass glass-hover cursor-pointer rounded-2xl" +
                 " " +
                 (index === 0 ? " rounded-r-2xl" : "")
               }
@@ -44,19 +44,19 @@ const OffProductsSlider = ({ offProducts }) => {
                   src={imageServerAddress + product?.mainImage?.filePath}
                 ></img>
               </div>
-              <div className="w-[114px]  md:w-[132px] h-[42px] overflow-hidden text-xs text-slate-500 font-semibold">
+              <div className="w-[114px]  md:w-[132px] h-[42px] overflow-hidden text-xs text-[var(--sub-text-color)] font-semibold">
                 {product?.name}
               </div>
               <div className="flex justify-between items-center mb-3">
                 <Tag
-                  bgColor="bg-red-600"
+                  bgColor="bg-[var(--bf-red)]"
                   txtColor="text-white"
                   morCss="text-sm font-basic"
                   size="xs"
                 >
                   {formatNumber(product?.offPercent)}%
                 </Tag>
-                <div className=" font-bold text-xs">
+                <div className=" font-bold text-xs text-[var(--color-white)]">
                   {formatNumber(product?.inventories?.[0]?.price)} تومان
                 </div>
               </div>

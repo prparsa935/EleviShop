@@ -9,7 +9,7 @@ const Category = ({ categoryData, isSub }) => {
       <span
         onClick={() => navigate("/search?categoryId=" + categoryData.id)}
         className={
-          "hover:bg-slate-200  cursor-pointer " +
+          "hover:bg-[var(--color-gold-light)]  cursor-pointer transition-colors " +
           (categoryData.childCategories.length === 0
             ? "text-sm text-neutral-400 px-5 py-2 "
             : " text-lg p-2")

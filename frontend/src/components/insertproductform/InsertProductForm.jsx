@@ -328,7 +328,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         </div>
         <div className="grow flex flex-col gap-y-10">
           <div className=" text-lg font-semibold">گام چهارم: اپلود عکس</div>
-          <div className=" flex border justify-center items-center border-slate-500 border-dotted rounded-lg p-10 relative">
+          <div className=" flex border justify-center items-center border-[var(--glass-border)] border-dotted rounded-lg p-10 relative">
             {isUploading ? (
               <>
                 <input
@@ -387,7 +387,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                     className="w-[80px]"
                     src={imageServerAddress + image?.filePath}
                   ></img>
-                  <span className=" text-sm text-slate-400">
+                  <span className=" text-sm text-[var(--sub-text-color)]">
                     {image?.filePath}
                   </span>
                 </div>
@@ -396,7 +396,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                     <i
                       onClick={() => setMainImage(image)}
                       data-mainImage={mainImage?.id === image?.id}
-                      class="fa-solid fa-flag data-[mainImage=true]:text-sky-400 text-slate-400 "
+                      class="fa-solid fa-flag data-[mainImage=true]:gold-text text-[var(--sub-text-color)] "
                     ></i>
                   </div>
                   <div>
@@ -410,7 +410,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
           {/* <div className="border flex justify-between  items-center  rounded-lg p-10">
             <div className="flex items-center">
               <img className="w-[80px]" src={productImageTest}></img>
-              <span className=" text-sm text-slate-400">product93141.jpg</span>
+              <span className=" text-sm text-[var(--sub-text-color)]">product93141.jpg</span>
             </div>
             <div className="flex justify-around gap-x-4">
               <div>
@@ -424,7 +424,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         </div>
       </div>
       <Button
-        bgColor="bg-rose-500"
+        bgColor="bg-[var(--color-gold)]"
         txtColor="text-white"
         shape="rounded-lg"
         disabled={loading}

@@ -14,12 +14,12 @@ const ProductImageShow = ({ active, setActive, productImageList }) => {
       className=" fixed top-0 w-full h-screen bg-[var(--color-lightblack)] z-50 data-[active=false]:hidden"
     >
       <div className="relative flex items-center w-full h-100">
-        <div
-          onClick={() => setActive(false)}
-          className="absolute top-4 left-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-[var(--color-white)] cursor-pointer hover:bg-white/20 transition-colors"
-        >
-          <i className="fa-solid fa-x"></i>
-        </div>
+          <div
+            onClick={() => setActive(false)}
+            className="absolute top-4 left-4 w-10 h-10 flex items-center justify-center rounded-full glass text-[var(--color-white)] cursor-pointer transition-colors"
+          >
+            <i className="fa-solid fa-x"></i>
+          </div>
         <Carousel opts={{ direction: "rtl" }} className="md:h-[70vh] md:w-[70vh] w-100 m-auto relative ">
           <CarouselContent className={"h-100"}>
             {productImageList?.map((image, index) => (
@@ -28,8 +28,8 @@ const ProductImageShow = ({ active, setActive, productImageList }) => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious moreCss={"absolute top-1/2 right-2"} shape={"rounded-full"} size="lg" bgColor={"bg-[var(--bf-orange)]"} />
-          <CarouselNext moreCss={"absolute top-1/2 left-2"} shape={"rounded-full"} size="lg" bgColor={"bg-[var(--bf-orange)]"} />
+          <CarouselPrevious moreCss={"absolute top-1/2 right-2"} shape={"rounded-full"} size="lg" bgColor={"bg-[var(--glass-bg-strong)]"} />
+          <CarouselNext moreCss={"absolute top-1/2 left-2"} shape={"rounded-full"} size="lg" bgColor={"bg-[var(--glass-bg-strong)]"} />
         </Carousel>
       </div>
     </div>

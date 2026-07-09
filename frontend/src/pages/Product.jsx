@@ -67,7 +67,7 @@ const Product = () => {
     return <PageLoading></PageLoading>;
   }
   return (
-    <div className="product-page bg-[var(--tp-b-color)] min-h-screen">
+    <div className="product-page app-bg min-h-screen">
       <NavBar />
       <div className=" sticky top-24 w-100 h-0 z-50 ">
         {toastList?.map((toast) => (
@@ -88,7 +88,7 @@ const Product = () => {
         commentModalActive={commentModalActive}
         setCommentModalActive={setCommentModalActive}
       />
-      <div className="flex flex-col gap-y-5 mt-7 mx-auto max-w-screen-2xl">
+      <div className="flex flex-col gap-y-5 mt-7 mx-auto max-w-screen-2xl px-3">
         <CategoryPath categoryPath={product?.mainCategory?.categoryPath} />
         <ProductUpperSection
           selectedSize={selectedSize}
@@ -98,7 +98,7 @@ const Product = () => {
           product={product}
         ></ProductUpperSection>
 
-        <div className="w-100 my-6 rounded-3xl border border-[var(--border-color)] bg-[var(--color-productcolor)] py-6 px-3">
+        <div className="w-100 my-6 rounded-3xl glass py-6 px-3">
           <Carousel
             opts={{ direction: "rtl", dragFree: true }}
             className="w-100 h-14 m-auto relative select-none cursor-pointer"
@@ -107,7 +107,7 @@ const Product = () => {
               {advantages.map((item, index) => (
                 <CarouselItem key={index} className={"lg:basis-1/5 basis-1/3"}>
                   <div className="flex justify-center text-[var(--sub-text-color)] lg:text-sm text-xs flex-col lg:flex-row font-medium items-center gap-x-3 gap-y-3">
-                    <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[var(--tp-b-color)] border border-[var(--border-color)] text-[var(--bf-orange)] shrink-0">
+                    <span className="flex items-center justify-center w-11 h-11 rounded-full glass border border-[var(--glass-border)] text-[var(--color-gold)] shrink-0">
                       <i className={`far fa-lg ${item.icon}`}></i>
                     </span>
                     <span>{item.label}</span>

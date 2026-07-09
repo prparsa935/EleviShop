@@ -34,17 +34,17 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommen
       <div>
         <div className="flex items-center gap-x-2 mb-3 px-2">
           <span className="relative w-7 h-7 shrink-0">
-            <span className="absolute inset-0 rounded-full border-2 border-[var(--bf-orange)]"></span>
-            <span className="absolute inset-[6px] rounded-full border-2 border-[var(--bf-red)]"></span>
+            <span className="absolute inset-0 rounded-full border-2 border-[var(--color-gold)]"></span>
+            <span className="absolute inset-[6px] rounded-full border-2 border-[var(--color-yellow)]"></span>
           </span>
           <h3 className="text-lg font-semibold text-[var(--color-white)]">اجزای سرویس</h3>
         </div>
         <HorizentalProductList products={service?.plates}></HorizentalProductList>
       </div>
 
-      <div className="flex w-100 bg-[var(--color-productcolor)] rounded-3xl border border-[var(--border-color)] p-4">
+      <div className="flex w-100 glass rounded-3xl p-4">
         <Tabs activationMode={"manual"} defaultValue="properties" orientation="vertical" className="grow ">
-          <TabsList className={"w-100 lg:justify-start justify-around sticky top-[96px] mb-8 border-b border-[var(--border-color)] "}>
+          <TabsList className={"w-100 lg:justify-start justify-around sticky top-[96px] mb-8 border-b border-[var(--glass-border)] "}>
             <TabsTrigger className={"lg:grow-0 grow"} value="introduction">معرفی</TabsTrigger>
             <TabsTrigger className={"lg:grow-0 grow"} value="properties">مشخصات</TabsTrigger>
             <TabsTrigger className={"lg:grow-0 grow"} value="comments">دیدگاه ها</TabsTrigger>
@@ -59,7 +59,7 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommen
               <div className="lg:text-xl text-base font-semibold text-[var(--color-white)] mb-5">مشخصات</div>
               <div className="flex flex-col gap-y-5 ">
                 {schema[product?.type]?.map((attr, i) => (
-                  <div key={i} className="flex lg:text-base text-xs lg:justify-normal justify-between border-b border-dashed border-[var(--border-color)] pb-2">
+                  <div key={i} className="flex lg:text-base text-xs lg:justify-normal justify-between border-b border-dashed border-[var(--glass-border)] pb-2">
                     <span className="text-[var(--sub-text-color)] font-semibold w-36">{attr.value}</span>
                     <span className="text-[var(--color-white)]">{product[attr.key]}</span>
                   </div>

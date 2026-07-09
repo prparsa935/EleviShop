@@ -5,9 +5,9 @@ import { findOrderByState } from "../../api/order";
 
 const OrdersTabBox = ({ currentOrders, deliveredOrders, canceledOrders }) => {
   return (
-    <div className="border p-4 flex flex-col">
+    <div className="glass p-4 rounded-2xl flex flex-col">
       <div className="mb-10">
-        <span className="font-semibold lg:text-lg">تاریخچه سفارشات</span>
+        <span className="font-semibold lg:text-lg text-[var(--color-white)]">تاریخچه سفارشات</span>
       </div>
       <Tabs
         activationMode={"manual"}
@@ -23,19 +23,19 @@ const OrdersTabBox = ({ currentOrders, deliveredOrders, canceledOrders }) => {
           <TabsTrigger className={"lg:grow-0 grow "} value="current">
             <span className="ml-1 lg:text-base text-sm">جاری</span>
 
-            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
+            <span className="bg-[var(--color-gold)] !text-white w-5 h-5 rounded ">
               {currentOrders?.length}
             </span>
           </TabsTrigger>
           <TabsTrigger className={"lg:grow-0 grow"} value="delivered">
             <span className="ml-1 lg:text-base text-sm ">تحویل شده</span>
-            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
+            <span className="bg-[var(--color-gold)] !text-white w-5 h-5 rounded ">
               {deliveredOrders?.length}
             </span>
           </TabsTrigger>
           <TabsTrigger className={"lg:grow-0 grow"} value="canceled">
             <span className="ml-1 lg:text-base text-sm">لغو شده</span>
-            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
+            <span className="bg-[var(--color-gold)] !text-white w-5 h-5 rounded ">
               {canceledOrders?.length}
             </span>
           </TabsTrigger>

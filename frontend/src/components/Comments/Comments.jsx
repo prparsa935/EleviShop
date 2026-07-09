@@ -40,19 +40,19 @@ const Comments = ({ setCommentModalActive, product }) => {
               <span className="text-sm">۵</span>
             </div>
             <div className="flex gap-x-1 text-sm">
-              <i className="fa fa-star text-yellow-500 " aria-hidden="true"></i>
-              <i className="fa fa-star text-yellow-500 " aria-hidden="true"></i>
-              <i className="fa fa-star text-yellow-500 " aria-hidden="true"></i>
-              <i className="fa fa-star text-yellow-500 " aria-hidden="true"></i>
-              <i className="fa fa-star text-gray-400 " aria-hidden="true"></i>
+              <i className="fa fa-star text-[var(--color-yellow)] " aria-hidden="true"></i>
+              <i className="fa fa-star text-[var(--color-yellow)] " aria-hidden="true"></i>
+              <i className="fa fa-star text-[var(--color-yellow)] " aria-hidden="true"></i>
+              <i className="fa fa-star text-[var(--color-yellow)] " aria-hidden="true"></i>
+              <i className="fa fa-star text-[var(--sub-text-color)] " aria-hidden="true"></i>
             </div>
-            <span className=" text-sm text-slate-700 ">
+            <span className=" text-sm text-[var(--sub-text-color)] ">
               نظر خود را درباره این ثبت کنید
             </span>
             <Button
               size="sm"
-              moreCss="border-rose-400"
-              txtColor="text-rose-600"
+              moreCss="border-[var(--bf-red)]"
+              txtColor="text-[var(--bf-red)]"
               onClick={() => setCommentModalActive(true)}
             >
               ثبت دیدگاه
@@ -60,15 +60,15 @@ const Comments = ({ setCommentModalActive, product }) => {
           </div>
         </div>
         {/* left section */}
-        <div className="grow flex flex-col text-slate-400 text-sm gap-y-4">
+        <div className="grow flex flex-col text-[var(--sub-text-color)] text-sm gap-y-4">
           <div className="flex justify-between">
             <div className=" flex gap-x-3">
-              <span className=" text-black  ">مرتب سازی:</span>
+              <span className=" text-[var(--color-white)]  ">مرتب سازی:</span>
               <span
                 onClick={() => setCommentOrder("earliest")}
                 className={
-                  " text-rose-400 cursor-pointer " +
-                  (commentOrder === "earliest" ? " text-rose-600" : "")
+                  " text-[var(--bf-red)] cursor-pointer " +
+                  (commentOrder === "earliest" ? " text-[var(--bf-red)] font-semibold" : "")
                 }
               >
                 جدید ترین
@@ -77,7 +77,7 @@ const Comments = ({ setCommentModalActive, product }) => {
                 onClick={() => setCommentOrder("best")}
                 className={
                   "cursor-pointer " +
-                  (commentOrder === "best" ? "text-black" : "")
+                  (commentOrder === "best" ? "text-[var(--color-white)] font-semibold" : "")
                 }
               >
                 مفید ترین
@@ -108,18 +108,17 @@ const Comments = ({ setCommentModalActive, product }) => {
           >
             {comments?.map((comment) => {
               return (
-                <div className=" border-t px-4 py-6 flex flex-col gap-y-4">
+                <div className=" border-t border-[var(--glass-border)] px-4 py-6 flex flex-col gap-y-4">
                   <div className=" flex gap-x-2 ">
-                    <span>
+                    <span className="text-[var(--color-white)]">
                       {comment?.user?.person?.firstName +
                         " " +
                         comment?.user?.person?.lastName}
                     </span>
                     <Tag
-                      bgColor="bg-green-100"
+                      bgColor="bg-[var(--color-gold-light)]"
                       size="xs"
-                      txtColor="text-green-500 
-                font-sm"
+                      txtColor="text-[var(--color-gold)] font-sm"
                     >
                       خریدار
                     </Tag>
@@ -132,7 +131,7 @@ const Comments = ({ setCommentModalActive, product }) => {
                     <RateStar currentRate={comment?.rate} starRate={4} />
                     <RateStar currentRate={comment?.rate} starRate={5} />
                   </div>
-                  <span className="text-base text-slate-800">
+                  <span className="text-base text-[var(--color-white)]">
                     ‍‍ {comment?.content}
                   </span>
                   <div className=" flex justify-end gap-x-3 ">

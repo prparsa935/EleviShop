@@ -2,7 +2,7 @@ const ProgressBar = (props) => {
   return (
     <div
       className={
-        "flex w-full bg-gray-200 rounded-full overflow-hidden  " +
+        "flex w-full bg-[var(--color-gray353030)] rounded-full overflow-hidden  " +
         props.className
       }
       role="progressbar"
@@ -14,7 +14,7 @@ const ProgressBar = (props) => {
             <div  style={{width:`${(props.value/props.max)*100}%`}} className={"progress-bar "+props.color} role="progressbar"  aria-valuenow={`${props.value}`} aria-valuemin="0" aria-valuemax={`${props.max}`}>{props.content}</div>
         </div> */}
       <div
-        class="flex flex-col justify-center rounded-full overflow-hidden bg-blue-300 text-xs text-white text-center whitespace-nowrap transition duration-500 "
+        class="flex flex-col justify-center rounded-full overflow-hidden bg-[var(--color-gold)] text-xs text-white text-center whitespace-nowrap transition duration-500 "
         style={{ width: props.persentage+'%' }}
       ></div>
     </div>

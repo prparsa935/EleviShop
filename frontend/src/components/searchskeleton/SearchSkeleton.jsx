@@ -4,7 +4,7 @@ const SearchSkeleton = () => {
   return (
     <>
       {Array.from({ length: 10 }).map((_, index) => (
-        <div className="flex flex-col p-3 gap-y-3 border border-slate-200  hover:shadow-lg cursor-pointer">
+        <div className="flex flex-col p-3 gap-y-3 glass rounded-2xl cursor-pointer">
           <div className="mx-auto mt-4">
             <Skeleton className="h-[240px] w-[240px]"></Skeleton>
           </div>
@@ -16,7 +16,7 @@ const SearchSkeleton = () => {
               <Skeleton className="h-[10px] w-10   "></Skeleton>
             </div>
           </div>
-          <div className="flex justify-end text-base font-bold text-slate-600 mb-2">
+          <div className="flex justify-end text-base font-bold text-[var(--color-white)] mb-2">
             <Skeleton className="h-[10px] w-24   "></Skeleton>
           </div>
         </div>

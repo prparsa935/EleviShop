@@ -7,8 +7,8 @@ const PageLoading = () => {
     <div className="relative">
       <NavBar></NavBar>
       <MobileFooter></MobileFooter>
-      <div className=" fixed top-0 w-screen h-screen flex justify-center items-center bg-black  bg-opacity-50 inset-0 ">
-        <div className="border bg-white p-10 rounded-2xl z-10 flex flex-col items-center ">
+      <div className=" fixed top-0 w-screen h-screen flex justify-center items-center bg-[var(--color-lightblack)] inset-0 ">
+        <div className="glass-strong border border-[var(--glass-border)] p-10 rounded-2xl z-10 flex flex-col items-center ">
           <img className="w-[120px]" src={brandImage}></img>
           <Loading className="w-10 h-10 mt-10"></Loading>
         </div>

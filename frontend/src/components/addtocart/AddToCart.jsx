@@ -41,14 +41,14 @@ const AddToCart = ({ product, inventory }) => {
   return (
     <div
       className={
-        "lg:w-[333px] w-100 lg:static fixed bottom-0 bg-[var(--color-productcolor)] z-30 left-0 "
+        "lg:w-[333px] w-100 lg:static fixed bottom-0 glass-strong z-30 left-0 "
       }
     >
       {/* add to cart */}
-      <div className="border border-[var(--border-color)] rounded-2xl flex flex-col p-3 gap-y-6 lg:ml-4">
-        <div className="flex font-semibold text-xs pb-4 border-b border-[var(--border-color)]">
+      <div className="border border-[var(--glass-border)] rounded-2xl flex flex-col p-3 gap-y-6 lg:ml-4">
+        <div className="flex font-semibold text-xs pb-4 border-b border-[var(--glass-border)]">
           <div className="mx-1 text-[var(--sub-text-color)]">رضایت از کالا</div>
-          <div className="mx-1 font-semibold text-xs text-[var(--bf-green)]">۹۰٪</div>
+          <div className="mx-1 font-semibold text-xs text-[var(--color-gold)]">۹۰٪</div>
         </div>
 
         <div className="flex justify-between align-center">
@@ -96,15 +96,16 @@ const AddToCart = ({ product, inventory }) => {
                 }
               }}
               txtColor="text-white"
-              bgColor="bg-[var(--bf-red)]"
+              bgColor="bg-[var(--color-gold)]"
               size="lg"
               moreCss="w-100"
               shape="rounded-2xl"
+              hoverClass="hover:brightness-105"
             >
               افزودن به سبد
             </Button>
           ) : (
-            <div className="border border-[var(--border-color)] rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-[var(--bf-red)] items-center w-20 font-semibold text-lg ">
+            <div className="border border-[var(--glass-border)] rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-[var(--color-gold)] items-center w-20 font-semibold text-lg ">
               {productInCart.productInCart.quantity === inventory?.quantity ? (
                 <div className="w-2"></div>
               ) : (
@@ -133,7 +134,7 @@ const AddToCart = ({ product, inventory }) => {
           {productInCart ? (
             <span
               onClick={() => navigate("/cart")}
-              className="lg:hidden p-3 text-[var(--bf-green)] self-end font-semibold "
+              className="lg:hidden p-3 text-[var(--color-gold)] self-end font-semibold "
             >
               برو به سبد خرید
             </span>

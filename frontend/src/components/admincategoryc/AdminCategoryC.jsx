@@ -41,8 +41,8 @@ const AdminCategoryC = ({ setDeleteModalActive }) => {
                 class={
                   "fal fa-edit " +
                   (!searchParams.get("categoryId")
-                    ? "text-slate-400"
-                    : "text-sky-400")
+                    ? "text-[var(--sub-text-color)]"
+                    : "gold-text")
                 }
               ></i>
             </div>
@@ -56,8 +56,8 @@ const AdminCategoryC = ({ setDeleteModalActive }) => {
                 class={
                   "fa-solid fa-trash  " +
                   (!searchParams.get("categoryId")
-                    ? "text-slate-400"
-                    : "text-red-500")
+                    ? "text-[var(--sub-text-color)]"
+                    : "text-[var(--bf-red)]")
                 }
               ></i>
             </div>

@@ -8,17 +8,19 @@ import { useNavigate } from "react-router";
 const MobileFooter = () => {
   const { user, logout, shoppingCart } = useContext(AuthContext);
   const navigate = useNavigate();
+  const path = window.location.pathname;
+
+  const activeColor = (p) =>
+    path === p ? "text-[var(--color-gold)]" : "text-[var(--sub-text-color)]";
 
   return (
-    <div className="w-100 fixed flex justify-around items-center  lg:hidden bottom-0 left-0 px-7 py-1 border-t-2 z-50" style={{ backgroundColor: 'var(--tp-b-color)', borderColor: 'var(--border-color)' }}>
+    <div className="glass-strong w-100 fixed flex justify-around items-center lg:hidden bottom-0 left-0 px-7 py-1 border-t border-[var(--glass-border)] z-50">
       <Button
         onClick={() => navigate("/")}
         col
         size="md"
         border="none "
-        txtColor={
-          window.location.pathname === "/" ? "text-black" : "text-slate-500"
-        }
+        txtColor={activeColor("/")}
         icon={
           <i
             data-href={window.location.pathname}
@@ -29,7 +31,7 @@ const MobileFooter = () => {
         خانه
       </Button>
       <Button
-        txtColor="text-slate-500"
+        txtColor={activeColor("/search")}
         col
         size="md"
         border="none "
@@ -41,17 +43,13 @@ const MobileFooter = () => {
       <Badge
         position="top-1/2 right-0"
         content={
-          <Tag size="xs" bgColor="bg-rose-500" txtColor="text-white">
+          <Tag size="xs" bgColor="bg-[var(--color-gold)]" txtColor="text-white">
             {shoppingCart.length}
           </Tag>
         }
       >
         <Button
-          txtColor={
-            window.location.pathname === "/cart"
-              ? "text-black"
-              : "text-slate-500"
-          }
+          txtColor={activeColor("/cart")}
           onClick={() => navigate("/cart")}
           col
           size="md"
@@ -63,11 +61,7 @@ const MobileFooter = () => {
       </Badge>
 
       <Button
-        txtColor={
-          window.location.pathname === "/profile"
-            ? "text-black"
-            : "text-slate-500"
-        }
+        txtColor={activeColor("/profile")}
         onClick={() => {
           user ? navigate("/profile") : navigate("/login");
         }}

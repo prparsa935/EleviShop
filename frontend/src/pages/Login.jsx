@@ -39,7 +39,7 @@ const Login = () => {
           );
         })}
       </div>
-      <div className="w-full lg:w-[400px]  lg:border rounded-2xl  p-8 flex flex-col">
+      <div className="w-full lg:w-[400px]  lg:border border-[var(--glass-border)] glass rounded-2xl  p-8 flex flex-col">
         {/* header */}
         <div className="flex justify-center">
           <svg
@@ -64,10 +64,10 @@ const Login = () => {
         </div>
         {/* body */}
         <form onSubmit={loginSubmit} className="flex flex-col">
-          <div className=" font-semibold text-slate-700 text-2xl flex items-center gap-x-2 mt-5">
+          <div className=" font-semibold text-[var(--color-white)] text-2xl flex items-center gap-x-2 mt-5">
             <span>ورود</span>
           </div>
-          <div className=" text-sm text-slate-600 mt-5 flex flex-col gap-y-1">
+          <div className=" text-sm text-[var(--sub-text-color)] mt-5 flex flex-col gap-y-1">
             <span>سلام!</span>
             <span>لطفا شماره همراه خود را وارد کنید</span>
           </div>
@@ -77,10 +77,11 @@ const Login = () => {
 
           <div className="mt-7">
             <Button
-              bgColor="bg-rose-500"
+              bgColor="bg-[var(--color-gold)]"
               txtColor="text-white"
               moreCss="w-full"
               shape="rounded-lg"
+              hoverClass="hover:brightness-105"
               disabled={loading}
             >
               {loading ? <Loading className="w-5 h-5"></Loading> : "ورود"}
@@ -94,7 +95,7 @@ const Login = () => {
             })}
           </div> */}
 
-          <div className="text-xs mt-6 flex justify-center text-slate-500">
+          <div className="text-xs mt-6 flex justify-center text-[var(--sub-text-color)]">
             ورود شما به معنای پذیرش شرایط دیجی‌کالاو قوانین حریم‌خصوصی است
           </div>
         </form>

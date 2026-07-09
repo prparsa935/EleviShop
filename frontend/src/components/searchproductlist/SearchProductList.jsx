@@ -45,7 +45,7 @@ const SearchProductList = () => {
         {productList?.map((product, index) => (
           <div
             onClick={() => navigate("/product/" + product.id)}
-            className="flex flex-col p-3 gap-y-3 border border-slate-200  hover:shadow-lg cursor-pointer"
+            className="flex flex-col p-3 gap-y-3 glass glass-hover rounded-2xl cursor-pointer"
           >
             <div className="mx-auto mt-4">
               <img
@@ -53,20 +53,20 @@ const SearchProductList = () => {
                 src={imageServerAddress + product?.mainImage?.filePath}
               />
             </div>
-            <div className="h-[72px] overflow-hidden font-medium  text-xs text-slate-700 !leading-7 ">
+            <div className="h-[72px] overflow-hidden font-medium  text-xs text-[var(--sub-text-color)] !leading-7 ">
               {product?.name}
             </div>
             <div className="flex justify-between items-center ">
 
               <div className="text-xs">
-                <span className="mx-2 font-bold text-slate-800">۴.۴</span>
-                <i class="fa-duotone fa-star text-amber-600"></i>
+                <span className="mx-2 font-bold text-[var(--color-white)]">۴.۴</span>
+                <i class="fa-duotone fa-star text-[var(--color-yellow)]"></i>
               </div>
             </div>
-            <div className="flex flex-col  text-base font-bold text-slate-600 mb-2 h-10">
+            <div className="flex flex-col  text-base font-bold text-[var(--color-white)] mb-2 h-10">
               <div className="flex justify-end items-center">
                 {product?.offPercent ? (
-                  <Tag size="xs" txtColor="text-white" bgColor={"bg-red-500"}>
+                  <Tag size="xs" txtColor="text-white" bgColor={"bg-[var(--bf-red)]"}>
                     {formatNumber(product?.offPercent) + "%"}
                   </Tag>
                 ) : (

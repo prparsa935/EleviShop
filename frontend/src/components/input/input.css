@@ -1,17 +1,18 @@
 .custom-input{ 
     transition: 100ms;
     text-decoration: none;
-    border: 1px solid rgb(213, 213, 213) ;
-    
+    border: 1px solid var(--glass-border) ;
+    background: var(--glass-bg);
+    color: var(--color-white);
     padding: .5rem 2rem;
     outline: none;
+    border-radius: 0.75rem;
 }
-/* .input-container{
-   
-    
-} */
+.custom-input::placeholder{
+    color: var(--sub-text-color);
+    opacity: 0.8;
+}
 .custom-input:focus{
-    outline: 1px solid rgb(163, 163, 163) !important;
-
-    
+    outline: 1px solid var(--color-gold) !important;
+    border-color: var(--color-gold);
 }

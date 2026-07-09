@@ -734,6 +734,58 @@ input[type=number] {
 .line-through {
     text-decoration-line: line-through;
 }
+
+/* ============================================================
+   Liquid Glass — shared utility classes
+   ============================================================ */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.glass-strong {
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px));
+  backdrop-filter: blur(calc(var(--glass-blur) + 6px));
+  border: 1px solid var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+}
+.glass-hover {
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.glass-hover:hover {
+  box-shadow: var(--glass-shadow-hover);
+  border-color: var(--color-gold-glow);
+  transform: translateY(-2px);
+}
+.gold-text {
+  color: var(--color-gold);
+}
+.gold-bg {
+  background: var(--color-gold);
+}
+.gold-soft-bg {
+  background: var(--color-gold-soft);
+}
+
+/* Page background — soft warm gradient with faint glass sheen */
+.app-bg {
+  background: var(--bg-main);
+  min-height: 100vh;
+}
+
+/* Reduced-motion respect (UI/UX Pro Max checklist) */
+@media (prefers-reduced-motion: reduce) {
+  .glass-hover:hover {
+    transform: none;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
 @media only screen and (max-width:700px){
     .outside-shadow-box{
         box-shadow: none;

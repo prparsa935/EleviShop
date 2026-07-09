@@ -32,7 +32,7 @@ const Modal = (props) => {
         ref={modalContent}
         style={{ height: props.height }}
         className={
-          "bg-[var(--tp-b-color)] text-[var(--color-white)] modal-content border border-[var(--border-color)] relative scale-0 duration-500 self-center overflow-y-scroll " +
+          "text-[var(--color-white)] modal-content border border-[var(--glass-border)] relative scale-0 duration-500 self-center overflow-y-scroll " +
           props.className
         }
       >

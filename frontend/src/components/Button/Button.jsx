@@ -53,7 +53,7 @@ const Button = (props) => {
         " " +
         props.txtColor +
         " " +
-        (props.disabled ? " text-slate-500" : "") +
+        (props.disabled ? " text-[var(--sub-text-color)] opacity-50" : "") +
         " " +
         (props.col ? "flex-col" : "") +
         " " +

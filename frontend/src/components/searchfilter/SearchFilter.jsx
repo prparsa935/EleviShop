@@ -20,13 +20,13 @@ const SearchFilter = () => {
     }
   }, [searchParms.get("enableOff")]);
   return (
-    <div className="   w-100   flex-col gap-y-8 p-6 rounded-2xl flex">
+    <div className="glass w-100 flex-col gap-y-8 p-6 rounded-2xl flex">
       <div className="flex justify-between items-center cursor-pointer">
-        <h3 className=" text-xl font-semibold text-slate-700 cursor-pointer ">
+        <h3 className=" text-xl font-semibold text-[var(--color-white)] cursor-pointer ">
           فیلتر ها
         </h3>
         <div
-          className=" text-sky-500 text-xs font-bold"
+          className="gold-text text-xs font-bold cursor-pointer"
           onClick={() => {
             setSearchParam((prev) => {
               return [];
@@ -39,8 +39,8 @@ const SearchFilter = () => {
 
       <div className="flex flex-col ">
         <div className="flex justify-between items-center cursor-pointer w-100 mb-2">
-          <h5 className=" text-sm font-medium text-slate-700  ">دسته بندی</h5>
-          <i class="fa-duotone fa-angle-down ml-1"></i>
+          <h5 className=" text-sm font-medium text-[var(--color-white)]  ">دسته بندی</h5>
+          <i class="fa-duotone fa-angle-down ml-1 gold-text"></i>
         </div>
         <FilterCategoryList
           active={true}
@@ -49,15 +49,15 @@ const SearchFilter = () => {
       </div>
       <div className="flex flex-col gap-y-3 ">
         <div className="flex justify-between items-center cursor-pointer ">
-          <h5 className=" text-sm font-medium text-slate-700 ">محدوده قیمت</h5>
-          <i class="fa-duotone fa-angle-down ml-1"></i>
+          <h5 className=" text-sm font-medium text-[var(--color-white)] ">محدوده قیمت</h5>
+          <i class="fa-duotone fa-angle-down ml-1 gold-text"></i>
         </div>
         <div className="flex flex-col">
-          <div className="flex justify-between font-semibold">
+          <div className="flex justify-between font-semibold text-[var(--color-white)]">
             <span>قیمت از</span>
             <span>{searchParms.get("minPrice")} تومان</span>
           </div>
-          <div className="flex justify-between font-semibold">
+          <div className="flex justify-between font-semibold text-[var(--color-white)]">
             <span>تا</span>
             <span>{searchParms.get("maxPrice")}تومان</span>
           </div>
@@ -85,7 +85,7 @@ const SearchFilter = () => {
         />
       </div>
       <div className="flex justify-between items-center cursor-pointer">
-        <h5 className=" text-sm font-semibold text-slate-700  ">دارای تخفیف</h5>
+        <h5 className=" text-sm font-semibold text-[var(--color-white)]  ">دارای تخفیف</h5>
         <Switch
           checked={isOff}
           onCheckedChange={(value) => {

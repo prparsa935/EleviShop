@@ -1,47 +1,52 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 const ThemeToggle = () => {
   const [isLight, setIsLight] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("theme") === "light";
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("theme") !== "dark";
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute(
-      "data-theme",
-      isLight ? "light" : "dark"
-    );
-    localStorage.setItem("theme", isLight ? "light" : "dark");
+    const theme = isLight ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
   }, [isLight]);
 
   return (
     <button
       onClick={() => setIsLight((prev) => !prev)}
       aria-label="تغییر تم روشن و تاریک"
-      className={
-        "relative w-16 h-9 rounded-full border border-[var(--border-color)] shrink-0 transition-colors duration-500 " +
-        (isLight
-          ? "bg-[var(--bf-lighter-green)]"
-          : "bg-[var(--color-productcolor)]")
-      }
+      className="glass relative w-16 h-9 rounded-full border border-[var(--glass-border)] shrink-0 cursor-pointer overflow-hidden"
     >
+      {/* Track glow */}
       <span
-        className={
-          "absolute top-1 left-1 w-7 h-7 rounded-full flex items-center justify-center transition-transform duration-500 ease-in-out " +
-          (isLight
-            ? "translate-x-7 bg-[var(--color-yellow)]"
-            : "translate-x-0 bg-[var(--bf-green)]")
-        }
+        className="absolute inset-0 transition-colors duration-500"
+        style={{
+          background: isLight
+            ? "var(--color-gold-light)"
+            : "rgba(31,27,22,0.6)",
+        }}
+      />
+      {/* Sliding knob */}
+      <motion.span
+        layout
+        transition={{ type: "spring", stiffness: 500, damping: 32 }}
+        className="absolute top-1 w-7 h-7 rounded-full flex items-center justify-center shadow-md"
+        style={{
+          left: isLight ? "calc(100% - 2rem)" : "0.25rem",
+          background: isLight ? "var(--color-gold)" : "#d4a84a",
+        }}
       >
         <i
           className={
-            "text-sm transition-all duration-500 " +
+            "text-sm text-white transition-transform duration-500 " +
             (isLight
-              ? "fa-solid fa-sun rotate-0 text-[var(--tp-b-color)]"
-              : "fa-solid fa-moon rotate-[360deg] text-white")
+              ? "fa-solid fa-sun rotate-0"
+              : "fa-solid fa-moon rotate-[360deg]")
           }
         ></i>
-      </span>
+      </motion.span>
     </button>
   );
 };

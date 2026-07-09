@@ -8,7 +8,7 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
   const [liked, setLiked] = useState(false);
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between bg-[var(--color-productcolor)] rounded-3xl border border-[var(--border-color)] p-4">
+    <div className="flex flex-col lg:flex-row justify-between glass rounded-3xl p-4">
       <div className="lg:w-6/12 w-100 flex flex-col gap-y-3 lg:px-4">
         {product?.offPercent >= 25 ? (
           <div className="w-fit px-4 py-1.5 rounded-full bg-[var(--bf-lighter-red)] text-[var(--bf-red)] text-sm font-semibold order-3 lg:order-1 ">
@@ -41,7 +41,7 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
             <img
               key={index}
               onClick={() => setImageSiderActive(true)}
-              className="w-[72px] h-[72px] object-cover rounded-xl border-2 border-[var(--border-color)] p-1 cursor-pointer hover:border-[var(--bf-orange)] transition-colors"
+              className="w-[72px] h-[72px] object-cover rounded-xl border-2 border-[var(--glass-border)] p-1 cursor-pointer hover:border-[var(--color-gold)] transition-colors"
               src={imageServerAddress + image.filePath}
             />
           ))}
@@ -54,7 +54,7 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
           </p>
         </div>
         <div className="flex lg:flex-row flex-col w-100">
-          <div className="grow flex flex-col gap-y-4 mt-2 border-t border-[var(--border-color)] pt-3 mx-5 ">
+          <div className="grow flex flex-col gap-y-4 mt-2 border-t border-[var(--glass-border)] pt-3 mx-5 ">
             <div className="flex items-center text-xs ">
               <div className="gap-x-1 flex items-center ml-3 ">
                 <i className="fa-duotone fa-star text-[var(--color-yellow)]"></i>
@@ -63,31 +63,31 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
               </div>
               <div className="gap-x-1 flex items-center text-xs ">
                 <span className="text-[var(--bf-sky)]">{product?.commentCount} دیدگاه</span>
-              </div>
+                </div>
             </div>
 
             <div className="flex flex-col mt-10 ">
               <h3 className="text-xl mb-3 font-semibold text-[var(--color-white)]">ویژگی ها</h3>
               <div className="grid grid-cols-3">
                 {schema[product?.type]?.map((attr, i) => (
-                  <div key={i} className="p-3 flex flex-col bg-[var(--tp-b-color)] rounded-2xl m-1 text-sm">
+                  <div key={i} className="p-3 flex flex-col glass rounded-2xl m-1 text-sm">
                     <h5 className="text-[var(--sub-text-color)]">{attr.value}</h5>
                     <p className="text-[var(--color-white)] font-medium">{product?.[attr.key]}</p>
                   </div>
                 ))}
               </div>
               <div className="flex justify-between items-center mt-3">
-                <div className="bg-[var(--border-color)] h-[1px] grow"></div>
+                <div className="bg-[var(--glass-border)] h-[1px] grow"></div>
                 <Button
                   size="sm"
                   bgColor="bg-transparent"
-                  txtColor="text-[var(--bf-orange)]"
+                  txtColor="text-[var(--color-gold)]"
                   moreCss="w-98 mx-5"
                   leftIcon={<i className="fa-solid fa-angle-left"></i>}
                 >
                   مشاهده همه ویژگی ها
                 </Button>
-                <div className="bg-[var(--border-color)] h-[1px] grow"></div>
+                <div className="bg-[var(--glass-border)] h-[1px] grow"></div>
               </div>
             </div>
           </div>

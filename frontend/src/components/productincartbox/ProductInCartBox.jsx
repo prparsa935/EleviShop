@@ -16,13 +16,13 @@ const ProductInCartBox = ({ productInCart, key }) => {
       onClick={() =>
         navigate("/product/" + productInCart?.productInCart?.product?.id)
       }
-      className=" border-b px-1 py-5 cursor-pointer"
+      className=" border-b border-[var(--glass-border)] px-1 py-5 cursor-pointer"
       key={key}
     >
       <div className="flex">
         <div className="flex flex-col items-center">
           <img
-            className="w-[114px] h-[114px] mb-3"
+            className="w-[114px] h-[114px] mb-3 rounded-xl"
             src={
               imageServerAddress +
               productInCart?.productInCart.product?.mainImage?.filePath
@@ -33,7 +33,7 @@ const ProductInCartBox = ({ productInCart, key }) => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="border rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-red-500 items-center cursor-pointer select-none "
+            className="border border-[var(--glass-border)] rounded-md flex justify-between grow px-2 py-1 mt-4 gap-x-3 text-[var(--color-gold)] items-center cursor-pointer select-none "
           >
             {productInCart?.productInCart?.quantity ===
             productInCart?.productInCart?.inventory?.quantity ? (
@@ -62,35 +62,35 @@ const ProductInCartBox = ({ productInCart, key }) => {
             </span>
           </div>
         </div>
-        {/* left side (properties) */}
-        <div className="flex flex-col mr-3">
-          {/* title */}
-          <span className=" font-semibold mb-2">
-            {productInCart?.productInCart?.product?.name}
-          </span>
-          <div className="flex flex-col text-sm font-medium text-neutral-500">
-            <span>گارانتی اصالت و سلامت فیزیکی کالا</span>
-            {/* <span>سایز {productInCart?.productInCart?.inventory?.size}</span> */}
-            <span>ارسال تا دو هفته کاری</span>
-          </div>
-          <div>
-            <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
-              <span>
-                {formatNumber(
-                  productInCart?.productInCart?.product?.offPercent
-                )}
-              </span>
-              <span>%</span>
-              <span>تخفیف</span>
+          {/* left side (properties) */}
+          <div className="flex flex-col mr-3">
+            {/* title */}
+            <span className=" font-semibold mb-2 text-[var(--color-white)]">
+              {productInCart?.productInCart?.product?.name}
+            </span>
+            <div className="flex flex-col text-sm font-medium text-[var(--sub-text-color)]">
+              <span>گارانتی اصالت و سلامت فیزیکی کالا</span>
+              {/* <span>سایز {productInCart?.productInCart?.inventory?.size}</span> */}
+              <span>ارسال تا دو هفته کاری</span>
             </div>
-            <div className=" flex text-lg gap-x-1  mt-3 font-semibold">
-              <span>
-                {formatNumber(productInCart?.productInCart?.inventory?.price)}
-              </span>
-              <span>تومان</span>
+            <div>
+              <div className="gap-x-1 flex  text-xs text-[var(--bf-red)] mt-3 font-medium">
+                <span>
+                  {formatNumber(
+                    productInCart?.productInCart?.product?.offPercent
+                  )}
+                </span>
+                <span>%</span>
+                <span>تخفیف</span>
+              </div>
+              <div className=" flex text-lg gap-x-1  mt-3 font-semibold text-[var(--color-white)]">
+                <span>
+                  {formatNumber(productInCart?.productInCart?.inventory?.price)}
+                </span>
+                <span>تومان</span>
+              </div>
             </div>
           </div>
-        </div>
       </div>
       {/* انتقال به خرید بعدی */}
     </div>

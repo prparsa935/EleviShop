@@ -37,22 +37,22 @@ const NavBar = () => {
 
   return (
     <header className=" lg:h-[144px] h-[96px]  ">
-      <div className="w-100 fixed border-b border-[var(--border-color)] z-40 bg-[var(--tp-b-color)]">
+      <div className="glass-strong w-100 fixed border-b border-[var(--glass-border)] z-40">
         <div className="pb-3 mx-auto mt-9 container max-w-screen-2xl flex lg:justify-between items-center px-5 ">
           <div className="flex items-center w-100 lg:w-fit ">
             <div className="ml-5">
               <img
                 src={logo}
                 onClick={() => navigate("/")}
-                className="cursor-pointer w-[150px] h-[50px] object-contain"
+                className="cursor-pointer w-[150px] h-[50px] object-contain drop-shadow-sm"
               ></img>
             </div>
             <form onSubmit={(e) => searchHandler(e)} className=" ">
               <Input
                 name="searchInput"
                 placeHolder="جستجو در محصولات و سرویس‌ها"
-                inputclassName="text-[var(--color-white)] bg-[var(--color-productcolor)] border border-[var(--border-color)] rounded-xl focus:ring-2 focus:ring-[var(--bf-green)]/40 lg:w-96 md:w-90 "
-                preffix={<i className="fal fa-search text-[var(--sub-text-color)]"></i>}
+                inputclassName="text-[var(--color-white)] bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl focus:ring-2 focus:ring-[var(--color-gold)]/40 lg:w-96 md:w-90 backdrop-blur-md"
+                preffix={<i className="fal fa-search text-[var(--color-gold)]"></i>}
               />
             </form>
           </div>
@@ -62,7 +62,7 @@ const NavBar = () => {
             <Badge
               position="top-full right-0"
               content={
-                <Tag size="xs" bgColor="bg-[var(--bf-green)]" txtColor="text-white">
+                <Tag size="xs" bgColor="bg-[var(--color-gold)]" txtColor="text-white">
                   {shoppingCart.length}
                 </Tag>
               }
@@ -70,9 +70,9 @@ const NavBar = () => {
               <Button
                 onClick={() => navigate("/cart")}
                 shape="rounded-xl"
-                bgColor="bg-[var(--color-productcolor)]"
+                bgColor="bg-[var(--glass-bg)]"
                 txtColor="text-[var(--color-white)]"
-                border="border border-[var(--border-color)]"
+                border="border border-[var(--glass-border)]"
                 size="md"
               >
                 <i className="font-medium fa-light fa-cart-shopping"></i>
@@ -83,13 +83,14 @@ const NavBar = () => {
               <Button
                 shape="rounded-xl"
                 icon={<i className="fas fa-sign-in"></i>}
-                bgColor="bg-[var(--bf-green)]"
+                bgColor="bg-[var(--color-gold)]"
                 txtColor="text-white"
-                morCss=""
+                border="border border-[var(--color-gold-soft)]"
+                hoverClass="hover:brightness-105"
                 size="md"
               >
                 <Link to={"/login"}>ورود</Link>
-                <Separator orientation="vertical" className={"bg-white/30 mx-2"}></Separator>{" "}
+                <Separator orientation="vertical" className={"bg-[var(--glass-border)] mx-2"}></Separator>{" "}
                 <Link to={"/register"}>ثبت نام</Link>
               </Button>
             ) : (
@@ -97,9 +98,9 @@ const NavBar = () => {
                 <Button
                   onClick={() => navigate("/profile")}
                   shape="rounded-xl"
-                  bgColor="bg-[var(--color-productcolor)]"
+                  bgColor="bg-[var(--glass-bg)]"
                   txtColor="text-[var(--color-white)]"
-                  border="border border-[var(--border-color)]"
+                  border="border border-[var(--glass-border)]"
                   leftIcon={<i className="fa-light fa-angle-down"></i>}
                   size="md"
                 >
@@ -108,9 +109,9 @@ const NavBar = () => {
                 <Button
                   onClick={() => logout()}
                   shape="rounded-xl"
-                  bgColor="bg-[var(--color-productcolor)]"
+                  bgColor="bg-[var(--glass-bg)]"
                   txtColor="text-[var(--bf-red)]"
-                  border="border border-[var(--border-color)]"
+                  border="border border-[var(--glass-border)]"
                   leftIcon={<i className="fas fa-sign-in"></i>}
                   size="sm"
                 ></Button>
@@ -121,7 +122,7 @@ const NavBar = () => {
         <div
           ref={navEl}
           data-scrolled="false"
-          className=" duration-300 h-0 overflow-hidden border-t border-[var(--border-color)] data-[scrolled=false]:lg:h-12 data-[scrolled=false]:lg:overflow-visible items-center px-5 mx-auto container max-w-screen-2xl "
+          className=" duration-300 h-0 overflow-hidden border-t border-[var(--glass-border)] data-[scrolled=false]:lg:h-12 data-[scrolled=false]:lg:overflow-visible items-center px-5 mx-auto container max-w-screen-2xl "
         >
           <div className="flex items-stretch">
             <NavTab menu={<Categories></Categories>}>
@@ -134,11 +135,11 @@ const NavBar = () => {
                 دسته بندی کالا ها
               </Button>
             </NavTab>
-            <Separator orientation="vertical" className={"bg-[var(--border-color)] mx-2 h-auto"}></Separator>
+            <Separator orientation="vertical" className={"bg-[var(--glass-border)] mx-2 h-auto"}></Separator>
             <NavTab>
               <Button
                 onClick={() => navigate("/search?enableOff=true")}
-                txtColor="text-[var(--sub-text-color)]"
+                txtColor="text-[var(--color-gold)]"
                 size="xs"
                 border="none "
                 icon={<i className="fa-light fa-basket-shopping"></i>}
@@ -148,7 +149,7 @@ const NavBar = () => {
             </NavTab>
             <NavTab>
               <Button
-                txtColor="text-[var(--sub-text-color)]"
+                txtColor="text-[var(--color-gold)]"
                 size="xs"
                 border="none "
                 icon={<i className="fal fa-fire text-[var(--bf-red)]"></i>}
@@ -159,7 +160,7 @@ const NavBar = () => {
             <NavTab>
               <Button
                 onClick={() => navigate("/search?enableOff=true")}
-                txtColor="text-[var(--sub-text-color)]"
+                txtColor="text-[var(--color-gold)]"
                 size="xs"
                 border="none "
                 icon={<i className="fa-light fa-badge-dollar"></i>}

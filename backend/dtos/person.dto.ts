@@ -18,6 +18,6 @@ export class PersonSaveDto {
   })
   postalCode: string;
 
-  @Matches(RegExp("^[0-9-A-Za-zآ-ی ]{10,50}$"), { message: "آدرس نادرست است." })
+  @Matches(RegExp("^[0-9-A-Za-zآ-ی]{10,200}$"), { message: "ادرس صحیح نیست" })
   addressLine: string;
 }

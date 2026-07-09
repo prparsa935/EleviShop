@@ -2,7 +2,11 @@ import { motion } from "framer-motion";
 import MainLayout from "../components/mainlayout/MainLayout";
 import MobileFooter from "../components/mobilefooter/MobileFooter";
 import NavBar from "../components/navbar/NavBar";
-import { staggerContainer, staggerItem, fadeUp } from "../components/pagetransition/PageTransition";
+import {
+  staggerContainer,
+  staggerItem,
+  fadeUp,
+} from "../components/pagetransition/PageTransition";
 
 const features = [
   {
@@ -57,8 +61,8 @@ const Home = () => {
                 <span className="gold-text">مدرن</span> و دلنشین
               </h1>
               <p className="mt-4 max-w-md text-[var(--sub-text-color)] leading-relaxed">
-                بهترین سرویس‌ها و ظروف آشپزخانه با کیفیت‌ترین مواد و طراحی
-                روز دنیا. از تک‌ظروف تا سرویس‌های کامل، همه در یک جا.
+                بهترین سرویس‌ها و ظروف آشپزخانه با کیفیت‌ترین مواد و طراحی روز
+                دنیا. از تک‌ظروف تا سرویس‌های کامل، همه در یک جا.
               </p>
               <div className="mt-7 flex gap-x-3">
                 <a

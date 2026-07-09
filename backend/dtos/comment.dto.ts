@@ -4,7 +4,7 @@ export enum CommentOrders {
   best = "best",
 }
 export class CommentSaveDto {
-  @Matches(RegExp("^[A-Za-zآ-ی ]{10,50}$"), {
+  @Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
     message: "لطفا متن نظر خود را کامل کنید",
   })
   content: string;

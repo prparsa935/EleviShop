@@ -16,7 +16,7 @@ class CommentService {
     const pageSize = 10;
     // creating query
     const queryBuilder = await this.commentRepo
-      .createQueryBuilder('comment')
+      .createQueryBuilder("comment")
       .leftJoinAndSelect("comment.product", "product")
       .leftJoinAndSelect("comment.user", "user")
       .leftJoinAndSelect("user.person", "profile")
@@ -52,7 +52,7 @@ class CommentService {
     } else if (CommentOrders.earliest === commentOrder) {
       queryBuilder.orderBy("comment.dateCreated", "DESC");
     }
-  
+
     // fetch
     const comments = await queryBuilder.getMany();
 
@@ -67,7 +67,7 @@ class CommentService {
     if (!product) {
       throw new OverallError("محصولی با این کد وجود ندارد", 404);
     }
-    
+
     const newComment = new Comment();
     newComment.product = product;
     newComment.rate = commentSaveDto.rate;

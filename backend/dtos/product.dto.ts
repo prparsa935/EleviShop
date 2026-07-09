@@ -41,7 +41,7 @@ export class ProductSaveDto {
     message: "لطفا نام محصول را درست واردکنید",
   })
   productName: string;
-  @Matches(RegExp("^[A-Za-zآ-ی ]{10,50}$"), {
+  @Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
     message: "لطفا توضیخات محصول را درست واردکنید",
   })
   description: string;

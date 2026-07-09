@@ -8,6 +8,7 @@ import digiImg from "../assets/img/digi.png";
 import { useNavigate } from "react-router";
 import SubmitOrderBox from "../components/submitorderbox/SubmitOrderBox";
 import AddressInOrder from "../components/addressinorder/AddressInOrder";
+import SmartImage from "../components/smartimage/SmartImage";
 
 import Alert from "../components/alert/Alert";
 import PersonInformaionForm from "../components/personinformationform/PersonInformaionForm";
@@ -65,7 +66,7 @@ const Payment = () => {
       />
       <div className="mx-auto max-w-screen-xl mt-10 border relative ">
         <div className="flex justify-center p-4  ">
-          <img className="w-24" src={digiImg}></img>
+          <SmartImage className="w-24" src={digiImg} alt="" ratio="3/1" />
         </div>
         <div className=" lg:absolute right-0 top-0 p-4 flex items-center font-semibold text-lg ">
           <i

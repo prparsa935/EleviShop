@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/helperMehods";
 import { imageServerAddress } from "../../App";
 import { useNavigate } from "react-router";
+import SmartImage from "../smartimage/SmartImage";
 const OffProductsSlider = ({ offProducts }) => {
   const navigate=useNavigate()
   return (
@@ -26,7 +27,7 @@ const OffProductsSlider = ({ offProducts }) => {
             className={"w-[114px] h-[114px] md:w-[132px] md:h-[132px] "}
           >
             <div className="">
-              <img src={image}></img>
+              <SmartImage src={image} alt="" ratio="1/1" />
             </div>
           </CarouselItem>
           {offProducts?.map((product, index) => (
@@ -40,9 +41,12 @@ const OffProductsSlider = ({ offProducts }) => {
               }
             >
               <div className={" w-[114px] h-[114px] md:w-[132px] md:h-[132px]"}>
-                <img
+                <SmartImage
+                  className="w-full h-full object-cover rounded-xl"
                   src={imageServerAddress + product?.mainImage?.filePath}
-                ></img>
+                  alt={product?.name}
+                  ratio="1/1"
+                />
               </div>
               <div className="w-[114px]  md:w-[132px] h-[42px] overflow-hidden text-xs text-[var(--sub-text-color)] font-semibold">
                 {product?.name}

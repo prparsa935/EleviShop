@@ -3,6 +3,7 @@ import { imageServerAddress } from "../../App";
 import productImg from "../../assets/img/947920b7e5d1b87552bff471172eb45237b15a03_1660396852.jpg";
 import { Carousel, CarouselContent, CarouselItem } from "../Carousel/Carousel";
 import { formatNumber } from "../../utils/helperMehods";
+import SmartImage from "../smartimage/SmartImage";
 const OrderBox = ({ order }) => {
   const navigate = useNavigate();
   return (
@@ -56,12 +57,14 @@ const OrderBox = ({ order }) => {
         <CarouselContent className={" h-100 py-4 pr-4"}>
           {order?.orderInventories?.map((orderInventory, index) => (
             <CarouselItem key={index} className={" px-2  "}>
-              <img
-                className="w-[64px] h-[64px] rounded-lg"
+              <SmartImage
+                className="w-[64px] h-[64px] rounded-lg object-cover"
                 src={
                   imageServerAddress +
                   orderInventory?.inventory?.product?.mainImage?.filePath
                 }
+                alt={orderInventory?.inventory?.product?.name}
+                ratio="1/1"
               />
             </CarouselItem>
           ))}

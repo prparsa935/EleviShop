@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
 import { formatNumber } from "../../utils/helperMehods";
+import SmartImage from "../smartimage/SmartImage";
 
 const ProductInOrderBox = ({ orderInventory }) => {
   const navigate = useNavigate();
@@ -13,13 +14,15 @@ const ProductInOrderBox = ({ orderInventory }) => {
     >
       <div className="flex">
         <div className="flex flex-col items-center">
-          <img
-            className="w-[114px] h-[114px] mb-3"
+          <SmartImage
+            className="w-[114px] h-[114px] mb-3 rounded-xl"
             src={
               imageServerAddress +
               orderInventory?.inventory?.product?.mainImage?.filePath
             }
-          ></img>
+            alt={orderInventory?.inventory?.product?.name}
+            ratio="1/1"
+          />
           {/* <img className="w-[60px] " src={specialSellImage}></img> */}
           <span></span>
         </div>

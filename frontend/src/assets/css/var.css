@@ -137,8 +137,10 @@
 @font-face {
   font-family: "BYekan";
   src: url("../BYekan/BYekan+.ttf");
+  font-display: swap;
 }
 @font-face {
   font-family: "IranianSans";
   src: url("../IRANSansRegular.ttf/IRANSansRegular.ttf");
+  font-display: swap;
 }

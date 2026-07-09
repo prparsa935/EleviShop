@@ -11,6 +11,7 @@ import { searchProducts } from "../../api/productApi";
 import SearchSkeleton from "../searchskeleton/SearchSkeleton";
 import Loading from "../icons/Loading";
 import { imageServerAddress } from "../../App";
+import SmartImage from "../smartimage/SmartImage";
 const AdminProductC = ({ handleDeleteItem }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -105,10 +106,12 @@ const AdminProductC = ({ handleDeleteItem }) => {
               >
                 <div className="flex items-center">
                   <div>
-                    <img
+                    <SmartImage
                       className="w-[80px]"
                       src={imageServerAddress + product?.mainImage.filePath}
-                    ></img>
+                      alt={product?.name}
+                      ratio="1/1"
+                    />
                   </div>
                   <h3 className=" lg:font-semibold">{product?.name}</h3>
                 </div>

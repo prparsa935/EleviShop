@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import { imageServerAddress } from "../../App";
+import SmartImage from "../smartimage/SmartImage";
 import schema from "../../schema/schema";
 
 const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSelectedSize }) => {
@@ -28,21 +29,26 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
             <i className="fa-light fa-share-nodes"></i>
             <i className="fa-regular fa-bell"></i>
           </div>
-          <div className="mx-auto ">
-            <img
-              className="h-[250px] lg:h-auto rounded-2xl"
-              src={imageServerAddress + product?.mainImage.filePath}
-            ></img>
-          </div>
+           <div className="mx-auto ">
+             <SmartImage
+               className="h-[250px] lg:h-auto rounded-2xl"
+               src={imageServerAddress + product?.mainImage.filePath}
+               alt={product?.name}
+               eager
+               ratio="1/1"
+             />
+           </div>
         </div>
 
         <div className="lg:order-3 order-2 flex flex-wrap gap-2">
           {product?.images?.map((image, index) => (
-            <img
+            <SmartImage
               key={index}
               onClick={() => setImageSiderActive(true)}
               className="w-[72px] h-[72px] object-cover rounded-xl border-2 border-[var(--glass-border)] p-1 cursor-pointer hover:border-[var(--color-gold)] transition-colors"
               src={imageServerAddress + image.filePath}
+              alt=""
+              ratio="1/1"
             />
           ))}
         </div>
@@ -57,7 +63,7 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
           <div className="grow flex flex-col gap-y-4 mt-2 border-t border-[var(--glass-border)] pt-3 mx-5 ">
             <div className="flex items-center text-xs ">
               <div className="gap-x-1 flex items-center ml-3 ">
-                <i className="fa-duotone fa-star text-[var(--color-yellow)]"></i>
+                <i className="fa-solid fa-star text-[var(--color-yellow)]"></i>
                 <span className="font-medium text-[var(--color-white)]">{product?.rate}</span>
                 <span className="text-[var(--sub-text-color)]">(امتیاز)</span>
               </div>

@@ -801,3 +801,17 @@ input[type=number] {
     } */
 
 }
+
+/* ===== Optimized image loading (SmartImage) ===== */
+.smart-img {
+  opacity: 0;
+  transition: opacity 320ms ease;
+  background-color: var(--skeleton-color, #e7e5e4);
+}
+.smart-img.is-loaded {
+  opacity: 1;
+}
+.smart-img.is-errored {
+  opacity: 1;
+  object-fit: contain;
+}

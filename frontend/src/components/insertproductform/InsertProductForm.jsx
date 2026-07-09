@@ -14,6 +14,7 @@ import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 import Loading from "../icons/Loading";
 import SelectCategories from "../selectcategories/SelectCategories";
 import { imageServerAddress } from "../../App";
+import SmartImage from "../smartimage/SmartImage";
 import schema from "../../schema/schema";
 import InsertProductAddAttr from "../insertproductadattr/InsertProductAddAttr";
 import ASelectBox from "../selectbox/ASelectBox";
@@ -369,7 +370,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                   name="productImage"
                   className=" absolute top-0 w-full h-full z-30 opacity-0"
                 ></input>
-                <i class="fa-thin fa-circle-plus fa-3x text-sky-400"></i>
+                <i class="fa-solid fa-circle-plus fa-3x text-sky-400"></i>
               </>
             )}
           </div>
@@ -383,10 +384,12 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
             return (
               <div className="border flex justify-between  items-center  rounded-lg p-10">
                 <div className="flex items-center">
-                  <img
+                  <SmartImage
                     className="w-[80px]"
                     src={imageServerAddress + image?.filePath}
-                  ></img>
+                    alt=""
+                    ratio="1/1"
+                  />
                   <span className=" text-sm text-[var(--sub-text-color)]">
                     {image?.filePath}
                   </span>

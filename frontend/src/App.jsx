@@ -1,8 +1,7 @@
 // import './assets/bootstrap-5.0.2-dist/css/bootstrap.min.css'
 // import './assets/bootstrap-5.0.2-dist/js/bootstrap.bundle'
-import { Suspense, lazy } from "react";
-import { AnimatePresence } from "framer-motion";
-import "./assets/FontAwesome.Pro.6.5.2/css/all.css";
+import { Suspense, lazy, useEffect } from "react";
+import faCssUrl from "./assets/FontAwesome.Pro.6.5.2/css/all.css?url";
 import "./assets/css/common.css";
 import "./assets/css/var.css";
 
@@ -41,205 +40,215 @@ export { serverAddress, imageServerAddress };
 function AnimatedRoutes() {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Home></Home>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/search"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Search></Search>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/product/:id"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Product></Product>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Login></Login>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/verify"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Verify></Verify>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Cart></Cart>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/payment"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Payment></Payment>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Profile></Profile>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/profile/orders"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Orders></Orders>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/profile/orders/:orderId"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <OrderDetails></OrderDetails>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <Admin></Admin>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin/brand"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <AdminBrand></AdminBrand>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin/color"
-          element={
-            <PageTransition>
-              <Suspense>
-                <AdminColor></AdminColor>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin/category"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <AdminCategory></AdminCategory>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin/product"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <AdminProduct></AdminProduct>
-              </Suspense>
-            </PageTransition>
-          }
-        />
+    <Routes location={location} key={location.pathname}>
+      <Route
+        path="/"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Home></Home>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Search></Search>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/product/:id"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Product></Product>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Login></Login>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/verify"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Verify></Verify>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Cart></Cart>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/payment"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Payment></Payment>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Profile></Profile>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/profile/orders"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Orders></Orders>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/profile/orders/:orderId"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <OrderDetails></OrderDetails>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Admin></Admin>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/brand"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <AdminBrand></AdminBrand>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/color"
+        element={
+          <PageTransition>
+            <Suspense>
+              <AdminColor></AdminColor>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/category"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <AdminCategory></AdminCategory>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/product"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <AdminProduct></AdminProduct>
+            </Suspense>
+          </PageTransition>
+        }
+      />
 
-        <Route
-          path="/admin/product/save"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <InsertProduct></InsertProduct>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin/category/save"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <InsertCategory></InsertCategory>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin/color/save"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <InsertColor></InsertColor>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/admin/brand/save"
-          element={
-            <PageTransition>
-              <Suspense fallback={<PageLoading></PageLoading>}>
-                <InsertBrand></InsertBrand>
-              </Suspense>
-            </PageTransition>
-          }
-        />
-      </Routes>
-    </AnimatePresence>
+      <Route
+        path="/admin/product/save"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <InsertProduct></InsertProduct>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/category/save"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <InsertCategory></InsertCategory>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/color/save"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <InsertColor></InsertColor>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/brand/save"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <InsertBrand></InsertBrand>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+    </Routes>
   );
 }
 
 function App() {
+  // Load FontAwesome CSS without blocking first paint (icons fade in after).
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = faCssUrl;
+    link.media = "print";
+    link.onload = () => {
+      link.media = "all";
+    };
+    document.head.appendChild(link);
+  }, []);
+
   return (
     <BrowserRouter>
       <AuthProvider>

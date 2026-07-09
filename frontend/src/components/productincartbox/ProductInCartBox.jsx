@@ -6,6 +6,7 @@ import AuthContext from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
 import { formatNumber } from "../../utils/helperMehods";
+import SmartImage from "../smartimage/SmartImage";
 
 const ProductInCartBox = ({ productInCart, key }) => {
   const navigate = useNavigate();
@@ -21,14 +22,16 @@ const ProductInCartBox = ({ productInCart, key }) => {
     >
       <div className="flex">
         <div className="flex flex-col items-center">
-          <img
+          <SmartImage
             className="w-[114px] h-[114px] mb-3 rounded-xl"
             src={
               imageServerAddress +
               productInCart?.productInCart.product?.mainImage?.filePath
             }
-          ></img>
-          <img className="w-[60px] " src={specialSellImage}></img>
+            alt={productInCart?.productInCart?.product?.name}
+            ratio="1/1"
+          />
+          <SmartImage className="w-[60px] " src={specialSellImage} alt="" ratio="1/1" />
           <div
             onClick={(e) => {
               e.stopPropagation();

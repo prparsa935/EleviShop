@@ -1,6 +1,7 @@
 import returnedOrderImg from "../../assets/img/status-returned.svg";
 import deliveredOrderImg from "../../assets/img/status-delivered.svg";
 import processingOrderImg from "../../assets/img/status-processing.svg";
+import SmartImage from "../smartimage/SmartImage";
 const MyOrders = () => {
   return (
     <div className="flex flex-col glass p-4 rounded-2xl ">
@@ -14,7 +15,7 @@ const MyOrders = () => {
 
       <div className="flex justify-around mt-10">
         <div className="flex flex-col lg:flex-row">
-          <img src={processingOrderImg}></img>
+          <SmartImage src={processingOrderImg} alt="" ratio="1/1" />
           <div className="flex flex-col justify-between mr-2">
             <div className="lg:text-lg font-semibold text-[var(--color-white)]">
               <span className="ml-1">۰</span>
@@ -24,7 +25,7 @@ const MyOrders = () => {
           </div>
         </div>
         <div className="flex flex-col lg:flex-row">
-          <img src={deliveredOrderImg}></img>
+          <SmartImage src={deliveredOrderImg} alt="" ratio="1/1" />
           <div className="flex flex-col justify-between mr-2">
             <div className="lg:text-lg font-semibold text-[var(--color-white)]">
               <span className="ml-1">۰</span>
@@ -34,7 +35,7 @@ const MyOrders = () => {
           </div>
         </div>
         <div className="flex flex-col lg:flex-row">
-          <img src={returnedOrderImg}></img>
+          <SmartImage src={returnedOrderImg} alt="" ratio="1/1" />
           <div className="flex flex-col justify-between mr-2">
             <div className="lg:text-lg font-semibold text-[var(--color-white)]">
               <span className="ml-1">۰</span>

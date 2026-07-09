@@ -1,4 +1,5 @@
 import { imageServerAddress } from "../../App";
+import SmartImage from "../smartimage/SmartImage";
 import {
   Carousel,
   CarouselContent,
@@ -24,7 +25,7 @@ const ProductImageShow = ({ active, setActive, productImageList }) => {
           <CarouselContent className={"h-100"}>
             {productImageList?.map((image, index) => (
               <CarouselItem key={index} className={"basis-full "}>
-                <img className="h-100 w-100 rounded-xl object-contain" src={imageServerAddress + image?.filePath}></img>
+                <SmartImage className="h-100 w-100 rounded-xl object-contain" src={imageServerAddress + image?.filePath} alt="" />
               </CarouselItem>
             ))}
           </CarouselContent>

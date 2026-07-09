@@ -8,6 +8,7 @@ import {
   transformToPersianNumber,
 } from "../../utils/helperMehods";
 import { useEffect } from "react";
+import SmartImage from "../smartimage/SmartImage";
 
 const HorizentalProductList = ({ products, title }) => {
   const navigate = useNavigate();
@@ -33,10 +34,12 @@ const HorizentalProductList = ({ products, title }) => {
               }
             >
               <div className={"mx-auto"}>
-                <img
+                <SmartImage
                   className="w-[114px] h-[114px] md:w-[150px] md:h-[150px] object-cover rounded-lg"
                   src={imageServerAddress + relatedProduct?.mainImage?.filePath}
-                ></img>
+                  alt={relatedProduct?.name}
+                  ratio="1/1"
+                />
               </div>
               <div className="w-[114px] md:w-[132px] h-[42px] overflow-hidden text-xs text-[var(--sub-text-color)] font-semibold">
                 {relatedProduct?.name}

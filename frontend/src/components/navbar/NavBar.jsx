@@ -11,6 +11,7 @@ import Categories from "../categories/Categories";
 import ThemeToggle from "../themetoggle/ThemeToggle";
 import logo from "../../assets/img/digi.png";
 import { imageServerAddress } from "../../App";
+import SmartImage from "../smartimage/SmartImage";
 
 const NavBar = () => {
   const navEl = useRef();
@@ -41,11 +42,14 @@ const NavBar = () => {
         <div className="pb-3 mx-auto mt-9 container max-w-screen-2xl flex lg:justify-between items-center px-5 ">
           <div className="flex items-center w-100 lg:w-fit ">
             <div className="ml-5">
-              <img
+              <SmartImage
                 src={logo}
                 onClick={() => navigate("/")}
                 className="cursor-pointer w-[150px] h-[50px] object-contain drop-shadow-sm"
-              ></img>
+                alt="EleviShop"
+                eager
+                ratio="3/1"
+              />
             </div>
             <form onSubmit={(e) => searchHandler(e)} className=" ">
               <Input
@@ -130,7 +134,7 @@ const NavBar = () => {
                 size="md"
                 border="none"
                 txtColor="text-[var(--color-white)]"
-                icon={<i className="pl-2 fa-thin fa-bars"></i>}
+                icon={<i className="pl-2 fa-solid fa-bars"></i>}
               >
                 دسته بندی کالا ها
               </Button>

@@ -5,6 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import SearchSkeleton from "../searchskeleton/SearchSkeleton";
 import { imageServerAddress } from "../../App";
 import { formatNumber } from "../../utils/helperMehods";
+import SmartImage from "../smartimage/SmartImage";
 import Tag from "../tag/Tag";
 
 const SearchProductList = () => {
@@ -48,9 +49,11 @@ const SearchProductList = () => {
             className="flex flex-col p-3 gap-y-3 glass glass-hover rounded-2xl cursor-pointer"
           >
             <div className="mx-auto mt-4">
-              <img
-                className="h-[240px] w-[240px]"
+              <SmartImage
+                className="h-[240px] w-[240px] object-cover rounded-xl"
                 src={imageServerAddress + product?.mainImage?.filePath}
+                alt={product?.name}
+                ratio="1/1"
               />
             </div>
             <div className="h-[72px] overflow-hidden font-medium  text-xs text-[var(--sub-text-color)] !leading-7 ">
@@ -60,7 +63,7 @@ const SearchProductList = () => {
 
               <div className="text-xs">
                 <span className="mx-2 font-bold text-[var(--color-white)]">۴.۴</span>
-                <i class="fa-duotone fa-star text-[var(--color-yellow)]"></i>
+                <i class="fa-solid fa-star text-[var(--color-yellow)]"></i>
               </div>
             </div>
             <div className="flex flex-col  text-base font-bold text-[var(--color-white)] mb-2 h-10">

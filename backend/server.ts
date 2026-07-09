@@ -1,6 +1,7 @@
 import express from "express";
 
 import cors from "cors";
+import compression from "compression";
 
 const app = express();
 import bodyParser from "body-parser";
@@ -17,11 +18,19 @@ import apiRouter from "./routes/api.js";
 
 app.use(cookieParser());
 
+app.use(compression());
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.json());
 
-app.use(express.static("public"));
+const imageCacheHeaders = (res, path) => {
+  if (/\.(png|jpe?g|webp|gif|svg|avif|ico)$/i.test(path)) {
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+  }
+};
+
+app.use(express.static("public", { setHeaders: imageCacheHeaders }));
 app.use(express.static("build"));
 app.use(express.static("adminpanelbuild"));
 

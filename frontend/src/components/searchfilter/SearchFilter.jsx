@@ -40,7 +40,7 @@ const SearchFilter = () => {
       <div className="flex flex-col ">
         <div className="flex justify-between items-center cursor-pointer w-100 mb-2">
           <h5 className=" text-sm font-medium text-[var(--color-white)]  ">دسته بندی</h5>
-          <i class="fa-duotone fa-angle-down ml-1 gold-text"></i>
+          <i class="fa-solid fa-angle-down ml-1 gold-text"></i>
         </div>
         <FilterCategoryList
           active={true}
@@ -50,7 +50,7 @@ const SearchFilter = () => {
       <div className="flex flex-col gap-y-3 ">
         <div className="flex justify-between items-center cursor-pointer ">
           <h5 className=" text-sm font-medium text-[var(--color-white)] ">محدوده قیمت</h5>
-          <i class="fa-duotone fa-angle-down ml-1 gold-text"></i>
+          <i class="fa-solid fa-angle-down ml-1 gold-text"></i>
         </div>
         <div className="flex flex-col">
           <div className="flex justify-between font-semibold text-[var(--color-white)]">

@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
-import reactSelect from 'react-select';
-import AsyncSelect from 'react-select/async';
+import React, { useState } from "react";
+import reactSelect from "react-select";
+import AsyncSelect from "react-select/async";
 
-
-
-
-
-const ASelectBox= (props) => {
-  
-// sample for load options
+const ASelectBox = (props) => {
+  // sample for load options
   // const loadOptions=(inputValue,callback)=>{
 
   //   callback([{value:Math.random(),label:'تخم سگ'}])
   //   }
 
-
-
   return (
-      
+    <>
       <AsyncSelect
-      
         placeholder={props.placeHolder}
         className={props.className}
         defaultValue={props.defaultValue}
@@ -29,48 +21,41 @@ const ASelectBox= (props) => {
         isRtl={true}
         isSearchable={props.isSearchable}
         name={props.name}
-        noOptionsMessage={()=>{
-          return<div>موردی یافت نشد  </div>
+        noOptionsMessage={() => {
+          return <div>موردی یافت نشد </div>;
         }}
         loadOptions={props.loadOptions}
- 
         isMulti={props.isMulti}
-        
+    
+        onChange={props.onChange}
         styles={{
-          container:(prevCss)=>{
-            return({
+          container: (prevCss) => {
+            return {
               ...prevCss,
-              width:props.width,
-         
-           
-            })
-          
-        },
-          control:(prevCss)=>{
-            return({
-              height:props.height,
+              width: props.width,
+            };
+          },
+          control: (prevCss) => {
+            return {
+              height: props.height,
               ...prevCss,
-              
-       
-              
-            })
-          
-        },
-      //   menu:(prevCss)=>{
-      //     return({
-      //       ...prevCss,
-            
-            
-     
-            
-      //     })
-        
-      // },
-      }}
+            };
+          },
+          //   menu:(prevCss)=>{
+          //     return({
+          //       ...prevCss,
+
+          //     })
+
+          // },
+        }}
       />
-
-
- 
+      {props?.error && (
+        <div className=" text-red-500 font-semibold text-sm mt-2">
+          {props.error}
+        </div>
+      )}
+    </>
   );
 };
-export default ASelectBox
+export default ASelectBox;

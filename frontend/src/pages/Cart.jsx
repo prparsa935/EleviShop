@@ -38,7 +38,6 @@ const Cart = () => {
             <div className="flex flex-col">
               <div className="flex justify-between">
                 <span className=" font-semibold text-lg">سبد خرید شما</span>
-           
               </div>
               <span className=" text-neutral-500 text-sm">
                 {shoppingCart.length} کالا

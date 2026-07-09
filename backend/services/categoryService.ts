@@ -27,5 +27,20 @@ class CategoryService {
 
     return [...categoryMap.values()].filter((cat) => !cat.parentCategory)[0]; // Return top-level categories
   }
+  async findCategoryById(id: number): Promise<Category> {
+    return await this.categoryRepo.findOne({
+      where: {
+        id: id,
+      },
+      relations: ["parentCategory"],
+    });
+  }
+  async createCategory(parentCatID: number, name: string): Promise<Category> {
+    const parentCat = await this.findCategoryById(parentCatID);
+    const cat = new Category();
+    cat.name = name;
+    cat.parentCategory = parentCat;
+    return await this.categoryRepo.save(cat);
+  }
 }
 export default new CategoryService();

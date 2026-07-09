@@ -1,8 +1,17 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { ProductFilter } from "../types/productTypes.js";
 import ResponseDTO from "../dtos/response.dto.js";
 import ProductService from "../services/productService.js";
+import { plainToClass, plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
+import { FieldErrors, OverallError } from "../errors/orderSaveError.js";
+import {
+  PlateSaveDto,
+  ProductSaveDto,
+  ServiceSaveDto,
+} from "../dtos/product.dto.js";
+// import { ProductSaveDto } from "../dtos/product.dto.js";
 
 class ProductController {
   async findProducts(req: Request, res: Response) {
@@ -30,20 +39,30 @@ class ProductController {
 
     return res.json(await ProductService.findProductById(productId));
   }
-  // async createproduct(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const productSaveDto = plainToInstance(ProductSaveDto, req.body);
-  //     const errors = await validate(productSaveDto);
-  //     const flattenErrors = errors.flat();
 
-  //     if (flattenErrors.length > 0) {
-  //       throw new FieldErrors(flattenErrors);
-  //     }
-  //     const product = await productService.saveProduct(productSaveDto);
-  //     return res.json(product);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  async createproduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const type = req.body["type"];
+      let productSaveDto: PlateSaveDto | ServiceSaveDto;
+      if (type === "plate") {
+        productSaveDto = plainToInstance(PlateSaveDto, req.body);
+      } else if (type === "service") {
+        productSaveDto = plainToInstance(ServiceSaveDto, req.body);
+      } else {
+        throw new OverallError("Invalid product type");
+      }
+      const errors = await validate(productSaveDto);
+      const flattenErrors = errors.flat();
+
+      if (flattenErrors.length > 0) {
+        throw new FieldErrors(flattenErrors);
+      }
+      const product = await ProductService.saveProduct(productSaveDto);
+      return res.json(product);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
 }
 export default new ProductController();

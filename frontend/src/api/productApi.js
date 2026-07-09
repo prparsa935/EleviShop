@@ -21,7 +21,6 @@ const searchProducts = async (
   setHasMore
 ) => {
   try {
-   
     const res = await Axios.get(serverAddress + "product", {
       params: { ...searchParams, pageNumber: page },
     });
@@ -49,12 +48,29 @@ const searchProducts = async (
     }
   }
 };
+const searchProducByNametWithCallback = async (name, callback) => {
+  try {
+    const res = await Axios.get(serverAddress + "product", {
+      params: { name: name, page: 1 },
+    });
+    if (res.status === 200) {
+      const resData = await res.data;
+      const formattedOptions = resData.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+      callback(formattedOptions);
+    }
+  } catch (error) {
+    callback([]);
+  }
+};
 const fetchSingleProduct = async (productId, setProduct, setLoading) => {
   try {
     const res = await Axios.get(serverAddress + "product/id/" + productId);
     if (res.status === 200) {
       const resData = await res.data;
-   
+
       setProduct(resData);
     }
   } catch (error) {
@@ -79,4 +95,5 @@ export {
   fetchSingleProduct,
   fetchRelatedProducts,
   fetchOffProducts,
+  searchProducByNametWithCallback,
 };

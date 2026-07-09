@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   Relation,
 } from "typeorm";
@@ -17,9 +18,11 @@ export class Inventory {
   id: number;
   @Column()
   quantity: number;
-  @Column({ type: "enum", enum: enumSize })
-  size: enumSize;
+  // @Column({ type: "enum", enum: enumSize })
+  // size: enumSize;
   @ManyToOne(() => Product)
   product: Relation<Product>;
+  @Column({ nullable: false })
+  price: number;
 }
 enumSize.md;

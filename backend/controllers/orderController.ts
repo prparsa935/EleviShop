@@ -65,6 +65,25 @@ class OrderController {
         .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
     }
   }
+  // async saveOrder(req: Request, res: Response) {
+  //   try {
+  //     const { id } = req.params;
+  //     const user: User = req["user"];
+  //     if (!isNumberString(id))
+  //       return res
+  //         .status(500)
+  //         .json(
+  //           new ResponseDTO({}, { message: "سفارش مورد نظر یافت نشد" }, false)
+  //         );
+  //     return res
+  //       .status(200)
+  //       .json(await orderService.findOrderById(Number(id), user));
+  //   } catch (error) {
+  //     return res
+  //       .status(500)
+  //       .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
+  //   }
+  // }
 
   async saveOrder(req: Request, res: Response, next: NextFunction) {
     try {

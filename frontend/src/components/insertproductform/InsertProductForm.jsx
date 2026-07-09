@@ -1,23 +1,23 @@
-import SelectCategoryList from "../selectcategorylist/SelectCategoryList";
-
 import Input from "../input/Input";
-import ASelectBox from "../selectbox/ASelectBox";
 import SelectBox from "../selectbox/SelectBox";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { deleteInvetory, insertInventory } from "../../utils/helperMehods";
 import { uploadImage } from "../../api/uploadImage";
 import ProgressBar from "../progressbar/ProgressBar";
 import { useSearchParams } from "react-router-dom";
 import Button from "../Button/Button";
 import formApiHandler from "../../api/form";
-import { fetchSingleProduct } from "../../api/productApi";
+import {
+  fetchSingleProduct,
+  searchProducByNametWithCallback,
+} from "../../api/productApi";
 import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
-import { findColorByName } from "../../api/color";
-import { findBrandByName } from "../../api/brand";
-import { getAllCategories } from "../../api/category";
 import Loading from "../icons/Loading";
 import SelectCategories from "../selectcategories/SelectCategories";
 import { imageServerAddress } from "../../App";
+import schema from "../../schema/schema";
+import InsertProductAddAttr from "../insertproductadattr/InsertProductAddAttr";
+import ASelectBox from "../selectbox/ASelectBox";
+import { findColorByName } from "../../api/color";
 // const ValidationSchema = Yup.object().shape({
 //   email: Yup.string()
 //     .email("Invalid email address")
@@ -29,17 +29,22 @@ import { imageServerAddress } from "../../App";
 const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const form = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [inventories, setInventories] = useState([]);
+
   const [existingProduct, setExistingProduct] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [mainImage, setMainImage] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
-
+  const [typeSelect, setTypeSelect] = useState({
+    label: "plate",
+    value: "plate",
+  });
+  const [serviceProducts, setServiceProducts] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchSingleProduct(searchParams.get("productId"), setExistingProduct);
+    if (searchParams.has("productId"))
+      fetchSingleProduct(searchParams.get("productId"), setExistingProduct);
     // todo declear product state and use useeffect([product])
   }, [searchParams.get("productId")]);
   const ExistingProductFormSetter = () => {
@@ -48,33 +53,30 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       currentForm.code.value = existingProduct.code;
       currentForm.productName.value = existingProduct.name;
       currentForm.description.value = existingProduct.description;
-      currentForm.price.value = existingProduct.price;
+      currentForm.price.value = existingProduct.inventories[0].price;
       currentForm.offPercent.value = existingProduct.offPercent;
       currentForm.material.value = existingProduct.material;
-      currentForm.height.value = existingProduct.height;
+      currentForm.quantity.value = existingProduct.inventories[0].quantity;
+      currentForm.colorId.value = existingProduct.color.id;
+      setTypeSelect({
+        label: existingProduct.type,
+        value: existingProduct.type,
+      });
+      // set service paltes if existing product is service
+      if (existingProduct.type === "service") {
+        setServiceProducts(
+          existingProduct?.plates?.map((plate) => {
+            return { label: plate.name, value: plate.id };
+          })
+        );
+      }
+
       // todo categoy lis is comming we fucked
       // e.target.categoryId.value = product.category;
       setSearchParams((prev) => {
         prev.set("categoryId", existingProduct?.mainCategory?.id);
         return prev;
       });
-      currentForm.brandId.value = existingProduct?.brand?.id;
-      currentForm.colorId.value = existingProduct?.color?.id;
-      if (inventories) {
-        setInventories(() => {
-          return existingProduct?.inventories;
-          // let localInventoryList = [];
-
-          // for (inventory of existingProduct?.inventories) {
-          //   existingProduct.inventories;
-          //   localInventoryList.push({
-          //     size: inventory.size,
-          //     quantity: inventory.quantity,
-          //   });
-          // }
-          // return localInventoryList;
-        });
-      }
 
       setUploadedImages([
         ...(existingProduct?.images || []),
@@ -82,9 +84,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       ]);
 
       setMainImage(existingProduct?.mainImage || null);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
   useDidUpdateEffect(ExistingProductFormSetter, [existingProduct]);
 
@@ -98,64 +98,78 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
 
   //   },
   // });
+
+  const getFormValues = (e) => {
+    let values = {
+      code: e.target.code.value,
+      productName: e.target.productName.value,
+      description: e.target.description.value,
+      price: Number(e.target.price.value),
+      offPercent: Number(e.target.offPercent.value),
+      quantity: Number(e.target.quantity.value),
+      material: e.target.material.value,
+      pattern: e.target.pattern.value,
+      colorId: Number(e.target.colorId.value),
+    };
+    if (typeSelect.value === "service") {
+      values.contain = e.target.contain.value;
+      const plateIds = serviceProducts?.map((p) => p.value);
+      values.plateIds = plateIds || [];
+    } else {
+      values.weight = Number(e.target.weight.value);
+      values.height = Number(e.target.height.value);
+      values.width = Number(e.target.width.value);
+    }
+    return values;
+  };
+  const preparePayload = (values) => {
+    const imageIds = uploadedImages
+      .filter((img) => img.id !== mainImage.id)
+      .map((img) => Number(img.id));
+    const categoryId = Number(searchParams.get("categoryId"));
+    const mainImageId = Number(mainImage.id);
+
+    return {
+      ...values,
+      categoryId,
+      type: typeSelect.value,
+      imageIds,
+      mainImageId,
+
+      inventories: [{ quantity: values.quantity, price: values.price }],
+    };
+  };
   const submitFormHandler = (e) => {
     e.preventDefault();
 
-    const code = e.target.code.value;
-    const productName = e.target.productName.value;
-    const description = e.target.description.value;
-    const price = e.target.price.value;
-    const offPercent = e.target.offPercent.value;
-    const material = e.target.material.value;
-    const pattern = e.target.pattern.value;
-    const height = e.target.height.value;
-    const categoryId = searchParams.get("categoryId");
-    const brandId = e.target.brandId.value;
-    const colorId = e.target.colorId.value;
-
-    // const imageIds = uploadedImages.map((uploadedImage) => {
-    //   if (uploadedImage.id !== mainImage.id) {
-    //     return uploadedImage.id;
-    //   }
-    // });
-    const imageIds = uploadedImages
-      .filter((uploadedImage) => {
-        return uploadedImage.id !== mainImage.id;
-      })
-      .map((uploadedImage) => {
-        return uploadedImage.id;
-      });
-
-    const mainImageId = mainImage.id;
-    // todo validation
+    setErrors([]);
     setLoading(true);
-    formApiHandler(
-      searchParams.get("productId")
-        ? "product/admin/update/" + searchParams.get("productId")
-        : "product/admin/save",
-      {
-        code: code,
-        productName: productName,
-        description: description,
-        price: price,
-        offPercent: offPercent,
-        material: material,
-        pattern: pattern,
-        height: height,
-        categoryId: categoryId,
-        brandId: brandId,
-        colorId: colorId,
-        inventories: inventories,
-        imageIds: imageIds,
-        mainImageId: mainImageId,
-      },
-      setToastList,
-      setErrors,
-      setLoading
-    );
+
+    // 1. جمع‌آوری داده‌ها از فرم
+    const formValues = getFormValues(e);
+
+    // // 2. اعتبارسنجی ساده (در صورت نیاز می‌تونه عمیق‌تر باشه)
+    // const validationErrors = validateForm(formValues);
+    // if (validationErrors.length > 0) {
+    //   setErrors(validationErrors);
+    //   setLoading(false);
+    //   return;
+    // }
+
+    // 3. آماده‌سازی payload نهایی
+    const payload = preparePayload(formValues);
+
+    // 4. ارسال به API
+    const productId = searchParams.get("productId");
+    const endpoint = productId
+      ? `product/admin/update/${productId}`
+      : `product/admin/save`;
+
+    formApiHandler(endpoint, payload, setToastList, setErrors, setLoading);
   };
   const loadcolorOptions = useCallback(findColorByName);
-  const loadBrandOptions = useCallback(findBrandByName);
+
+  // const loadBrandOptions = useCallback(findBrandByName);
 
   return (
     <form
@@ -192,6 +206,13 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
               </div>
               <Input iMessage={errors?.productName} name="productName" />
             </div>
+            <div className="flex flex-col col-span-2 ">
+              <div className="mb-2 font-medium text-sm !leading-3 ">
+                <span className=" text-red-500 text-lg !leading-3 ">*</span>
+                <span className="!leading-3">تعداد</span>
+              </div>
+              <Input iMessage={errors?.quantity} name={"quantity"} />
+            </div>
             <div className="flex flex-col lg:col-span-3 col-span-12 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
@@ -212,7 +233,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
               </div>
               <Input iMessage={errors?.code} name="code" />
             </div>
-            <div className="flex flex-col col-span-4 ">
+            {/* <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">برند</span>
@@ -222,7 +243,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 isSearchable={true}
                 name="brandId"
               />
-            </div>
+            </div> */}
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
@@ -234,6 +255,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 name="colorId"
               />
             </div>
+
             <div className="flex flex-col col-span-12 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
@@ -257,90 +279,45 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
           <div className=" text-lg font-semibold">
             گام سوم:درج ویژگی های کالا
           </div>
+
           <div className="mx-3 grid grid-cols-12 gap-x-3 gap-y-4 items-center">
+            <div className="flex flex-col col-span-12 ">
+              <div className="mb-2 font-medium text-sm !leading-3 ">
+                <span className=" text-red-500 text-lg !leading-3 ">*</span>
+                <span className="!leading-3">نوع محصول</span>
+              </div>
+              <SelectBox
+                options={Object.keys(schema)
+                  .filter((key) => key !== "product")
+                  .map((key) => ({ label: key, value: key }))}
+                value={typeSelect}
+                onChange={(val) => {
+                  setTypeSelect(val);
+                }}
+                iMessage={errors?.material}
+                name="type"
+              />
+            </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">جنس</span>
               </div>
-              <Input iMessage={errors?.material} name="material" />
+              <Input iMessage={errors?.material} name={"material"} />
             </div>
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
+                <span className=" text-red-500 text-lg !leading-3 ">*</span>
                 <span className="!leading-3">طرح</span>
               </div>
-              <Input iMessage={errors?.pattern} name="pattern" />
+              <Input iMessage={errors?.pattern} name={"pattern"} />
             </div>
-            <div className="flex flex-col col-span-4 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">قد</span>
-              </div>
-              <Input iMessage={errors?.height} name="height" />
-            </div>
-
-            <div className="flex flex-col col-span-5 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">سایز</span>
-              </div>
-              <SelectBox
-                name="inventorySize"
-                options={[
-                  { label: "xs", value: "XS" },
-                  { label: "sm", value: "S" },
-                ]}
-              />
-            </div>
-            <div className="flex flex-col col-span-5 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">تعداد</span>
-              </div>
-              <Input
-                iMessage={errors?.inventoryQuantity}
-                name="inventoryQuantity"
-                type="number"
-              />
-            </div>
-
-            <div
-              onClick={() => {
-                insertInventory(form, inventories, setInventories);
-              }}
-              className="mt-4 cursor-pointer"
-            >
-              <i class="fa-solid fa-circle-plus fa-2x text-green-500"></i>
-            </div>
-
-            <div className=" col-span-12 grid grid-cols-12 ">
-              {inventories.map((inventory) => {
-                return (
-                  <div className="flex justify-between col-span-4 p-3 border rounded">
-                    <div>
-                      <span>سایز:</span>
-                      <span>{inventory.size}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span>تعداد:</span>
-                      <span>{inventory.quantity}</span>
-                    </div>
-                    <div
-                      onClick={() =>
-                        deleteInvetory(
-                          inventory.size,
-                          inventories,
-                          setInventories
-                        )
-                      }
-                      className="flex items-center cursor-pointer"
-                    >
-                      <i class="fas fa-window-close text-red-500"></i>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <InsertProductAddAttr
+              errors={errors}
+              type={typeSelect.value}
+              serviceProducts={serviceProducts}
+              setServiceProducts={setServiceProducts}
+            ></InsertProductAddAttr>
           </div>
         </div>
       </div>

@@ -9,11 +9,10 @@ import {
 import { Order } from "./Order.js";
 
 import { Inventory } from "./Inventory.js";
+import { Base } from "./Base.js";
 
 @Entity()
-export class OrderInventory {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class OrderInventory extends Base {
   @Column({ nullable: false })
   quantity: number;
   @Column({ nullable: false })

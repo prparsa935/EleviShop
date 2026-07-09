@@ -8,9 +8,17 @@ import { getAllCategories } from "../../api/category";
 const SearchFilter = () => {
   const [categories, setCategories] = useState();
   const [searchParms, setSearchParam] = useSearchParams();
+  const [isOff, setIsOff] = useState(false);
   useEffect(() => {
     getAllCategories(setCategories);
   }, []);
+  useEffect(() => {
+    if (searchParms.get("enableOff") === "true") {
+      setIsOff(true);
+    } else {
+      setIsOff(false);
+    }
+  }, [searchParms.get("enableOff")]);
   return (
     <div className="   w-100   flex-col gap-y-8 p-6 rounded-2xl flex">
       <div className="flex justify-between items-center cursor-pointer">
@@ -79,7 +87,7 @@ const SearchFilter = () => {
       <div className="flex justify-between items-center cursor-pointer">
         <h5 className=" text-sm font-semibold text-slate-700  ">دارای تخفیف</h5>
         <Switch
-          defaultChecked={searchParms.get("enableOff") === "true" || false}
+          checked={isOff}
           onCheckedChange={(value) => {
             setSearchParam((prev) => {
               prev.set("enableOff", value);

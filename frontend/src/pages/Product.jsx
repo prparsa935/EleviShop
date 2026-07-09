@@ -1,11 +1,7 @@
 import CategoryPath from "../components/categorypath/CategoryPath";
 import { useContext, useEffect, useState } from "react";
-
 import { useParams } from "react-router-dom";
-// import product from '../jsons/product.json'
-
 import NavBar from "../components/navbar/NavBar";
-
 import ProductUpperSection from "../components/productuppersection/ProductUpperSection";
 import {
   Carousel,
@@ -13,15 +9,22 @@ import {
   CarouselItem,
 } from "../components/Carousel/Carousel";
 import ProductImageShow from "../components/productimageshow/ProductImageShow";
-
 import ProductLowerSection from "../components/productlowersection/ProductLowerSection";
 import { fetchSingleProduct } from "../api/productApi";
 import PageLoading from "../components/pageloading/PageLoading";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 import AuthContext from "../context/AuthContext";
-
 import CommentModalForm from "../components/commentmodalform/CommentModalForm";
 import Alert from "../components/alert/Alert";
+
+const advantages = [
+  { icon: "fa-shipping-fast", label: "امکان تحویل سریع" },
+  { icon: "fa-user-headset", label: "پشتیبانی ۲۴ ساعته" },
+  { icon: "fa-credit-card", label: "امکان تحویل درب منزل" },
+  { icon: "fa-repeat", label: "هفت روز ضمانت بازگشت" },
+  { icon: "fa-badge-check", label: "ضمانت اصل بودن کالا" },
+];
+
 const Product = () => {
   const [errors, setErrors] = useState([]);
   const [toastList, setToastList] = useState([]);
@@ -39,28 +42,19 @@ const Product = () => {
   }, [id]);
   useDidUpdateEffect(() => {
     let lastAvailableInv = null;
-    console.log(shoppingCart)
     const inventory = product?.inventories?.find((inventory) => {
       const productInCartIndex = shoppingCart.findIndex((productInCart) => {
         return productInCart.inventory?.id === inventory?.id;
       });
-
       if (inventory.quantity !== 0) {
         lastAvailableInv = inventory;
       }
       return productInCartIndex !== -1;
     });
-
     if (inventory) {
-      setSelectedSize({
-        label: inventory.size,
-        value: inventory,
-      });
+      setSelectedSize({ label: inventory.size, value: inventory });
     } else if (lastAvailableInv) {
-      setSelectedSize({
-        label: lastAvailableInv.size,
-        value: lastAvailableInv,
-      });
+      setSelectedSize({ label: lastAvailableInv.size, value: lastAvailableInv });
     } else {
       setSelectedSize({
         label: product?.inventories[0]?.size,
@@ -73,23 +67,20 @@ const Product = () => {
     return <PageLoading></PageLoading>;
   }
   return (
-    <div className="product-page">
+    <div className="product-page bg-[var(--tp-b-color)] min-h-screen">
       <NavBar />
       <div className=" sticky top-24 w-100 h-0 z-50 ">
-        {toastList?.map((toast) => {
-          return (
-            <Alert duration={5000} type={toast.type}>
-              {toast.message}
-            </Alert>
-          );
-        })}
+        {toastList?.map((toast) => (
+          <Alert duration={5000} type={toast.type}>
+            {toast.message}
+          </Alert>
+        ))}
       </div>
       <ProductImageShow
         productImageList={product?.images}
         active={imageSiderActive}
         setActive={setImageSiderActive}
       ></ProductImageShow>
-      {/* comment modal */}
       <CommentModalForm
         setErrors={setErrors}
         product={product}
@@ -97,10 +88,8 @@ const Product = () => {
         commentModalActive={commentModalActive}
         setCommentModalActive={setCommentModalActive}
       />
-      <div className="flex flex-col gap-y-5  mt-7 mx-auto max-w-screen-2xl">
-        {/* category path */}
+      <div className="flex flex-col gap-y-5 mt-7 mx-auto max-w-screen-2xl">
         <CategoryPath categoryPath={product?.mainCategory?.categoryPath} />
-        {/* unit product */}
         <ProductUpperSection
           selectedSize={selectedSize}
           setSelectedSize={setSelectedSize}
@@ -109,46 +98,26 @@ const Product = () => {
           product={product}
         ></ProductUpperSection>
 
-        <Carousel
-          opts={{ direction: "rtl", dragFree: true }}
-          className=" w-100 h-12 m-auto  relative my-5 select-none cursor-pointer shadow-lg shadow-slate-200 "
-        >
-          <CarouselContent className={"h-100 justify-center align-baseline "}>
-            <CarouselItem className={" lg:basis-1/5 basis-1/3    "}>
-              <div className="flex justify-center text-slate-400 lg:text-sm text-xs flex-col lg:flex-row  font-medium items-center gap-x-2">
-                <i class="far fa-xl fa-shipping-fast mb-4 lg:m-0  "></i>
+        <div className="w-100 my-6 rounded-3xl border border-[var(--border-color)] bg-[var(--color-productcolor)] py-6 px-3">
+          <Carousel
+            opts={{ direction: "rtl", dragFree: true }}
+            className="w-100 h-14 m-auto relative select-none cursor-pointer"
+          >
+            <CarouselContent className={"h-100 justify-center align-baseline"}>
+              {advantages.map((item, index) => (
+                <CarouselItem key={index} className={"lg:basis-1/5 basis-1/3"}>
+                  <div className="flex justify-center text-[var(--sub-text-color)] lg:text-sm text-xs flex-col lg:flex-row font-medium items-center gap-x-3 gap-y-3">
+                    <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[var(--tp-b-color)] border border-[var(--border-color)] text-[var(--bf-orange)] shrink-0">
+                      <i className={`far fa-lg ${item.icon}`}></i>
+                    </span>
+                    <span>{item.label}</span>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
 
-                <span>امکان تحویل سریع</span>
-              </div>
-            </CarouselItem>
-            <CarouselItem className={" lg:basis-1/5 basis-1/3  "}>
-              <div className="flex justify-center text-slate-400 lg:text-sm text-xs flex-col lg:flex-row  font-medium items-center gap-x-2">
-                <i class="fa-solid fa-xl  fa-user-headset mb-4 lg:m-0"></i>
-                <span>پشتیبانی ۲۴ ساعته</span>
-              </div>
-            </CarouselItem>
-            <CarouselItem className={" lg:basis-1/5 basis-1/3  "}>
-              <div className="flex justify-center text-slate-400 lg:text-sm text-xs flex-col lg:flex-row  font-medium items-center gap-x-2">
-                <i class="fa-solid fa-xl fa-credit-card mb-4 lg:m-0"></i>
-
-                <span>امکان تحویل درب منزل</span>
-              </div>
-            </CarouselItem>
-            <CarouselItem className={" lg:basis-1/5 basis-1/3  "}>
-              <div className="flex justify-center text-slate-400 lg:text-sm text-xs flex-col lg:flex-row  font-medium items-center gap-x-2">
-                <i class="fa-solid fa-xl fa-repeat mb-4 lg:m-0"></i>
-                <span>هفت روز ضمانت بازگشت</span>
-              </div>
-            </CarouselItem>
-
-            <CarouselItem className={" lg:basis-1/5 basis-1/3  "}>
-              <div className="flex justify-center text-slate-400 lg:text-sm text-xs flex-col lg:flex-row  font-medium items-center gap-x-2">
-                <i class="fa-solid fa-xl fa-badge-check mb-4 lg:m-0"></i>
-                <span>ضمانت اصل بودن کالا</span>
-              </div>
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
         <ProductLowerSection
           setToastList={setToastList}
           setCommentModalActive={setCommentModalActive}

@@ -7,7 +7,6 @@ const Modal = (props) => {
     if (!enable) {
       document.body.classList.remove("overflow-hidden");
       modalRef.current.classList.add("opa-0");
-
       modalContent.current.classList.add("scale-0");
       setTimeout(() => {
         modalRef.current.classList.add("hidden");
@@ -20,21 +19,20 @@ const Modal = (props) => {
     }
   };
   useEffect(() => {
-  
     modalControl(props.enable);
   }, [props.enable]);
   return (
     <div
       ref={modalRef}
       className={
-        "fixed top-0 w-100 h-100vh flex justify-center  bg-opacity-70 bg-black duration-500 z-40      "
+        "fixed top-0 w-100 h-100vh flex justify-center bg-opacity-70 bg-[var(--color-lightblack)] duration-500 z-40 "
       }
     >
       <div
         ref={modalContent}
         style={{ height: props.height }}
         className={
-          " bg-white modal-content border relative scale-0 duration-500 self-center overflow-y-scroll " +
+          "bg-[var(--tp-b-color)] text-[var(--color-white)] modal-content border border-[var(--border-color)] relative scale-0 duration-500 self-center overflow-y-scroll " +
           props.className
         }
       >
@@ -43,9 +41,9 @@ const Modal = (props) => {
             props.setModalActive(false);
           }}
           role="button"
-          className=" dialog-close-btn "
+          className="dialog-close-btn text-[var(--color-white)]"
         >
-          <i class="fa fa-times" aria-hidden="true"></i>
+          <i className="fa fa-times" aria-hidden="true"></i>
         </div>
         {props.children}
       </div>

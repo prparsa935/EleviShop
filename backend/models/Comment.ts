@@ -1,25 +1,11 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  OneToMany,
-  ManyToMany,
-  JoinTable,
-  IntegerType,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Relation,
-} from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne, Relation } from "typeorm";
 import { Product } from "./product.js";
 import { User } from "./User.js";
 import { UserCommentLikes } from "./UserCommentLikes.js";
+import { Base } from "./Base.js";
 
 @Entity()
-export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Comment extends Base {
   @Column({ nullable: false })
   content: String;
   @Column({ nullable: false })
@@ -28,17 +14,7 @@ export class Comment {
   likesCount: number;
   @Column({ default: 0 })
   dislikesCount: number;
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-  })
-  dateCreated: Date;
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-    onUpdate: "CURRENT_TIMESTAMP(6)",
-  })
-  updated_at: Date;
+
   @ManyToOne(() => Product, (product) => product.comments, { nullable: false })
   product: Relation<Product>;
   @ManyToOne(() => User, (user) => user.comments, { nullable: false })

@@ -71,15 +71,19 @@ const OrderDetailsC = ({ order }) => {
               {formatNumber(order?.totalOrderPrice)} تومان
             </span>
           </div>
-          <div className="flex gap-x-2 items-center justify-between">
-            <span className=" text-slate-500 ">سود شما از خرید</span>
-            <div className="flex gap-x-1 font-semibold">
-              {formatNumber(order?.totalOrderOffPrice)} تومان
-              {/* <span>۱۸</span>
+          {order?.totalOrderOffPrice ? (
+            <div className="flex gap-x-2 items-center justify-between">
+              <span className=" text-slate-500 ">سود شما از خرید</span>
+              <div className="flex gap-x-1 font-semibold">
+                {formatNumber(order?.totalOrderOffPrice)} تومان
+                {/* <span>۱۸</span>
               <span> شهریور</span>
               <span>۱۳۹۷</span> */}
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 

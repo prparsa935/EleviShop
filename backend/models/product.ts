@@ -18,6 +18,7 @@ import { Comment } from "./Comment.js";
 import { Color } from "./Color.js";
 import { Category } from "./Category.js";
 import { Inventory } from "./Inventory.js";
+import { Base } from "./Base.js";
 
 // export enum color {
 //     yellow = 'yellow',
@@ -27,7 +28,7 @@ import { Inventory } from "./Inventory.js";
 @TableInheritance({
   column: { type: "varchar", name: "type", default: "plate", length: 10 },
 })
-export abstract class Product {
+export abstract class Product extends Base {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: "varchar", name: "type", default: "plate", length: 10 })
@@ -46,16 +47,24 @@ export abstract class Product {
   mainImage: Image;
   // @Column({ nullable: true })
   // ratio: number;
-  @Column({ nullable: false })
-  price: number;
   @Column({ length: 10, nullable: false })
   pattern: string;
   @Column({ default: 0 })
   offPercent: number;
+  @Column({ default: 1 })
+  countPerProduct: number;
   @Column({ nullable: false })
   material: string;
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   rate: number;
+  @Column({ nullable: true, default: 0 })
+  rateScore: number;
+  @Column({ nullable: true, default: 0 })
+  rateCount: number;
+  @Column({ nullable: true, default: 0 })
+  buyerCount: number;
+  @Column({ nullable: true, default: 0 })
+  commentCount: number;
   @OneToOne(() => Color)
   @JoinColumn()
   color: Color;

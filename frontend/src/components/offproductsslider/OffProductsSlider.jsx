@@ -1,4 +1,4 @@
-import image from "../../assets/img/Amazings.svg";
+import image from "../../assets/img/Amazings.png";
 import productImageTest from "../../assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp";
 import Card from "../card/Card";
 import Tag from "../tag/Tag";
@@ -57,7 +57,7 @@ const OffProductsSlider = ({ offProducts }) => {
                   {formatNumber(product?.offPercent)}%
                 </Tag>
                 <div className=" font-bold text-xs">
-                  {formatNumber(product?.price)} تومان
+                  {formatNumber(product?.inventories?.[0]?.price)} تومان
                 </div>
               </div>
             </CarouselItem>

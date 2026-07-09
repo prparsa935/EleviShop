@@ -67,7 +67,7 @@ class CommentService {
     if (!product) {
       throw new OverallError("محصولی با این کد وجود ندارد", 404);
     }
-
+    
     const newComment = new Comment();
     newComment.product = product;
     newComment.rate = commentSaveDto.rate;

@@ -79,51 +79,53 @@ class OrderService {
   }
   async saveOrder(orderSaveDto: OrderSaveDto[], user: User): Promise<Order> {
     return dataSource.transaction(async (entityManager) => {
-      let orderInventories: OrderInventory[] = [];
-      const inventoryIds = orderSaveDto.map(
-        (orderDto) => orderDto.inventory.id
-      );
+      // استخراج inventoryIds و ایجاد Map برای دسترسی سریع
+      const inventoryIds = orderSaveDto.map((dto) => dto.inventory.id);
       const inventories = await inventoryService.findInventoryByIds(
         entityManager,
         inventoryIds
       );
-      // save inventories in map for less database inventory find
-      const inventoryMap = new Map(
-        inventories.map((inventory) => [inventory.id, inventory])
-      );
-      for (const orderInventoryDto of orderSaveDto) {
-        const inventory = inventoryMap.get(orderInventoryDto.inventory.id);
+      const inventoryMap = new Map(inventories.map((inv) => [inv.id, inv]));
+
+      // اعتبارسنجی و ساخت OrderInventoryها به‌صورت همزمان
+      const orderInventories = orderSaveDto.map((dto) => {
+        const inventory = inventoryMap.get(dto.inventory.id);
         if (!inventory) {
           throw new OverallError(
-            "یکی از محصولات انتخابی در پایگاه داده موجود نیست",
+            `محصول با شناسه ${dto.inventory.id} در پایگاه داده موجود نیست`,
             400
           );
         }
-        if (inventory.quantity < orderInventoryDto.quantity) {
+        if (inventory.quantity < dto.quantity) {
           throw new OverallError(
-            `محصول ${inventory.product.name} موجود نیست`,
+            `محصول ${inventory.product.name} به مقدار کافی موجود نیست`,
             400
           );
         }
+
         const orderInventory = new OrderInventory();
         orderInventory.inventory = inventory;
-        orderInventory.quantity = orderInventoryDto.quantity;
+        orderInventory.quantity = dto.quantity;
         orderInventory.singleProductOffPercent = inventory.product.offPercent;
-        orderInventory.singleProductPrice = inventory.product.price;
-        orderInventories.push(orderInventory);
-      }
-      orderInventories = await orderInventoryService.saveOrderInventory(
-        entityManager,
-        orderInventories
-      );
+        orderInventory.singleProductPrice = inventory.price;
+        return orderInventory;
+      });
 
+      // ذخیره گروهی OrderInventoryها
+      const savedOrderInventories =
+        await orderInventoryService.saveOrderInventory(
+          entityManager,
+          orderInventories
+        );
+
+      // ایجاد و ذخیره سفارش
       const order = new Order();
       order.user = user;
       order.orderStatus = orderStatus.waitingForPayment;
       order.person = user.person;
-      order.orderInventories = orderInventories;
-      await entityManager.save(Order, order);
-      return order;
+      order.orderInventories = savedOrderInventories;
+
+      return entityManager.save(Order, order);
     });
   }
 }

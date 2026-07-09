@@ -44,11 +44,18 @@ const ProductInOrderBox = ({ orderInventory }) => {
             </div>
           </div>
           <div>
-            <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
-              <span>{formatNumber(orderInventory?.singleProductOffPercent)}</span>
-              <span>%</span>
-              <span>تخفیف</span>
-            </div>
+            {orderInventory?.singleProductOffPercent ? (
+              <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
+                <span>
+                  {formatNumber(orderInventory?.singleProductOffPercent)}
+                </span>
+                <span>%</span>
+                <span>تخفیف</span>
+              </div>
+            ) : (
+              ""
+            )}
+
             <div className=" flex text-lg gap-x-1  mt-3 font-semibold">
               <span>{formatNumber(orderInventory?.singleProductPrice)}</span>
               <span>تومان</span>

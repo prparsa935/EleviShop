@@ -31,7 +31,7 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
   const submitFormHandler = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
-    const categoryId = searchParams.get("categoryId");
+    const parentCategoryId = searchParams.get("categoryId");
 
     // todo validation
     setLoading(true);
@@ -40,8 +40,8 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
         ? "category/admin/update/" + searchParams.get("eCategoryId")
         : "category/admin/save",
       {
-        name: name,
-        parentId: categoryId,
+        categoryname: name,
+        parentCatId: parentCategoryId,
       },
       setToastList,
       setErrors,
@@ -73,7 +73,7 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
           <div className="mx-3">
             <SelectCategories allwaysActive={true} />
           </div>
-          {errors["parentId"] ? (
+          {errors?.["parentId"] ? (
             errors["parentId"]
           ) : (
             <span className=" text-red-600 text-sm"></span>

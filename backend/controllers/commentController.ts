@@ -29,6 +29,7 @@ class CommentController {
 
       return res.status(200).json(comments);
     } catch (error) {
+      console.log(error)
       next(error);
     }
   }
@@ -52,6 +53,7 @@ class CommentController {
         .status(200)
         .json(new ResponseDTO(null, null, true, "نظر شما با موفقیت ثبت شد"));
     } catch (error) {
+    
       next(error);
     }
   }

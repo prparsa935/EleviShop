@@ -4,6 +4,6 @@ export type ProductFilter = {
   name?: string;
   minPrice?: number;
   maxPrice?: number;
-  enableOff?: Boolean;
+  enableOff?: string;
   pageNumber?: number;
 };

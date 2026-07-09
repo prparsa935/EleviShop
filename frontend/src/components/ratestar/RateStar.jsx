@@ -3,8 +3,10 @@ const RateStar = ({ onClick, currentRate, starRate }) => {
     <i
       onClick={onClick}
       className={
-        "fa fa-star  cursor-pointer " +
-        (currentRate >= starRate ? "text-yellow-500" : "text-gray-400")
+        "fa fa-star cursor-pointer " +
+        (currentRate >= starRate
+          ? "text-[var(--color-yellow)]"
+          : "text-[var(--sub-text-color)]")
       }
       aria-hidden="true"
     ></i>

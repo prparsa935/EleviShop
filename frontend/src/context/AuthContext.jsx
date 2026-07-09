@@ -46,7 +46,7 @@ const AuthProvider = (props) => {
           lShoppingCart
         );
       });
-  
+
       await Promise.all(checkPromises);
 
       deleteInvalidItems(invalidList, lShoppingCart);
@@ -98,7 +98,6 @@ const AuthProvider = (props) => {
     iSelectedInventory,
     lShoppingCart
   ) => {
-
     lShoppingCart[productInCartIndex]["product"] = product;
     lShoppingCart[productInCartIndex]["inventory"] = iSelectedInventory;
     if (
@@ -113,23 +112,22 @@ const AuthProvider = (props) => {
     }
   };
   const deleteInvalidItems = (invalidList, lShoppingCart) => {
-
-
     for (const invalidItemId of invalidList) {
       const invalidItemIndex = lShoppingCart?.findIndex((iProductInCart) => {
         return iProductInCart.inventory?.id === invalidItemId;
       });
-
 
       lShoppingCart.splice(invalidItemIndex, 1);
     }
   };
   const calculatePrice = (setPrice) => {
     let price = { totalPurePrice: 0, totalPrice: 0, totalOff: 0 };
+    console.log(shoppingCart)
     for (const productInCart of shoppingCart) {
+    
       const quantity = productInCart?.quantity;
       const off = productInCart?.product?.offPercent;
-      const purePrice = productInCart?.product?.price;
+      const purePrice = productInCart?.inventory?.price;
 
       price.totalPurePrice += quantity * purePrice;
       price.totalPrice += quantity * (purePrice - (purePrice * off) / 100);
@@ -155,7 +153,6 @@ const AuthProvider = (props) => {
   };
   const subtractProductInCart = (productInCart) => {
     if (productInCart.productInCart.quantity <= 1) {
-
       deleteProductFromCart(productInCart?.productInCart?.inventory?.id);
     } else {
       setShoppingCart((prev) => {
@@ -165,7 +162,6 @@ const AuthProvider = (props) => {
     }
   };
   const isProductInCartValid = (quantity, quantitySelected) => {
-
     if (quantitySelected > quantity) {
       return false;
     }
@@ -175,7 +171,6 @@ const AuthProvider = (props) => {
     const productInCartIndex = shoppingCart?.findIndex(
       (iProductInCart) => iProductInCart.inventory?.id === inventoryId
     );
-
 
     if (productInCartIndex !== -1) {
       setShoppingCart((prev) => {
@@ -197,7 +192,6 @@ const AuthProvider = (props) => {
   };
   const addToCart = (product, inventory) => {
     setShoppingCart((prev) => {
-
       return [...prev, { product: product, inventory: inventory, quantity: 1 }];
     });
   };

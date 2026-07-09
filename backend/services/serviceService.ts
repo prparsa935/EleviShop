@@ -6,7 +6,13 @@ class ServiceService {
   async findServiceById(id: number): Promise<Service> {
     return await this.serviceRepo.findOne({
       where: { id: id },
-      relations: ["plates", "plates.mainImage", "mainImage"],
+      relations: [
+        "plates",
+        "plates.mainImage",
+        "plates.inventories",
+        "inventories",
+        "mainImage",
+      ],
     });
   }
 }

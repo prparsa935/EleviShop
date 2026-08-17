@@ -1,0 +1,1 @@
+const e=[{value:"وزن",key:"weight"},{value:"طول",key:"height"},{value:"عرض",key:"width"}],a=[{value:"شامل",key:"contain"}],t=[{value:"جنس",key:"material"},{value:"نوع",key:"type"},{value:"طرح",key:"pattern"}],c={plate:e,service:a,product:t};export{c as s};

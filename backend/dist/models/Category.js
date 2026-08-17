@@ -7,8 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, } from "typeorm";
-let Category = class Category {
+import { Column, Entity, ManyToOne, OneToMany, } from "typeorm";
+import { Base } from "./Base.js";
+let Category = class Category extends Base {
     get categoryPath() {
         const parents = [];
         let currentCategory = this.parentCategory;
@@ -19,10 +20,6 @@ let Category = class Category {
         return parents;
     }
 };
-__decorate([
-    PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Category.prototype, "id", void 0);
 __decorate([
     Column({ unique: true, length: 20, nullable: false }),
     __metadata("design:type", String)

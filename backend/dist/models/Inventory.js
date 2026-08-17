@@ -26,13 +26,13 @@ __decorate([
     __metadata("design:type", Number)
 ], Inventory.prototype, "quantity", void 0);
 __decorate([
-    Column({ type: "enum", enum: enumSize }),
-    __metadata("design:type", String)
-], Inventory.prototype, "size", void 0);
-__decorate([
     ManyToOne(() => Product),
     __metadata("design:type", Object)
 ], Inventory.prototype, "product", void 0);
+__decorate([
+    Column({ nullable: false }),
+    __metadata("design:type", Number)
+], Inventory.prototype, "price", void 0);
 Inventory = __decorate([
     Entity()
 ], Inventory);

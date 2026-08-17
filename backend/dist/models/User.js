@@ -12,6 +12,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn
 import { Comment } from "./Comment.js";
 import { TfLogin } from "./TfLogin.js";
 import { Person } from "./Person.js";
+import { ShoppingCartItem } from "./ShoppingCartItem.js";
 let User = class User {
     get isIdentified() {
         return this.person ? true : false;
@@ -43,6 +44,10 @@ __decorate([
     OneToOne(() => TfLogin),
     __metadata("design:type", TfLogin)
 ], User.prototype, "tfLogin", void 0);
+__decorate([
+    OneToMany(() => ShoppingCartItem, (shoppingCartItem) => shoppingCartItem.user),
+    __metadata("design:type", Object)
+], User.prototype, "shoppingCartItems", void 0);
 User = __decorate([
     Entity()
 ], User);

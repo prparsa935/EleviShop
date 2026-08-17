@@ -7,12 +7,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, BeforeInsert, } from "typeorm";
+import { Entity, Column, ManyToOne, OneToMany, BeforeInsert, } from "typeorm";
 import moment from "moment-jalaali";
 import { User } from "./User.js";
 import { OrderInventory } from "./OrderInventory.js";
 import { Person } from "./Person.js";
 import { Expose } from "class-transformer";
+import { Base } from "./Base.js";
 export var orderStatus;
 (function (orderStatus) {
     orderStatus["waitingForPayment"] = "\u062F\u0631 \u0627\u0646\u062A\u0638\u0627\u0631 \u067E\u0631\u062F\u0627\u062E\u062A";
@@ -28,24 +29,7 @@ export var orderStatus;
 // unknown = "unknown",
 // anotherMerchantId = "notherMerchantId",
 // invalidAuth = "invalidAuth",
-let Order = class Order {
-    // @Column()
-    // bankCode: number;
-    // @Column()
-    // bankMessage: string;
-    // // @OneToOne(()=>User)
-    // // @JoinColumn()
-    // // user:User;
-    // @Column({ unique: true })
-    // authority: string;
-    // @Column({ nullable: true })
-    // cardHash: string;
-    // @Column({ nullable: true })
-    // refId: number;
-    // @Column({ nullable: true })
-    // cardPan: string;
-    // @Column({ nullable: true })
-    // errors: string;
+let Order = class Order extends Base {
     generateTrackingCode() {
         const date = new Date();
         const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD format
@@ -73,10 +57,6 @@ let Order = class Order {
     }
 };
 __decorate([
-    PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Order.prototype, "id", void 0);
-__decorate([
     Column({ unique: true }),
     __metadata("design:type", String)
 ], Order.prototype, "trackingCode", void 0);
@@ -87,24 +67,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Order.prototype, "orderInventories", void 0);
 __decorate([
-    CreateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)",
-    }),
-    __metadata("design:type", Date)
-], Order.prototype, "dateCreated", void 0);
-__decorate([
     ManyToOne(() => User),
     __metadata("design:type", User)
 ], Order.prototype, "user", void 0);
-__decorate([
-    UpdateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)",
-        onUpdate: "CURRENT_TIMESTAMP(6)",
-    }),
-    __metadata("design:type", Date)
-], Order.prototype, "updated_at", void 0);
 __decorate([
     ManyToOne(() => Person, { nullable: true }),
     __metadata("design:type", Person)

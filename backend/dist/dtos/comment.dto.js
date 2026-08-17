@@ -16,7 +16,7 @@ export var CommentOrders;
 export class CommentSaveDto {
 }
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{10,50}$"), {
+    Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
         message: "لطفا متن نظر خود را کامل کنید",
     }),
     __metadata("design:type", String)

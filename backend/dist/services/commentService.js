@@ -12,7 +12,7 @@ class CommentService {
         const pageSize = 10;
         // creating query
         const queryBuilder = await this.commentRepo
-            .createQueryBuilder('comment')
+            .createQueryBuilder("comment")
             .leftJoinAndSelect("comment.product", "product")
             .leftJoinAndSelect("comment.user", "user")
             .leftJoinAndSelect("user.person", "profile")

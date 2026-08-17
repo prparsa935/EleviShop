@@ -7,10 +7,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, } from "typeorm";
+import { Entity, Column, ManyToOne, } from "typeorm";
 import { Order } from "./Order.js";
 import { Inventory } from "./Inventory.js";
-let OrderInventory = class OrderInventory {
+import { Base } from "./Base.js";
+let OrderInventory = class OrderInventory extends Base {
     get TotalPrice() {
         const price = this.singleProductPrice;
         const offPercent = this.singleProductOffPercent;
@@ -24,10 +25,6 @@ let OrderInventory = class OrderInventory {
         return finalOffPrice * this.quantity;
     }
 };
-__decorate([
-    PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], OrderInventory.prototype, "id", void 0);
 __decorate([
     Column({ nullable: false }),
     __metadata("design:type", Number)

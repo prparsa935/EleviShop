@@ -23,5 +23,20 @@ class CategoryService {
         });
         return [...categoryMap.values()].filter((cat) => !cat.parentCategory)[0]; // Return top-level categories
     }
+    async findCategoryById(id) {
+        return await this.categoryRepo.findOne({
+            where: {
+                id: id,
+            },
+            relations: ["parentCategory"],
+        });
+    }
+    async createCategory(parentCatID, name) {
+        const parentCat = await this.findCategoryById(parentCatID);
+        const cat = new Category();
+        cat.name = name;
+        cat.parentCategory = parentCat;
+        return await this.categoryRepo.save(cat);
+    }
 }
 export default new CategoryService();

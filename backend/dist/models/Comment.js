@@ -7,16 +7,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, } from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
 import { Product } from "./product.js";
 import { User } from "./User.js";
 import { UserCommentLikes } from "./UserCommentLikes.js";
-let Comment = class Comment {
+import { Base } from "./Base.js";
+let Comment = class Comment extends Base {
 };
-__decorate([
-    PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Comment.prototype, "id", void 0);
 __decorate([
     Column({ nullable: false }),
     __metadata("design:type", String)
@@ -33,21 +30,6 @@ __decorate([
     Column({ default: 0 }),
     __metadata("design:type", Number)
 ], Comment.prototype, "dislikesCount", void 0);
-__decorate([
-    CreateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)",
-    }),
-    __metadata("design:type", Date)
-], Comment.prototype, "dateCreated", void 0);
-__decorate([
-    UpdateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)",
-        onUpdate: "CURRENT_TIMESTAMP(6)",
-    }),
-    __metadata("design:type", Date)
-], Comment.prototype, "updated_at", void 0);
 __decorate([
     ManyToOne(() => Product, (product) => product.comments, { nullable: false }),
     __metadata("design:type", Object)

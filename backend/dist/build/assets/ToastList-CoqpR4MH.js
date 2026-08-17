@@ -1,0 +1,1 @@
+import{j as s}from"./motion-Dr3-Dcy1.js";import{A as e}from"./Alert-DyOMzk-i.js";const a=({toastList:t})=>s.jsx("div",{className:" sticky top-24 w-100 h-0 z-50 ",children:t?.map(r=>s.jsx(e,{duration:5e3,type:r.type,children:r.message}))});export{a as T};

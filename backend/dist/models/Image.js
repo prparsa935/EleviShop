@@ -7,18 +7,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, } from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
 import { Product } from "./product.js";
-// export enum color {
-//     yellow = 'yellow',
-//     red = 'red',
-//   }
-let Image = class Image {
+import { Base } from "./Base.js";
+let Image = class Image extends Base {
 };
-__decorate([
-    PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Image.prototype, "id", void 0);
 __decorate([
     ManyToOne(() => Product),
     __metadata("design:type", Object)

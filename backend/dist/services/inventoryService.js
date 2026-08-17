@@ -1,23 +1,29 @@
 import dataSource from "../utils/dbConfiguration.js";
 import { Inventory } from "../models/Inventory.js";
 import { In } from "typeorm";
-import { plainToInstance } from "class-transformer";
 class InventoryService {
     constructor() {
         this.inventoryRepo = dataSource.getRepository(Inventory);
     }
+    async findInventoryById(id) {
+        const inventory = await this.inventoryRepo.findOne({
+            where: {
+                id: id,
+            },
+        });
+        return inventory;
+    }
     async findInventoryByIds(entityManager, ids) {
-        const inventories = await entityManager.find(Inventory, {
+        const inventory = await entityManager.find(Inventory, {
             where: {
                 id: In(ids),
             },
             relations: ["product"],
         });
-        return inventories;
+        return inventory;
     }
-    async saveInventories(entityManager, inventoriesDto) {
-        const inventories = plainToInstance(Inventory, inventoriesDto);
-        return await entityManager.save(Inventory, inventories);
+    async saveInventories(entityManager, inventies) {
+        return await entityManager.save(Inventory, inventies);
     }
 }
 export default new InventoryService();

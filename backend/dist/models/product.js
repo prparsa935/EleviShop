@@ -13,16 +13,21 @@ import { Comment } from "./Comment.js";
 import { Color } from "./Color.js";
 import { Category } from "./Category.js";
 import { Inventory } from "./Inventory.js";
+import { Base } from "./Base.js";
 // export enum color {
 //     yellow = 'yellow',
 //     red = 'red',
 //   }
-let Product = class Product {
+let Product = class Product extends Base {
 };
 __decorate([
     PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
 ], Product.prototype, "id", void 0);
+__decorate([
+    Column({ type: "varchar", name: "type", default: "plate", length: 10 }),
+    __metadata("design:type", String)
+], Product.prototype, "type", void 0);
 __decorate([
     OneToMany(() => Image, (image) => image.product),
     __metadata("design:type", Array)
@@ -45,14 +50,6 @@ __decorate([
     __metadata("design:type", Image)
 ], Product.prototype, "mainImage", void 0);
 __decorate([
-    Column({ nullable: true }),
-    __metadata("design:type", Number)
-], Product.prototype, "ratio", void 0);
-__decorate([
-    Column({ nullable: false }),
-    __metadata("design:type", Number)
-], Product.prototype, "price", void 0);
-__decorate([
     Column({ length: 10, nullable: false }),
     __metadata("design:type", String)
 ], Product.prototype, "pattern", void 0);
@@ -61,13 +58,33 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "offPercent", void 0);
 __decorate([
+    Column({ default: 1 }),
+    __metadata("design:type", Number)
+], Product.prototype, "countPerProduct", void 0);
+__decorate([
     Column({ nullable: false }),
     __metadata("design:type", String)
 ], Product.prototype, "material", void 0);
 __decorate([
-    Column({ nullable: true }),
+    Column({ nullable: true, default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "rate", void 0);
+__decorate([
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "rateScore", void 0);
+__decorate([
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "rateCount", void 0);
+__decorate([
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "buyerCount", void 0);
+__decorate([
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "commentCount", void 0);
 __decorate([
     OneToOne(() => Color),
     JoinColumn(),
@@ -93,7 +110,7 @@ __decorate([
 Product = __decorate([
     Entity(),
     TableInheritance({
-        column: { type: "varchar", name: "type", default: "plate" },
+        column: { type: "varchar", name: "type", default: "plate", length: 10 },
     })
 ], Product);
 export { Product };

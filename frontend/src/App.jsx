@@ -32,8 +32,8 @@ const InsertProduct = lazy(() => import("./pages/InsertProduct.jsx"));
 const InsertCategory = lazy(() => import("./pages/InsertCategory.jsx"));
 const InsertColor = lazy(() => import("./pages/InsertColor.jsx"));
 const InsertBrand = lazy(() => import("./pages/InsertBrand.jsx"));
-const serverAddress = "http://2.190.104.111:8000/api/";
-const imageServerAddress = "http://2.190.104.111:8000/";
+const serverAddress = "http://localhost:8000/api/";
+const imageServerAddress = "http://localhost:8000/";
 
 export { serverAddress, imageServerAddress };
 

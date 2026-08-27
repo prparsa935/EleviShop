@@ -26,6 +26,7 @@ const Admin = lazy(() => import("./pages/Admin.jsx"));
 const AdminColor = lazy(() => import("./pages/AdminColor.jsx"));
 const AdminCategory = lazy(() => import("./pages/AdminCategory.jsx"));
 const AdminProduct = lazy(() => import("./pages/AdminProduct.jsx"));
+const AdminStock = lazy(() => import("./pages/AdminStock.jsx"));
 
 const InsertProduct = lazy(() => import("./pages/InsertProduct.jsx"));
 const InsertCategory = lazy(() => import("./pages/InsertCategory.jsx"));
@@ -175,6 +176,16 @@ function AnimatedRoutes() {
           <PageTransition>
             <Suspense fallback={<PageLoading></PageLoading>}>
               <AdminProduct></AdminProduct>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
+        path="/admin/stock"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <AdminStock></AdminStock>
             </Suspense>
           </PageTransition>
         }

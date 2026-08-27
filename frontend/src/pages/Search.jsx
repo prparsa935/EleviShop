@@ -9,7 +9,6 @@ import Sheet from "../components/sheet/Sheet";
 import Tag from "../components/tag/Tag";
 // category
 // min takhfif
-// brand
 //name
 // price min max
 

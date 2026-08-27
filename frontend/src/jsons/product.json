@@ -4,10 +4,6 @@
   "name": "shittyTshirtt",
   "shortDescription": "shortDescription",
   "longDescription": "longDescription",
-  "brand": {
-    "id": 2,
-    "name": "laboutin"
-  },
   "inventories": [
     {
       "id": 29,

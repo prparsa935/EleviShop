@@ -18,7 +18,7 @@ import SmartImage from "../smartimage/SmartImage";
 import schema from "../../schema/schema";
 import InsertProductAddAttr from "../insertproductadattr/InsertProductAddAttr";
 import ASelectBox from "../selectbox/ASelectBox";
-import { findColorByName } from "../../api/color";
+import { findColorByName, findColorById } from "../../api/color";
 // const ValidationSchema = Yup.object().shape({
 //   email: Yup.string()
 //     .email("Invalid email address")
@@ -42,6 +42,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   });
   const [serviceProducts, setServiceProducts] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(null);
 
   useEffect(() => {
     if (searchParams.has("productId"))
@@ -57,13 +58,24 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       currentForm.price.value = existingProduct.inventories[0].price;
       currentForm.offPercent.value = existingProduct.offPercent;
       currentForm.material.value = existingProduct.material;
+      currentForm.pattern.value = existingProduct.pattern;
       currentForm.quantity.value = existingProduct.inventories[0].quantity;
-      currentForm.colorId.value = existingProduct.color.id;
+      currentForm.colorId.value = existingProduct.color?.id || "";
+      if (existingProduct.color) {
+        setSelectedColor({ value: existingProduct.color.id, label: existingProduct.color.name });
+      }
+      
+      if (existingProduct.type === "plate") {
+        currentForm.weight.value = existingProduct.weight;
+        currentForm.height.value = existingProduct.height;
+        currentForm.width.value = existingProduct.width;
+      }
+      
       setTypeSelect({
         label: existingProduct.type,
         value: existingProduct.type,
       });
-      // set service paltes if existing product is service
+      // set service plates if existing product is service
       if (existingProduct.type === "service") {
         setServiceProducts(
           existingProduct?.plates?.map((plate) => {
@@ -72,8 +84,6 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         );
       }
 
-      // todo categoy lis is comming we fucked
-      // e.target.categoryId.value = product.category;
       setSearchParams((prev) => {
         prev.set("categoryId", existingProduct?.mainCategory?.id);
         return prev;
@@ -85,7 +95,9 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       ]);
 
       setMainImage(existingProduct?.mainImage || null);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error setting existing product form:", error);
+    }
   };
   useDidUpdateEffect(ExistingProductFormSetter, [existingProduct]);
 
@@ -110,7 +122,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       quantity: Number(e.target.quantity.value),
       material: e.target.material.value,
       pattern: e.target.pattern.value,
-      colorId: Number(e.target.colorId.value),
+      colorId: selectedColor ? selectedColor.value : undefined,
     };
     if (typeSelect.value === "service") {
       values.contain = e.target.contain.value;
@@ -124,21 +136,38 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     return values;
   };
   const preparePayload = (values) => {
+    const mainImageIdValue = mainImage ? Number(mainImage.id) : undefined;
     const imageIds = uploadedImages
-      .filter((img) => img.id !== mainImage.id)
+      .filter((img) => !mainImageIdValue || img.id !== mainImageIdValue)
       .map((img) => Number(img.id));
     const categoryId = Number(searchParams.get("categoryId"));
-    const mainImageId = Number(mainImage.id);
 
-    return {
+    const payload = {
       ...values,
-      categoryId,
       type: typeSelect.value,
       imageIds,
-      mainImageId,
-
       inventories: [{ quantity: values.quantity, price: values.price }],
     };
+
+    // Only add categoryId if it's valid
+    if (!isNaN(categoryId) && categoryId > 0) {
+      payload.categoryId = categoryId;
+    }
+
+    // Only add mainImageId if it's valid
+    if (mainImageIdValue) {
+      payload.mainImageId = mainImageIdValue;
+    }
+
+    // Remove colorId if it's 0 or undefined
+    if (!payload.colorId || payload.colorId === 0) {
+      delete payload.colorId;
+    }
+    // Remove price and quantity from root (they're in inventories)
+    delete payload.price;
+    delete payload.quantity;
+
+    return payload;
   };
   const submitFormHandler = (e) => {
     e.preventDefault();
@@ -169,8 +198,6 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     formApiHandler(endpoint, payload, setToastList, setErrors, setLoading);
   };
   const loadcolorOptions = useCallback(findColorByName);
-
-  // const loadBrandOptions = useCallback(findBrandByName);
 
   return (
     <form
@@ -234,17 +261,6 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
               </div>
               <Input iMessage={errors?.code} name="code" />
             </div>
-            {/* <div className="flex flex-col col-span-4 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">برند</span>
-              </div>
-              <ASelectBox
-                loadOptions={loadBrandOptions}
-                isSearchable={true}
-                name="brandId"
-              />
-            </div> */}
             <div className="flex flex-col col-span-4 ">
               <div className="mb-2 font-medium text-sm !leading-3 ">
                 <span className=" text-red-500 text-lg !leading-3 ">*</span>
@@ -254,6 +270,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 loadOptions={loadcolorOptions}
                 isSearchable={true}
                 name="colorId"
+                value={selectedColor}
+                onChange={(val) => setSelectedColor(val)}
               />
             </div>
 
@@ -398,8 +416,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                   <div>
                     <i
                       onClick={() => setMainImage(image)}
-                      data-mainImage={mainImage?.id === image?.id}
-                      class="fa-solid fa-flag data-[mainImage=true]:gold-text text-[var(--sub-text-color)] "
+                      className={`fa-solid fa-flag ${mainImage?.id === image?.id ? 'gold-text' : 'text-[var(--sub-text-color)]'}`}
                     ></i>
                   </div>
                   <div>

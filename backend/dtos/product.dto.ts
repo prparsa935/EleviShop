@@ -5,6 +5,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   Matches,
   Max,
   Min,
@@ -108,4 +109,102 @@ export class ServiceSaveDto extends ProductSaveDto {
   @IsInt({ each: true }) // هر عضو باید عدد صحیح باشد
   @Min(1, { each: true }) // هر عدد حداقل 1 باشد
   plateIds: number[];
+}
+
+export class UpdateProductDto {
+  @IsEnum(typeEnum, { message: "نوع محصول درست مشخص نشده است" })
+  @IsOptional()
+  type?: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => InventorySaveDto)
+  @IsOptional()
+  inventories?: InventorySaveDto[];
+
+  @Matches(RegExp("^[0-9]{5,8}$"), {
+    message: "لطفا کد محصول را با فرمت درست وارد کنید",
+  })
+  @IsOptional()
+  code?: string;
+
+  @Matches(RegExp("^[A-Za-zآ-ی ]{3,15}$"), {
+    message: "لطفا نام محصول را درست واردکنید",
+  })
+  @IsOptional()
+  productName?: string;
+
+  @Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
+    message: "لطفا توضیخات محصول را درست واردکنید",
+  })
+  @IsOptional()
+  description?: string;
+
+  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
+  @Min(0, { message: "حداقل 0 درصد" })
+  @Max(99, { message: "حداکثر ۹۹ درصد" })
+  @IsOptional()
+  offPercent?: number;
+
+  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    message: "لطفا جنس محصول را درست واردکنید",
+  })
+  @IsOptional()
+  material?: string;
+
+  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    message: "لطفا طرح محصول را درست واردکنید",
+  })
+  @IsOptional()
+  pattern?: string;
+
+  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
+  @IsOptional()
+  categoryId?: number;
+
+  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
+  @IsOptional()
+  colorId?: number;
+
+  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
+  @IsOptional()
+  mainImageId?: number;
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @IsOptional()
+  imageIds?: number[];
+
+  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
+  @IsNumber({}, { message: "لطفا عرض را به صورت عدد وارد کنید" })
+  @Min(1, { message: "حداقل مقدار 1" })
+  @Max(1000, { message: "حداکثر مقدار 1000" })
+  @IsOptional()
+  height?: number;
+
+  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
+  @IsNumber({}, { message: "لطفا وزن را به صورت عدد وارد کنید" })
+  @Min(1, { message: "حداقل مقدار 1" })
+  @Max(1000, { message: "حداکثر مقدار 1000" })
+  @IsOptional()
+  weight?: number;
+
+  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
+  @IsNumber({}, { message: "لطفا طول را به صورت عدد وارد کنید" })
+  @Min(1, { message: "حداقل مقدار 1" })
+  @Max(1000, { message: "حداکثر مقدار 1000" })
+  @IsOptional()
+  width?: number;
+
+  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    message: "لطفا کالا های سرویس را درست وارد کنید",
+  })
+  @IsOptional()
+  contain?: string;
+
+  @ArrayNotEmpty({ message: "حداقل یک آیتم لازم است" })
+  @IsArray()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  @IsOptional()
+  plateIds?: number[];
 }

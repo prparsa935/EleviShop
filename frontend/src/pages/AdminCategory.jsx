@@ -1,6 +1,5 @@
 import { useSearchParams } from "react-router-dom";
 import deleteItem from "../api/delete";
-import AdminBrandC from "../components/Adminbrandc/AdminBrandC";
 import AdminCategoryC from "../components/admincategoryc/AdminCategoryC";
 import AdminColorC from "../components/admincolorc/AdminColorC";
 
@@ -17,12 +16,14 @@ const AdminCategory = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [toastList, setToastList] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const handleDeleteConfirm = () => {
     deleteItem(
       "category/admin/delete/",
       searchParams.get("categoryId"),
-      setToastList
+      setToastList,
+      setErrors
     );
   };
   return (

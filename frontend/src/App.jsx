@@ -23,7 +23,6 @@ const Profile = lazy(() => import("./pages/Profile.jsx"));
 const Orders = lazy(() => import("./pages/Orders.jsx"));
 const OrderDetails = lazy(() => import("./pages/OrderDetails.jsx"));
 const Admin = lazy(() => import("./pages/Admin.jsx"));
-const AdminBrand = lazy(() => import("./pages/AdminBrand.jsx"));
 const AdminColor = lazy(() => import("./pages/AdminColor.jsx"));
 const AdminCategory = lazy(() => import("./pages/AdminCategory.jsx"));
 const AdminProduct = lazy(() => import("./pages/AdminProduct.jsx"));
@@ -31,7 +30,6 @@ const AdminProduct = lazy(() => import("./pages/AdminProduct.jsx"));
 const InsertProduct = lazy(() => import("./pages/InsertProduct.jsx"));
 const InsertCategory = lazy(() => import("./pages/InsertCategory.jsx"));
 const InsertColor = lazy(() => import("./pages/InsertColor.jsx"));
-const InsertBrand = lazy(() => import("./pages/InsertBrand.jsx"));
 const serverAddress = "http://localhost:8000/api/";
 const imageServerAddress = "http://localhost:8000/";
 
@@ -152,16 +150,6 @@ function AnimatedRoutes() {
         }
       />
       <Route
-        path="/admin/brand"
-        element={
-          <PageTransition>
-            <Suspense fallback={<PageLoading></PageLoading>}>
-              <AdminBrand></AdminBrand>
-            </Suspense>
-          </PageTransition>
-        }
-      />
-      <Route
         path="/admin/color"
         element={
           <PageTransition>
@@ -218,16 +206,6 @@ function AnimatedRoutes() {
           <PageTransition>
             <Suspense fallback={<PageLoading></PageLoading>}>
               <InsertColor></InsertColor>
-            </Suspense>
-          </PageTransition>
-        }
-      />
-      <Route
-        path="/admin/brand/save"
-        element={
-          <PageTransition>
-            <Suspense fallback={<PageLoading></PageLoading>}>
-              <InsertBrand></InsertBrand>
             </Suspense>
           </PageTransition>
         }

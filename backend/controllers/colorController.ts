@@ -41,5 +41,47 @@ class ColorController {
       next(error);
     }
   }
+  async findColorByName(req: Request, res: Response, next: NextFunction) {
+    try {
+      const colorName = req.query.colorName as string;
+      if (!colorName) {
+        return res.json(await colorService.findColors());
+      }
+      return res.json(await colorService.findColorsByName(colorName));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteColor(req: Request, res: Response, next: NextFunction) {
+    try {
+      const colorId: number = Number(req.params.id);
+      if (isNaN(colorId)) {
+        throw new OverallError("رنگ مورد نظر یافت نشد", 404);
+      }
+      await colorService.deleteColor(colorId);
+      return res.json(
+        new ResponseDTO(null, null, true, "رنگ با موفقیت حذف شد")
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateColor(req: Request, res: Response, next: NextFunction) {
+    try {
+      const colorId: number = Number(req.params.id);
+      if (isNaN(colorId)) {
+        throw new OverallError("رنگ مورد نظر یافت نشد", 404);
+      }
+      const { name, hexCode } = req.body;
+      const color = await colorService.updateColor(colorId, name, hexCode);
+      return res.json(
+        new ResponseDTO(null, null, true, "رنگ با موفقیت به‌روزرسانی شد", color)
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 export default new ColorController();

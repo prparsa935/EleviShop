@@ -24,15 +24,6 @@ const AdminSideBar = () => {
         </div>
       </div>
       <div
-        onClick={() => navigate("/admin/brand")}
-        className=" justify-between items-center p-4 hover:bg-[var(--color-gold-light)] transition-colors rounded-xl "
-      >
-        <div className="flex items-center gap-x-3  font-semibold text-[var(--color-white)] ">
-          <i class="fa-regular fa-bag-shopping gold-text"></i>
-          <span className="">مدیریت برند ها</span>
-        </div>
-      </div>
-      <div
         onClick={() => navigate("/admin/color")}
         className=" justify-between items-center p-4 hover:bg-[var(--color-gold-light)] transition-colors rounded-xl "
       >

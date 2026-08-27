@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AdminBrandC from "../components/Adminbrandc/AdminBrandC";
 import AdminColorC from "../components/admincolorc/AdminColorC";
 import AdminProductC from "../components/adminproductc/AdminProductC";
 
@@ -16,13 +15,14 @@ const AdminProduct = () => {
   const [itemSelectedForDelete, setItemSelectedForDelete] = useState(null);
 
   const [toastList, setToastList] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const handleDeleteItem = (itemId) => {
     setDeleteModalActive(true);
     setItemSelectedForDelete(itemId);
   };
   const handleDeleteConfirm = () => {
-    deleteItem("product/admin/delete/", itemSelectedForDelete, setToastList);
+    deleteItem("product/admin/delete/", itemSelectedForDelete, setToastList, setErrors);
   };
   return (
     <div className="profile-page">

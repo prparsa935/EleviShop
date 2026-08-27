@@ -24,5 +24,8 @@ export class Inventory {
   product: Relation<Product>;
   @Column({ nullable: false })
   price: number;
+
+  @Column({ default: 5 })
+  lowStockThreshold: number;
 }
 enumSize.md;

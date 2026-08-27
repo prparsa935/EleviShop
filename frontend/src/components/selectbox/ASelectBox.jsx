@@ -14,6 +14,7 @@ const ASelectBox = (props) => {
       <AsyncSelect
         placeholder={props.placeHolder}
         className={props.className}
+        value={props.value || props.defaultValue}
         defaultValue={props.defaultValue}
         isDisabled={props.disabled}
         isLoading={props.isLoading}

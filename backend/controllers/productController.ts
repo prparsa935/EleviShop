@@ -10,6 +10,7 @@ import {
   PlateSaveDto,
   ProductSaveDto,
   ServiceSaveDto,
+  UpdateProductDto,
 } from "../dtos/product.dto.js";
 // import { ProductSaveDto } from "../dtos/product.dto.js";
 
@@ -61,6 +62,50 @@ class ProductController {
       return res.json(product);
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+
+  async deleteProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const productId: number = Number(req.params.id);
+      if (isNaN(productId)) {
+        return res
+          .status(404)
+          .json(
+            new ResponseDTO({}, { message: "محصول مورد نظر یافت نشد" }, false)
+          );
+      }
+      await ProductService.deleteProduct(productId);
+      return res.json(
+        new ResponseDTO(null, null, true, "محصول با موفقیت حذف شد")
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const productId: number = Number(req.params.id);
+      if (isNaN(productId)) {
+        return res
+          .status(404)
+          .json(
+            new ResponseDTO({}, { message: "محصول مورد نظر یافت نشد" }, false)
+          );
+      }
+      const updateDto = plainToInstance(UpdateProductDto, req.body);
+      const errors = await validate(updateDto);
+      if (errors.length > 0) {
+        throw new FieldErrors(errors);
+      }
+      const product = await ProductService.updateProduct(productId, updateDto);
+      return res.json(
+        new ResponseDTO(null, null, true, "محصول با موفقیت به‌روزرسانی شد", product)
+      );
+    } catch (error) {
+      console.error("Update product error:", error);
       next(error);
     }
   }

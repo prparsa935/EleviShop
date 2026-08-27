@@ -41,5 +41,35 @@ class CategoryController {
             next(error);
         }
     }
+    async deleteCategory(req, res, next) {
+        try {
+            const categoryId = Number(req.params.id);
+            if (!categoryId) {
+                throw new OverallError("دسته‌بندی مورد نظر یافت نشد", 404);
+            }
+            await CategoryService.deleteCategory(categoryId);
+            return res.json(new ResponseDTO(null, null, true, "دسته‌بندی با موفقیت حذف شد"));
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    async updateCategory(req, res, next) {
+        try {
+            const categoryId = Number(req.params.id);
+            if (!categoryId) {
+                throw new OverallError("دسته‌بندی مورد نظر یافت نشد", 404);
+            }
+            const { categoryname, parentCatId } = req.body;
+            if (!categoryname) {
+                throw new OverallError("نام را وارد کنید");
+            }
+            const category = await CategoryService.updateCategory(categoryId, categoryname, parentCatId);
+            return res.json(new ResponseDTO(null, null, true, "دسته‌بندی با موفقیت به‌روزرسانی شد", category));
+        }
+        catch (error) {
+            next(error);
+        }
+    }
 }
 export default new CategoryController();

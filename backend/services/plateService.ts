@@ -25,7 +25,7 @@ class PlateService {
       ],
     });
   }
-  async findProductByIds(ids: number[]): Promise<Product[]> {
+  async findProductByIds(ids: number[]): Promise<Plate[]> {
     return await this.plateRepo.find({
       where: { id: In(ids)  },
 

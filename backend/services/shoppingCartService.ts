@@ -1,3 +1,4 @@
+import { instanceToPlain } from "class-transformer";
 import { OverallError } from "../errors/orderSaveError.js";
 import { ShoppingCartItem } from "../models/ShoppingCartItem.js";
 import { User } from "../models/User.js";
@@ -10,7 +11,7 @@ class ShoppingCartService {
     inventoryId: number,
     userId: number
   ) {
-    this.shoppingCartRepo.findOne({
+    return await this.shoppingCartRepo.findOne({
       where: {
         user: {
           id: userId,
@@ -29,6 +30,30 @@ class ShoppingCartService {
         },
       },
     });
+  }
+  async getUserCart(userId: number) {
+    const items = await this.shoppingCartRepo.find({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relations: [
+        "inventory",
+        "inventory.product",
+        "inventory.product.mainImage",
+      ],
+      order: {
+        dateCreated: "ASC",
+      },
+    });
+    return instanceToPlain(
+      items.map((item) => ({
+        product: item.inventory?.product,
+        inventory: item.inventory,
+        quantity: item.count,
+      }))
+    );
   }
   async addItemToUserShopingCart(
     inventoryId: number,
@@ -68,6 +93,85 @@ class ShoppingCartService {
       newShoppingCartItem.inventory = inventory;
       return await this.shoppingCartRepo.save(newShoppingCartItem);
     }
+  }
+  async syncShoppingCart(
+    user: User,
+    items: { inventoryId: number; count: number }[],
+    replace: boolean = false
+  ) {
+    const desired = new Map<number, number>();
+    (items ?? []).forEach((item) => {
+      const inventoryId = Number(item?.inventoryId);
+      const count = Number(item?.count);
+      if (
+        !Number.isInteger(inventoryId) ||
+        !Number.isFinite(count) ||
+        count < 0
+      ) {
+        return;
+      }
+      desired.set(inventoryId, count);
+    });
+
+    const inventoryIds = Array.from(desired.keys());
+    const inventories =
+      inventoryIds.length > 0
+        ? await inventoryService.findInventoryByIds(
+            dataSource.manager,
+            inventoryIds
+          )
+        : [];
+    const inventoryMap = new Map(inventories.map((inv) => [inv.id, inv]));
+
+    const dbItems = await this.shoppingCartRepo.find({
+      where: {
+        user: {
+          id: user.id,
+        },
+      },
+      relations: ["inventory"],
+    });
+    const dbItemMap = new Map(dbItems.map((item) => [item.inventory.id, item]));
+
+    for (const inventoryId of inventoryIds) {
+      const requestedCount = desired.get(inventoryId)!;
+      const inventory = inventoryMap.get(inventoryId);
+      if (!inventory) {
+        continue;
+      }
+      const clampedCount = Math.min(requestedCount, inventory.quantity);
+      const existingItem = dbItemMap.get(inventoryId);
+      if (existingItem) {
+        const nextCount = replace
+          ? clampedCount
+          : Math.max(existingItem.count, clampedCount);
+        if (nextCount <= 0) {
+          await this.shoppingCartRepo.remove(existingItem);
+          dbItemMap.delete(inventoryId);
+        } else if (nextCount !== existingItem.count) {
+          existingItem.count = nextCount;
+          await this.shoppingCartRepo.save(existingItem);
+        }
+      } else if (clampedCount > 0) {
+        const newShoppingCartItem = new ShoppingCartItem();
+        newShoppingCartItem.count = clampedCount;
+        newShoppingCartItem.user = user;
+        newShoppingCartItem.inventory = inventory;
+        await this.shoppingCartRepo.save(newShoppingCartItem);
+        dbItemMap.set(inventoryId, newShoppingCartItem);
+      }
+    }
+
+    if (replace) {
+      for (const dbItem of dbItems) {
+        if (!desired.has(dbItem.inventory.id)) {
+          await this.shoppingCartRepo.remove(dbItem);
+          dbItemMap.delete(dbItem.inventory.id);
+        }
+      }
+    }
+
+    return await this.getUserCart(user.id);
   }
 }
 export default new ShoppingCartService();

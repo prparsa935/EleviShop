@@ -22,6 +22,10 @@ const AuthProvider = (props) => {
     JSON.parse(localStorage?.getItem("shoppingCart")) || []
   );
   const count = useRef(false);
+  const skipNextSyncRef = useRef(false);
+  const lastSyncedCartRef = useRef(
+    JSON.stringify(JSON.parse(localStorage?.getItem("shoppingCart")) || [])
+  );
   // error here
   const [user, setUser] = useState(
     cookies?.access ? jwtDecode(cookies?.access) : null
@@ -33,6 +37,38 @@ const AuthProvider = (props) => {
     // window.localStorage.removeItem("shoppingCart");
     localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
   }, [shoppingCart]);
+
+  const syncCartWithServer = async (items, replace) => {
+    const response = await Axios.post(serverAddress + "cart/sync", {
+      items: items.map((item) => ({
+        inventoryId: item.inventory?.id,
+        count: item.quantity,
+      })),
+      replace: replace,
+    });
+    return response;
+  };
+  useEffect(() => {
+    if (!user || !access) {
+      return undefined;
+    }
+    const cartJson = JSON.stringify(shoppingCart);
+    if (skipNextSyncRef.current) {
+      skipNextSyncRef.current = false;
+      lastSyncedCartRef.current = cartJson;
+      return undefined;
+    }
+    if (lastSyncedCartRef.current === cartJson) {
+      return undefined;
+    }
+    const timer = setTimeout(async () => {
+      lastSyncedCartRef.current = JSON.stringify(shoppingCart);
+      try {
+        await syncCartWithServer(shoppingCart, true);
+      } catch (error) {}
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [shoppingCart, user, access]);
 
   const updateShoppingCart = async (setLoading) => {
     let invalidList = [];
@@ -287,6 +323,25 @@ const AuthProvider = (props) => {
         if (response.data.success === true) {
           const data = response.data;
           userSetter(data.data);
+          Axios.defaults.headers.common["Authorization"] =
+            `Bearer ${data.data}`;
+          try {
+            const localCart =
+              JSON.parse(localStorage.getItem("shoppingCart")) || [];
+            const syncResponse = await Axios.post(
+              serverAddress + "cart/sync",
+              {
+                items: localCart.map((item) => ({
+                  inventoryId: item.inventory?.id,
+                  count: item.quantity,
+                })),
+              }
+            );
+            if (Array.isArray(syncResponse.data)) {
+              skipNextSyncRef.current = true;
+              setShoppingCart(syncResponse.data);
+            }
+          } catch (syncError) {}
         }
       }
     } catch (error) {
@@ -323,6 +378,7 @@ const AuthProvider = (props) => {
     removeCookie("access", { path: "/" });
     setUser(null);
     setAccess(null);
+    lastSyncedCartRef.current = JSON.stringify(shoppingCart);
   };
 
   return (

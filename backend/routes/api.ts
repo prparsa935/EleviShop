@@ -11,6 +11,7 @@ import commentApi from "./commentApi.js";
 import serviceApi from "./serviceApi.js";
 import stockApi from "./stockApi.js";
 import analyticsApi from "./analyticsApi.js";
+import shoppingCartApi from "./shoppingCartApi.js";
 
 const apiRouter = Router();
 apiRouter.use("/product", productApi);
@@ -24,5 +25,6 @@ apiRouter.use("/comment", commentApi);
 apiRouter.use("/service", serviceApi);
 apiRouter.use("/stock", stockApi);
 apiRouter.use("/analytics", analyticsApi);
+apiRouter.use("/cart", shoppingCartApi);
 
 export default apiRouter;

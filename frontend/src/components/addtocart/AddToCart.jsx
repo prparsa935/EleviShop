@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import { formatNumber } from "../../utils/helperMehods";
+import { trackEvent } from "../../hooks/useAnalytics";
 
 const AddToCart = ({ product, inventory }) => {
   const {
@@ -93,6 +94,10 @@ const AddToCart = ({ product, inventory }) => {
               onClick={() => {
                 if (inventory?.quantity !== 0) {
                   addToCart(product, inventory);
+                  trackEvent("ADD_TO_CART", {
+                    productId: product?.id,
+                    metadata: { price: inventory?.price, quantity: 1 },
+                  });
                 }
               }}
               txtColor="text-white"

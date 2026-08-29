@@ -33,6 +33,10 @@ __decorate([
     Column({ nullable: false }),
     __metadata("design:type", Number)
 ], Inventory.prototype, "price", void 0);
+__decorate([
+    Column({ default: 5 }),
+    __metadata("design:type", Number)
+], Inventory.prototype, "lowStockThreshold", void 0);
 Inventory = __decorate([
     Entity()
 ], Inventory);

@@ -7,6 +7,7 @@ import { serverAddress } from "../App";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
+import { trackEvent } from "../hooks/useAnalytics";
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const navigate = useNavigate();
@@ -173,6 +174,11 @@ const AuthProvider = (props) => {
     );
 
     if (productInCartIndex !== -1) {
+      const removedItem = shoppingCart[productInCartIndex];
+      trackEvent("REMOVE_FROM_CART", {
+        productId: removedItem?.product?.id,
+        metadata: { inventoryId: inventoryId },
+      });
       setShoppingCart((prev) => {
         prev.splice(productInCartIndex, 1);
         return JSON.parse(JSON.stringify(prev));

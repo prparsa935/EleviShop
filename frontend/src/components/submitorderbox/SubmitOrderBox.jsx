@@ -4,6 +4,7 @@ import AuthContext from "../../context/AuthContext";
 import formApiHandler from "../../api/form";
 import { formatNumber } from "../../utils/helperMehods";
 import { useNavigate } from "react-router";
+import { trackEvent } from "../../hooks/useAnalytics";
 
 const SubmitOrderBox = ({ price, setToastList }) => {
   const { shoppingCart, setShoppingCart } = useContext(AuthContext);
@@ -19,6 +20,12 @@ const SubmitOrderBox = ({ price, setToastList }) => {
       }));
     const success = await formApiHandler("order/save", orderData, setToastList, setErrors, setLoading);
     if (success) {
+      trackEvent("PURCHASE_COMPLETE", {
+        metadata: {
+          totalPrice: price?.totalPrice,
+          itemCount: shoppingCart.length,
+        },
+      });
       setShoppingCart([]);
       navigate("/profile/orders");
     }

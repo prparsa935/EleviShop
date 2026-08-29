@@ -13,6 +13,7 @@ import ProductLowerSection from "../components/productlowersection/ProductLowerS
 import { fetchSingleProduct } from "../api/productApi";
 import PageLoading from "../components/pageloading/PageLoading";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
+import { trackEvent } from "../hooks/useAnalytics";
 import AuthContext from "../context/AuthContext";
 import CommentModalForm from "../components/commentmodalform/CommentModalForm";
 import Alert from "../components/alert/Alert";
@@ -39,6 +40,7 @@ const Product = () => {
   useEffect(() => {
     setLoading(true);
     fetchSingleProduct(id, setProduct, setLoading);
+    trackEvent("PRODUCT_VIEW", { productId: Number(id) });
   }, [id]);
   useDidUpdateEffect(() => {
     let lastAvailableInv = null;

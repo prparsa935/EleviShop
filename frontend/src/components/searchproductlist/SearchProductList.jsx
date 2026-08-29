@@ -7,6 +7,7 @@ import { imageServerAddress } from "../../App";
 import { formatNumber } from "../../utils/helperMehods";
 import SmartImage from "../smartimage/SmartImage";
 import Tag from "../tag/Tag";
+import { trackEvent } from "../../hooks/useAnalytics";
 
 const SearchProductList = () => {
   const navigate = useNavigate();
@@ -15,6 +16,14 @@ const SearchProductList = () => {
   const [productList, setProductList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
+    const categoryId = searchParams.get("categoryId");
+    const query = searchParams.get("name");
+    if (categoryId) {
+      trackEvent("CATEGORY_VIEW", { categoryId: Number(categoryId) });
+    }
+    if (query) {
+      trackEvent("SEARCH", { searchQuery: query });
+    }
     searchProducts(
       Object.fromEntries([...searchParams]),
       [],

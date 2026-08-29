@@ -5,6 +5,8 @@ import { OrderInventory } from "../models/OrderInventory.js";
 import inventoryService from "./inventoryService.js";
 import orderInventoryService from "./orderInventoryService.js";
 import { OverallError } from "../errors/orderSaveError.js";
+import stockMovementService from "./stockMovementService.js";
+import { MovementType } from "../models/StockMovement.js";
 class OrderService {
     constructor() {
         this.orderRepo = dataSource.getRepository(Order);
@@ -83,9 +85,6 @@ class OrderService {
                 if (!inventory) {
                     throw new OverallError(`محصول با شناسه ${dto.inventory.id} در پایگاه داده موجود نیست`, 400);
                 }
-                if (inventory.quantity < dto.quantity) {
-                    throw new OverallError(`محصول ${inventory.product.name} به مقدار کافی موجود نیست`, 400);
-                }
                 const orderInventory = new OrderInventory();
                 orderInventory.inventory = inventory;
                 orderInventory.quantity = dto.quantity;
@@ -101,7 +100,11 @@ class OrderService {
             order.orderStatus = orderStatus.waitingForPayment;
             order.person = user.person;
             order.orderInventories = savedOrderInventories;
-            return entityManager.save(Order, order);
+            const savedOrder = await entityManager.save(Order, order);
+            for (const dto of orderSaveDto) {
+                await stockMovementService.recordMovement(dto.inventory.id, MovementType.SALE, -dto.quantity, `سفارش ${savedOrder.trackingCode}`, user.id, entityManager);
+            }
+            return savedOrder;
         });
     }
 }

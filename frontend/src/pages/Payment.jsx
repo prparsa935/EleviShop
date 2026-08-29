@@ -16,6 +16,7 @@ import Alert from "../components/alert/Alert";
 import PersonInformaionForm from "../components/personinformationform/PersonInformaionForm";
 import { getPerson } from "../api/personApi";
 import PageLoading from "../components/pageloading/PageLoading";
+import { trackEvent } from "../hooks/useAnalytics";
 const Payment = () => {
   const { access } = useContext(AuthContext);
   const [person, setPerson] = useState(null);
@@ -37,6 +38,7 @@ const Payment = () => {
   useEffect(() => {
     setLoading(true);
     updateShoppingCart(setLoading);
+    trackEvent("CHECKOUT_START");
   }, []);
   useEffect(() => {
     getPerson(setPerson, setToastList);

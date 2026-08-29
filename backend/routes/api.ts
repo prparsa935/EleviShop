@@ -10,6 +10,7 @@ import colorApi from "./colorApi.js";
 import commentApi from "./commentApi.js";
 import serviceApi from "./serviceApi.js";
 import stockApi from "./stockApi.js";
+import analyticsApi from "./analyticsApi.js";
 
 const apiRouter = Router();
 apiRouter.use("/product", productApi);
@@ -22,5 +23,6 @@ apiRouter.use("/color", colorApi);
 apiRouter.use("/comment", commentApi);
 apiRouter.use("/service", serviceApi);
 apiRouter.use("/stock", stockApi);
+apiRouter.use("/analytics", analyticsApi);
 
 export default apiRouter;

@@ -2,6 +2,8 @@ import express from "express";
 
 import cors from "cors";
 import compression from "compression";
+import helmet from "helmet";
+import { authLimiter, generalLimiter } from "./middlewares/rateLimit.js";
 
 const app = express();
 import bodyParser from "body-parser";
@@ -15,6 +17,12 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: __dirname + "/.env" });
 
 import apiRouter from "./routes/api.js";
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
 app.use(cookieParser());
 
@@ -43,7 +51,8 @@ dataSource
   .catch((err) => {
     console.error("Error during Data Source initialization:", err);
   });
-app.use(cors());
+const allowedOrigin = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "");
+app.use(cors({ origin: allowedOrigin, credentials: true }));
 // white list pages
 app.use((req, res, next) => {
   if (
@@ -56,6 +65,8 @@ app.use((req, res, next) => {
     next(); // Pass control to the next middleware or route handler
   }
 });
+app.use("/api/auth", authLimiter);
+app.use("/api", generalLimiter);
 app.use("/api", apiRouter);
 
 // app.get('/admin',(req,res)=>{

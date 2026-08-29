@@ -5,6 +5,9 @@ class ImageController {
     async saveimage(req, res, next) {
         try {
             const imageFile = req.file;
+            if (!imageFile) {
+                return res.json(new ResponseDTO({}, { message: "فایل ارسال نشده یا فرمت یا حجم آن مجاز نیست" }, false, null));
+            }
             const image = new Image();
             image.filePath = imageFile.filename;
             await imageService.saveImage(image);

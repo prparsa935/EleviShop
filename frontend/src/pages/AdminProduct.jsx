@@ -33,8 +33,8 @@ const AdminProduct = () => {
         deleteModalActive={deleteModalActive}
         onDelete={handleDeleteConfirm}
       ></DeleteModal>
-      <ToastList toastList={toastList} />;
-      <div className="mx-auto max-w-screen-xl grid grid-cols-7  mt-10">
+      <ToastList toastList={toastList} />
+      <div className="mx-auto max-w-screen-xl grid grid-cols-7 mt-10">
         <div className="lg:col-span-2 lg:order-1 col-span-12 order-2">
           <AdminSideBar />
         </div>

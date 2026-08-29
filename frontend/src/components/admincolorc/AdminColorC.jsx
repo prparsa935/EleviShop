@@ -25,38 +25,37 @@ const AdminColorC = ({ handleDeleteItem }) => {
     );
   }, [searchParams]);
   return (
-    <div className="flex flex-col border ">
-      {/* header */}
-      <div className=" m-5 p-2 border-b flex justify-between items-center">
-        <div>
+    <div className="glass rounded-2xl p-5 flex flex-col gap-y-4">
+      <div className="flex flex-wrap justify-between items-center gap-y-3 pb-4 border-b border-[var(--glass-border)]">
+        <h2 className="text-lg font-bold text-[var(--color-white)]">مدیریت رنگ ها</h2>
+        <div className="flex flex-wrap items-center gap-3">
           <Button
             onClick={() => navigate("/admin/color/save")}
-            size="xs"
-            bgColor="bg-green-100"
-            txtColor="text-green-800"
+            size="sm"
+            bgColor="bg-bf-lighter-green"
+            txtColor="text-bf-green"
+            moreCss="cursor-pointer"
           >
-            افزودن +
+            <i className="fa-solid fa-plus ml-1"></i>
+            افزودن
           </Button>
-        </div>
-
-        <div className="flex items-stretch">
-          <div className="h-[30px]">
-            <Input
-              onChange={(e) =>
-                setSearchParams((prev) => {
-                  prev.set("name", e.target.value);
-                  return prev;
-                })
-              }
-              height="30px"
-              inputclassName=""
-            ></Input>
-          </div>
-
-          <div>
+          <div className="flex items-stretch">
+            <div className="h-[30px]">
+              <Input
+                onChange={(e) =>
+                  setSearchParams((prev) => {
+                    prev.set("name", e.target.value);
+                    return prev;
+                  })
+                }
+                height="30px"
+                placeHolder="نام رنگ"
+              />
+            </div>
             <Button
-              moreCss="border-r-0 rounded-r-none h-[30px] "
-              bgColor="bg-sky-100"
+              moreCss="border-r-0 rounded-r-none h-[30px] cursor-pointer"
+              bgColor="bg-[var(--color-gold-light)]"
+              txtColor="gold-text"
               size="sm"
             >
               جست و جو
@@ -64,7 +63,7 @@ const AdminColorC = ({ handleDeleteItem }) => {
           </div>
         </div>
       </div>
-      <div className="">
+      <div>
         <InfiniteScroll
           dataLength={colorList?.length}
           next={() =>
@@ -79,28 +78,29 @@ const AdminColorC = ({ handleDeleteItem }) => {
           }
           hasMore={hasMore}
           loader={
-            <div className="flex justify-center w-full">
+            <div className="flex justify-center w-full py-4">
               <Loading className="w-8 h-8"></Loading>
             </div>
           }
-        ></InfiniteScroll>
-        {colorList?.map((color, index) => {
-          return (
-            <AdminItemBox
-              key={index}
-              onDelete={() => handleDeleteItem(color?.id)}
-              onEdit={() => navigate(`/admin/color/save?colorId=${color?.id}`)}
-            >
-              <div className="flex items-center gap-x-5">
-                <div
-                  style={{ backgroundColor: color?.hexCode }}
-                  className=" w-8 h-8 rounded-full "
-                ></div>
-                <h3 className="">{color?.name}</h3>
-              </div>
-            </AdminItemBox>
-          );
-        })}
+        >
+          {colorList?.map((color, index) => {
+            return (
+              <AdminItemBox
+                key={index}
+                onDelete={() => handleDeleteItem(color?.id)}
+                onEdit={() => navigate(`/admin/color/save?colorId=${color?.id}`)}
+              >
+                <div className="flex items-center gap-x-4">
+                  <div
+                    style={{ backgroundColor: color?.hexCode }}
+                    className="w-8 h-8 rounded-full border border-[var(--glass-border)]"
+                  ></div>
+                  <h3 className="font-semibold text-[var(--color-white)]">{color?.name}</h3>
+                </div>
+              </AdminItemBox>
+            );
+          })}
+        </InfiniteScroll>
       </div>
     </div>
   );

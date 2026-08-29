@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import MainLayout from "../components/mainlayout/MainLayout";
 import MobileFooter from "../components/mobilefooter/MobileFooter";
 import NavBar from "../components/navbar/NavBar";
+import Footer from "../components/footer/Footer";
 import {
   staggerContainer,
   staggerItem,
@@ -126,9 +127,11 @@ const Home = () => {
       </section>
 
       {/* Existing sliders (offers, products) */}
-      <section className="mt-10 pb-24">
+      <section className="mt-10">
         <MainLayout />
       </section>
+
+      <Footer />
     </div>
   );
 };

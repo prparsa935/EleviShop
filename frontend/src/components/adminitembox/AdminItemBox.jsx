@@ -1,13 +1,19 @@
-const AdminItemBox = ({ rightContent, onDelete, onEdit, children }) => {
+const AdminItemBox = ({ onDelete, onEdit, children }) => {
   return (
-    <div className="border flex justify-between  items-center  rounded-lg p-10">
+    <div className="glass glass-hover rounded-xl p-4 flex justify-between items-center mb-3">
       <div>{children}</div>
-      <div className="flex justify-around gap-x-4">
-        <div onClick={onEdit} className=" cursor-pointer">
-          <i class="fal fa-edit text-sky-400"></i>
+      <div className="flex gap-x-3">
+        <div
+          onClick={onEdit}
+          className="cursor-pointer w-9 h-9 rounded-lg bg-bf-lighter-sky flex items-center justify-center transition-colors hover:bg-bf-sky hover:text-white"
+        >
+          <i className="fal fa-edit text-bf-sky"></i>
         </div>
-        <div onClick={onDelete} className=" cursor-pointer">
-          <i class="fa-solid fa-trash text-red-400"></i>
+        <div
+          onClick={onDelete}
+          className="cursor-pointer w-9 h-9 rounded-lg bg-bf-lighter-red flex items-center justify-center transition-colors hover:bg-bf-red hover:text-white"
+        >
+          <i className="fa-solid fa-trash text-bf-red"></i>
         </div>
       </div>
     </div>

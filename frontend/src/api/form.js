@@ -20,7 +20,9 @@ const formApiHandler = async (
           message: response.data.successMessage,
         },
       ]);
+      return true;
     }
+    return false;
   } catch (error) {
     console.log(error)
     if (error.response) {
@@ -37,8 +39,6 @@ const formApiHandler = async (
         ];
       });
     } else {
-      
-      // Something happened in setting up the request that triggered an Error
       setToastList((prev) => {
         return [
           ...prev,
@@ -49,6 +49,7 @@ const formApiHandler = async (
         ];
       });
     }
+    return false;
   } finally {
     setLoading(false);
   }

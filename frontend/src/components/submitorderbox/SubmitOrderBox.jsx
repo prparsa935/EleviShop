@@ -1,12 +1,28 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Button from "../Button/Button";
 import AuthContext from "../../context/AuthContext";
 import formApiHandler from "../../api/form";
 import { formatNumber } from "../../utils/helperMehods";
+import { useNavigate } from "react-router";
 
 const SubmitOrderBox = ({ price, setToastList }) => {
-  const { shoppingCart } = useContext(AuthContext);
+  const { shoppingCart, setShoppingCart } = useContext(AuthContext);
   const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const submitOrder = async () => {
+    const orderData = shoppingCart
+      .filter((item) => item.inventory)
+      .map((item) => ({
+        inventory: { id: item.inventory.id },
+        quantity: item.quantity,
+      }));
+    const success = await formApiHandler("order/save", orderData, setToastList, setErrors, setLoading);
+    if (success) {
+      setShoppingCart([]);
+      navigate("/profile/orders");
+    }
+  };
   return (
     <div className="glass-strong lg:w-[300px] w-screen left-0 justify-between items-center lg:items-stretch fixed bottom-0 flex lg:flex-col gap-y-4 border border-[var(--glass-border)] p-5 lg:sticky lg:top-[155px]">
       <div className="lg:flex   hidden justify-between text-[var(--sub-text-color)] font-semibold border-b-2 border-[var(--glass-border)] py-3  ">
@@ -33,9 +49,7 @@ const SubmitOrderBox = ({ price, setToastList }) => {
         </div>
       </div>
       <Button
-        onClick={() =>
-          formApiHandler("order/save", shoppingCart, setToastList, setErrors)
-        }
+        onClick={submitOrder}
         size="lg"
         shape="rounded-xl"
         txtColor="text-[var(--color-gold)]"

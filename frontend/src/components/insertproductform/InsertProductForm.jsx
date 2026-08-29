@@ -203,68 +203,67 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     <form
       onSubmit={submitFormHandler}
       ref={form}
-      className="insert-product-form flex flex-col gap-y-10"
+      className="flex flex-col gap-y-6"
     >
-      <div className="flex ">
-        <div className="mx-2 self-start">
-          <i class="fa-solid fa-2x fa-square-plus text-sky-400"></i>
+      <div className="glass rounded-2xl p-5 flex gap-x-4">
+        <div className="self-start mt-1">
+          <i className="fa-solid fa-2x fa-square-plus text-sky-400"></i>
         </div>
-
         <div className="grow flex flex-col gap-y-3">
-          <div className=" text-lg font-semibold">
+          <div className="text-lg font-bold text-[var(--color-white)]">
             گام اول: انتخاب گروه کالا
           </div>
-          <div className="mx-3">
+          <div className="mx-1">
             <SelectCategories allwaysActive={true} />
           </div>
         </div>
       </div>
-      <div className="flex ">
-        <div className="mx-2 self-start">
-          <i class="fa-solid fa-2x fa-square-plus text-emerald-400"></i>
-        </div>
 
-        <div className="grow flex flex-col gap-y-10">
-          <div className=" text-lg font-semibold">گام دوم:درج اطلاعات کالا</div>
-          <div className="mx-3 grid grid-cols-12 gap-x-3 gap-y-4 items-center">
-            <div className="flex flex-col lg:col-span-6 col-span-12  ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">نام فارسی کالا</span>
+      <div className="glass rounded-2xl p-5 flex gap-x-4">
+        <div className="self-start mt-1">
+          <i className="fa-solid fa-2x fa-square-plus text-emerald-400"></i>
+        </div>
+        <div className="grow flex flex-col gap-y-6">
+          <div className="text-lg font-bold text-[var(--color-white)]">گام دوم: درج اطلاعات کالا</div>
+          <div className="grid grid-cols-12 gap-x-3 gap-y-4 items-center">
+            <div className="flex flex-col lg:col-span-6 col-span-12">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                نام فارسی کالا
               </div>
               <Input iMessage={errors?.productName} name="productName" />
             </div>
-            <div className="flex flex-col col-span-2 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">تعداد</span>
+            <div className="flex flex-col col-span-2">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                تعداد
               </div>
-              <Input iMessage={errors?.quantity} name={"quantity"} />
+              <Input iMessage={errors?.quantity} name="quantity" />
             </div>
-            <div className="flex flex-col lg:col-span-3 col-span-12 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">قیمت</span>
+            <div className="flex flex-col lg:col-span-3 col-span-12">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                قیمت
               </div>
               <Input iMessage={errors?.price} name="price" />
             </div>
-            <div className="flex flex-col col-span-3 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className="!leading-3">درصد تخفیف</span>
+            <div className="flex flex-col col-span-3">
+              <div className="mb-2 font-medium text-sm">
+                درصد تخفیف
               </div>
               <Input iMessage={errors?.offPercent} name="offPercent" />
             </div>
-            <div className="flex flex-col col-span-4 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">کد</span>
+            <div className="flex flex-col col-span-4">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                کد
               </div>
               <Input iMessage={errors?.code} name="code" />
             </div>
-            <div className="flex flex-col col-span-4 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">رنگ</span>
+            <div className="flex flex-col col-span-4">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                رنگ
               </div>
               <ASelectBox
                 loadOptions={loadcolorOptions}
@@ -274,11 +273,10 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 onChange={(val) => setSelectedColor(val)}
               />
             </div>
-
-            <div className="flex flex-col col-span-12 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">توضیحات</span>
+            <div className="flex flex-col col-span-12">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                توضیحات
               </div>
               <Input
                 iMessage={errors?.description}
@@ -290,20 +288,19 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         </div>
       </div>
 
-      <div className="flex ">
-        <div className="mx-2 self-start">
-          <i class="fa-solid fa-2x fa-square-plus text-red-400"></i>
+      <div className="glass rounded-2xl p-5 flex gap-x-4">
+        <div className="self-start mt-1">
+          <i className="fa-solid fa-2x fa-square-plus text-red-400"></i>
         </div>
-        <div className="grow flex flex-col gap-y-10">
-          <div className=" text-lg font-semibold">
-            گام سوم:درج ویژگی های کالا
+        <div className="grow flex flex-col gap-y-6">
+          <div className="text-lg font-bold text-[var(--color-white)]">
+            گام سوم: درج ویژگی های کالا
           </div>
-
-          <div className="mx-3 grid grid-cols-12 gap-x-3 gap-y-4 items-center">
-            <div className="flex flex-col col-span-12 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">نوع محصول</span>
+          <div className="grid grid-cols-12 gap-x-3 gap-y-4 items-center">
+            <div className="flex flex-col col-span-12">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                نوع محصول
               </div>
               <SelectBox
                 options={Object.keys(schema)
@@ -317,37 +314,37 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                 name="type"
               />
             </div>
-            <div className="flex flex-col col-span-4 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">جنس</span>
+            <div className="flex flex-col col-span-4">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                جنس
               </div>
-              <Input iMessage={errors?.material} name={"material"} />
+              <Input iMessage={errors?.material} name="material" />
             </div>
-            <div className="flex flex-col col-span-4 ">
-              <div className="mb-2 font-medium text-sm !leading-3 ">
-                <span className=" text-red-500 text-lg !leading-3 ">*</span>
-                <span className="!leading-3">طرح</span>
+            <div className="flex flex-col col-span-4">
+              <div className="mb-2 font-medium text-sm">
+                <span className="text-red-500 text-lg">*</span>
+                طرح
               </div>
-              <Input iMessage={errors?.pattern} name={"pattern"} />
+              <Input iMessage={errors?.pattern} name="pattern" />
             </div>
             <InsertProductAddAttr
               errors={errors}
               type={typeSelect.value}
               serviceProducts={serviceProducts}
               setServiceProducts={setServiceProducts}
-            ></InsertProductAddAttr>
+            />
           </div>
         </div>
       </div>
 
-      <div className="flex ">
-        <div className="mx-2 self-start">
-          <i class="fa-solid fa-2x fa-square-plus text-purple-400"></i>
+      <div className="glass rounded-2xl p-5 flex gap-x-4">
+        <div className="self-start mt-1">
+          <i className="fa-solid fa-2x fa-square-plus text-purple-400"></i>
         </div>
-        <div className="grow flex flex-col gap-y-10">
-          <div className=" text-lg font-semibold">گام چهارم: اپلود عکس</div>
-          <div className=" flex border justify-center items-center border-[var(--glass-border)] border-dotted rounded-lg p-10 relative">
+        <div className="grow flex flex-col gap-y-6">
+          <div className="text-lg font-bold text-[var(--color-white)]">گام چهارم: آپلود عکس</div>
+          <div className="flex border justify-center items-center border-[var(--glass-border)] border-dashed rounded-xl p-10 relative cursor-pointer hover:border-[var(--color-gold)] transition-colors">
             {isUploading ? (
               <>
                 <input
@@ -363,16 +360,15 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                   }
                   type="file"
                   name="productImage"
-                  className=" absolute top-0 w-full h-full z-30 opacity-0 hidden"
-                ></input>
+                  className="absolute top-0 w-full h-full z-30 opacity-0 hidden"
+                />
                 <ProgressBar
                   className="h-[20px]"
                   persentage={uploadProgress}
-                ></ProgressBar>
+                />
               </>
             ) : (
               <>
-                {" "}
                 <input
                   onChange={(e) =>
                     uploadImage(
@@ -386,61 +382,52 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
                   }
                   type="file"
                   name="productImage"
-                  className=" absolute top-0 w-full h-full z-30 opacity-0"
-                ></input>
-                <i class="fa-solid fa-circle-plus fa-3x text-sky-400"></i>
+                  className="absolute top-0 w-full h-full z-30 opacity-0"
+                />
+                <i className="fa-solid fa-circle-plus fa-3x text-sky-400"></i>
               </>
             )}
           </div>
         </div>
       </div>
 
-      <div className="grow flex flex-col gap-y-10">
-        <div className=" text-lg font-semibold">تصاویر بارگذاری شده</div>
-        <div className=" flex flex-col ">
+      <div className="glass rounded-2xl p-5 flex flex-col gap-y-4">
+        <div className="text-lg font-bold text-[var(--color-white)]">تصاویر بارگذاری شده</div>
+        <div className="flex flex-col">
           {uploadedImages.map((image) => {
             return (
-              <div className="border flex justify-between  items-center  rounded-lg p-10">
-                <div className="flex items-center">
+              <div
+                key={image?.id}
+                className={`glass glass-hover rounded-xl p-4 flex justify-between items-center mb-3 ${mainImage?.id === image?.id ? "border-r-2 border-[var(--color-gold)]" : ""}`}
+              >
+                <div className="flex items-center gap-x-3">
                   <SmartImage
-                    className="w-[80px]"
+                    className="w-[60px] rounded-lg"
                     src={imageServerAddress + image?.filePath}
                     alt=""
                     ratio="1/1"
                   />
-                  <span className=" text-sm text-[var(--sub-text-color)]">
+                  <span className="text-sm text-[var(--sub-text-color)]">
                     {image?.filePath}
                   </span>
                 </div>
-                <div className="flex justify-around gap-x-4">
-                  <div>
-                    <i
-                      onClick={() => setMainImage(image)}
-                      className={`fa-solid fa-flag ${mainImage?.id === image?.id ? 'gold-text' : 'text-[var(--sub-text-color)]'}`}
-                    ></i>
+                <div className="flex gap-x-3">
+                  <div
+                    onClick={() => setMainImage(image)}
+                    className="cursor-pointer w-9 h-9 rounded-lg bg-[var(--color-gold-light)] flex items-center justify-center transition-colors hover:bg-[var(--color-gold)] hover:text-white"
+                  >
+                    <i className={`fa-solid fa-flag ${mainImage?.id === image?.id ? "gold-text" : "text-[var(--sub-text-color)]"}`}></i>
                   </div>
-                  <div>
-                    <i class="fa-solid fa-trash text-red-400"></i>
+                  <div
+                    onClick={() => setUploadedImages(uploadedImages.filter((img) => img.id !== image.id))}
+                    className="cursor-pointer w-9 h-9 rounded-lg bg-bf-lighter-red flex items-center justify-center transition-colors hover:bg-bf-red hover:text-white"
+                  >
+                    <i className="fa-solid fa-trash text-bf-red"></i>
                   </div>
                 </div>
               </div>
             );
           })}
-
-          {/* <div className="border flex justify-between  items-center  rounded-lg p-10">
-            <div className="flex items-center">
-              <img className="w-[80px]" src={productImageTest}></img>
-              <span className=" text-sm text-[var(--sub-text-color)]">product93141.jpg</span>
-            </div>
-            <div className="flex justify-around gap-x-4">
-              <div>
-                <i class="fa-solid fa-flag text-sky-400"></i>
-              </div>
-              <div>
-                <i class="fa-solid fa-trash text-red-400"></i>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
       <Button
@@ -448,8 +435,9 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         txtColor="text-white"
         shape="rounded-lg"
         disabled={loading}
+        moreCss="cursor-pointer"
       >
-        {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت کالا"}
+        {loading ? <Loading className="w-6 h-6" /> : "ثبت کالا"}
       </Button>
     </form>
   );

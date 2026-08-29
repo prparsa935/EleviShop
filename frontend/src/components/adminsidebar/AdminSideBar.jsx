@@ -14,12 +14,12 @@ const navItems = [
   {
     path: "/admin/color",
     label: "مدیریت رنگ ها",
-    icon: "fa-regular fa-bag-shopping",
+    icon: "fa-regular fa-palette",
   },
   {
     path: "/admin/category",
     label: "مدیریت گروه های کالایی",
-    icon: "fa-regular fa-bag-shopping",
+    icon: "fa-regular fa-layer-group",
   },
 ];
 
@@ -43,15 +43,15 @@ const AdminSideBar = () => {
           key={item.path}
           onClick={() => navigate(item.path)}
           className={
-            " justify-between items-center p-4 hover:bg-[var(--color-gold-light)] transition-colors rounded-xl cursor-pointer " +
+            "flex justify-between items-center p-3 hover:bg-[var(--color-gold-light)] transition-all duration-200 rounded-xl cursor-pointer " +
             (location.pathname.startsWith(item.path)
-              ? "bg-[var(--color-gold-light)]"
+              ? "bg-[var(--color-gold-light)] border-r-2 border-[var(--color-gold)]"
               : "")
           }
         >
-          <div className="flex items-center gap-x-3  font-semibold text-[var(--color-white)] ">
+          <div className="flex items-center gap-x-3 font-semibold text-[var(--color-white)]">
             <i className={item.icon + " gold-text"}></i>
-            <span className="">{item.label}</span>
+            <span>{item.label}</span>
           </div>
         </div>
       ))}

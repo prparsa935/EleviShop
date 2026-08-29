@@ -1,5 +1,5 @@
 import dataSource from "../utils/dbConfiguration.js";
-import { EntityManager } from "typeorm";
+import { EntityManager, LessThan, MoreThanOrEqual, Between } from "typeorm";
 import { StockMovement, MovementType } from "../models/StockMovement.js";
 import { Inventory } from "../models/Inventory.js";
 import { OverallError } from "../errors/orderSaveError.js";
@@ -26,12 +26,6 @@ class StockMovementService {
         );
       }
       const newQuantity = inventory.quantity + quantityChange;
-      if (newQuantity < 0) {
-        throw new OverallError(
-          `موجودی کافی نیست. موجودی فعلی: ${inventory.quantity}`,
-          400
-        );
-      }
       inventory.quantity = newQuantity;
       await manager.save(Inventory, inventory);
 
@@ -71,6 +65,35 @@ class StockMovementService {
     }
     qb.leftJoinAndSelect("inv.product", "product");
     return qb.getMany();
+  }
+
+  async getSlowMovingItems(
+    dateRangeInMonths: number,
+    salesThreshold: number
+  ): Promise<Inventory[]> {
+    const inventoryRepo = dataSource.getRepository(Inventory);
+    const now = new Date();
+    const startDate = new Date();
+    startDate.setMonth(now.getMonth() - dateRangeInMonths);
+
+    const inventories = await inventoryRepo.find({
+      relations: ["product"],
+    });
+
+    const slowMoving: Inventory[] = [];
+    for (const inv of inventories) {
+      const salesCount = await this.stockMovementRepo.count({
+        where: {
+          inventory: { id: inv.id },
+          type: MovementType.SALE,
+          dateCreated: Between(startDate, now),
+        },
+      });
+      if (salesCount < salesThreshold) {
+        slowMoving.push(inv);
+      }
+    }
+    return slowMoving;
   }
 }
 

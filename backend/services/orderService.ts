@@ -98,13 +98,6 @@ class OrderService {
             400
           );
         }
-        if (inventory.quantity < dto.quantity) {
-          throw new OverallError(
-            `محصول ${inventory.product.name} به مقدار کافی موجود نیست`,
-            400
-          );
-        }
-
         const orderInventory = new OrderInventory();
         orderInventory.inventory = inventory;
         orderInventory.quantity = dto.quantity;

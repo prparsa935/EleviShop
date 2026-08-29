@@ -67,6 +67,26 @@ class StockController {
       next(error);
     }
   }
+
+  async getSlowMoving(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dateRangeInMonths = req.query.months
+        ? Number(req.query.months)
+        : 3;
+      const salesThreshold = req.query.threshold
+        ? Number(req.query.threshold)
+        : 1;
+      const items = await stockMovementService.getSlowMovingItems(
+        dateRangeInMonths,
+        salesThreshold
+      );
+      return res
+        .status(200)
+        .json(new ResponseDTO(null, null, true, null, instanceToPlain(items)));
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new StockController();

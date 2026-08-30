@@ -16,8 +16,9 @@ const AddToCart = ({
   const {
     shoppingCart,
     findProductInCart,
+    findSetInCart,
     addToCart,
-    addItemsToCart,
+    addSetToCart,
     sumProductInCart,
     subtractProductInCart,
     isProductInCartValid,
@@ -31,33 +32,21 @@ const AddToCart = ({
     ? selectedSetColor?.availableQuantity
     : inventory?.quantity;
   const handleAddSetToCart = () => {
-    if (!selectedSetColor?.components?.length) {
+    if (!selectedSetColor || !product) {
       return;
     }
-    addItemsToCart(
-      selectedSetColor.components.map((component) => ({
-        product: {
-          id: component.plateId,
-          name: component.plateName,
-          type: "plate",
-          mainImage: component.plateMainImage
-            ? { filePath: component.plateMainImage }
-            : null,
-        },
-        inventory: {
-          id: component.inventoryId,
-          price: component.inventoryPrice,
-          quantity: component.inventoryQuantity,
-        },
-        quantity: component.perSetQuantity,
-      }))
-    );
+    addSetToCart(product, selectedSetColor, 1);
     trackEvent("ADD_TO_CART", {
       productId: product?.id,
-      metadata: { colorId: selectedSetColor?.colorId, quantity: 1 },
+      metadata: {
+        itemType: "SET",
+        colorId: selectedSetColor?.colorId,
+        quantity: 1,
+      },
     });
   };
   const [productInCart, setProductInCart] = useState(null);
+  const [setInCart, setSetInCart] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     setProductInCart(() => {
@@ -79,6 +68,13 @@ const AddToCart = ({
       }
     });
   }, [shoppingCart, inventory]);
+  useEffect(() => {
+    if (!isSet || !selectedSetColor) {
+      setSetInCart(null);
+      return;
+    }
+    setSetInCart(findSetInCart(product?.id, selectedSetColor.colorId));
+  }, [shoppingCart, selectedSetColor, product]);
 
   return (
     <div
@@ -159,7 +155,37 @@ const AddToCart = ({
                     : "موجود"}
                 </div>
               )}
-              {!setHasNoCommonColor && !productInCart ? (
+              {!setHasNoCommonColor && setInCart ? (
+                <div className="border border-[var(--glass-border)] rounded-md flex justify-between grow px-2 py-1 gap-x-3 text-[var(--color-gold)] items-center w-20 font-semibold text-lg">
+                  {setInCart.productInCart.quantity ===
+                  selectedSetColor?.availableQuantity ? (
+                    <div className="w-2"></div>
+                  ) : (
+                    <span
+                      onClick={() => {
+                        sumProductInCart(
+                          setInCart,
+                          selectedSetColor?.availableQuantity
+                        );
+                      }}
+                      className="cursor-pointer"
+                    >
+                      +
+                    </span>
+                  )}
+
+                  <span>{formatNumber(setInCart.productInCart.quantity)}</span>
+
+                  <span
+                    onClick={() => {
+                      subtractProductInCart(setInCart);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    -
+                  </span>
+                </div>
+              ) : !setHasNoCommonColor && availableQuantity !== 0 ? (
                 <Button
                   onClick={handleAddSetToCart}
                   txtColor="text-white"
@@ -224,7 +250,7 @@ const AddToCart = ({
               </span>
             </div>
           )}
-          {productInCart ? (
+          {productInCart || (isSet && setInCart) ? (
             <span
               onClick={() => navigate("/cart")}
               className="lg:hidden p-3 text-[var(--color-gold)] self-end font-semibold "

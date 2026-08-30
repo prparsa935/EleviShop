@@ -11,6 +11,13 @@ import { Column, Entity, ManyToOne, Unique, } from "typeorm";
 import { User } from "./User.js";
 import { Base } from "./Base.js";
 import { Inventory } from "./Inventory.js";
+import { ProductSet } from "./ProductSet.js";
+import { Color } from "./Color.js";
+export var CartItemType;
+(function (CartItemType) {
+    CartItemType["SIMPLE"] = "SIMPLE";
+    CartItemType["SET"] = "SET";
+})(CartItemType || (CartItemType = {}));
 let ShoppingCartItem = class ShoppingCartItem extends Base {
 };
 __decorate([
@@ -18,15 +25,32 @@ __decorate([
     __metadata("design:type", Object)
 ], ShoppingCartItem.prototype, "user", void 0);
 __decorate([
-    ManyToOne(() => Inventory),
+    ManyToOne(() => Inventory, { nullable: true }),
     __metadata("design:type", Object)
 ], ShoppingCartItem.prototype, "inventory", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Number)
 ], ShoppingCartItem.prototype, "count", void 0);
+__decorate([
+    Column({
+        type: "enum",
+        enum: CartItemType,
+        default: CartItemType.SIMPLE,
+    }),
+    __metadata("design:type", String)
+], ShoppingCartItem.prototype, "itemType", void 0);
+__decorate([
+    ManyToOne(() => ProductSet, { nullable: true }),
+    __metadata("design:type", Object)
+], ShoppingCartItem.prototype, "productSet", void 0);
+__decorate([
+    ManyToOne(() => Color, { nullable: true }),
+    __metadata("design:type", Object)
+], ShoppingCartItem.prototype, "color", void 0);
 ShoppingCartItem = __decorate([
     Unique(["user", "inventory"]),
+    Unique(["user", "productSet", "color"]),
     Entity()
 ], ShoppingCartItem);
 export { ShoppingCartItem };

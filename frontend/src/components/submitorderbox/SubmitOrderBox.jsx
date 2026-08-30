@@ -13,11 +13,27 @@ const SubmitOrderBox = ({ price, setToastList }) => {
   const navigate = useNavigate();
   const submitOrder = async () => {
     const orderData = shoppingCart
-      .filter((item) => item.inventory)
-      .map((item) => ({
-        inventory: { id: item.inventory.id },
-        quantity: item.quantity,
-      }));
+      .map((item) => {
+        if (item?.itemType === "SET") {
+          return {
+            itemType: "SET",
+            productSetId: item?.product?.id,
+            colorId: item?.color?.id,
+            quantity: item?.quantity,
+          };
+        }
+        return {
+          itemType: "SIMPLE",
+          inventory: { id: item?.inventory?.id },
+          quantity: item?.quantity,
+        };
+      })
+      .filter(
+        (item) =>
+          item.itemType === "SET"
+            ? item.productSetId && item.colorId
+            : item.inventory?.id
+      );
     const success = await formApiHandler("order/save", orderData, setToastList, setErrors, setLoading);
     if (success) {
       trackEvent("PURCHASE_COMPLETE", {

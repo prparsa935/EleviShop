@@ -76,12 +76,19 @@ class OrderService {
     }
     async saveOrder(orderSaveDto, user) {
         return dataSource.transaction(async (entityManager) => {
+            const simpleDtos = orderSaveDto.filter((dto) => dto.itemType !== "SET");
+            const setDtos = orderSaveDto.filter((dto) => dto.itemType === "SET");
+            if (simpleDtos.some((dto) => !dto.inventory)) {
+                throw new OverallError("محصول انتخابی اشتباه است", 400);
+            }
             // استخراج inventoryIds و ایجاد Map برای دسترسی سریع
-            const inventoryIds = orderSaveDto.map((dto) => dto.inventory.id);
+            const inventoryIds = simpleDtos.map((dto) => dto.inventory.id);
             const inventories = await inventoryService.findInventoryByIds(entityManager, inventoryIds);
             const inventoryMap = new Map(inventories.map((inv) => [inv.id, inv]));
-            // اعتبارسنجی و ساخت OrderInventoryها به‌صورت همزمان
-            const orderInventories = orderSaveDto.map((dto) => {
+            const resolvedSetComponents = [];
+            // اعتبارسنجی و ساخت OrderInventoryها برای آیتم‌های ساده
+            const orderInventories = [];
+            for (const dto of simpleDtos) {
                 const inventory = inventoryMap.get(dto.inventory.id);
                 if (!inventory) {
                     throw new OverallError(`محصول با شناسه ${dto.inventory.id} در پایگاه داده موجود نیست`, 400);
@@ -91,8 +98,54 @@ class OrderService {
                 orderInventory.quantity = dto.quantity;
                 orderInventory.singleProductOffPercent = inventory.product.offPercent;
                 orderInventory.singleProductPrice = inventory.price;
-                return orderInventory;
-            });
+                orderInventories.push(orderInventory);
+            }
+            // گسترش آیتم‌های SET به OrderInventory برای تک‌تک قطعات سرویس
+            for (const dto of setDtos) {
+                if (!dto.productSetId || !dto.colorId) {
+                    throw new OverallError("اطلاعات سرویس انتخابی ناقص است", 400);
+                }
+                const setItems = await entityManager.find(ProductSetItem, {
+                    where: { productSet: { id: dto.productSetId } },
+                    relations: [
+                        "plate",
+                        "plate.color",
+                        "plate.inventories",
+                        "plate.inventories.product",
+                    ],
+                });
+                if (!setItems || setItems.length === 0) {
+                    throw new OverallError("سرویس مورد نظر یافت نشد یا آیتمی ندارد", 404);
+                }
+                for (const item of setItems) {
+                    const plateColorId = item.plate?.color?.id ?? null;
+                    if (plateColorId !== dto.colorId) {
+                        throw new OverallError(`قطعه «${item.plate?.name ?? item.plate?.id}» در رنگ انتخابی موجود نیست`, 400);
+                    }
+                    const plateInventories = (item.plate?.inventories ?? [])
+                        .slice()
+                        .sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0));
+                    const componentInventory = plateInventories[0];
+                    if (!componentInventory) {
+                        throw new OverallError(`قطعه «${item.plate?.name ?? item.plate?.id}» موجودی ثبت‌شده ندارد`, 400);
+                    }
+                    const totalQuantity = (item.quantity || 1) * dto.quantity;
+                    if ((componentInventory.quantity ?? 0) < totalQuantity) {
+                        throw new OverallError(`موجودی قطعه «${item.plate?.name ?? item.plate?.id}» برای این سفارش کافی نیست`, 400);
+                    }
+                    const orderInventory = new OrderInventory();
+                    orderInventory.inventory = componentInventory;
+                    orderInventory.quantity = totalQuantity;
+                    orderInventory.singleProductOffPercent =
+                        componentInventory.product?.offPercent ?? 0;
+                    orderInventory.singleProductPrice = componentInventory.price;
+                    orderInventories.push(orderInventory);
+                    resolvedSetComponents.push({
+                        inventoryId: componentInventory.id,
+                        totalQuantity,
+                    });
+                }
+            }
             // ذخیره گروهی OrderInventoryها
             const savedOrderInventories = await orderInventoryService.saveOrderInventory(entityManager, orderInventories);
             // ایجاد و ذخیره سفارش
@@ -102,7 +155,7 @@ class OrderService {
             order.person = user.person;
             order.orderInventories = savedOrderInventories;
             const savedOrder = await entityManager.save(Order, order);
-            for (const dto of orderSaveDto) {
+            for (const dto of simpleDtos) {
                 await stockMovementService.recordMovement(dto.inventory.id, MovementType.SALE, -dto.quantity, `سفارش ${savedOrder.trackingCode}`, user.id, entityManager);
                 const inventory = inventoryMap.get(dto.inventory.id);
                 if (inventory?.product?.type === "productSet") {
@@ -119,6 +172,9 @@ class OrderService {
                         await stockMovementService.recordMovement(plateInventory.id, MovementType.BUNDLE_SALE, -(item.quantity * dto.quantity), `فروش ست محصول - سفارش ${savedOrder.trackingCode}`, user.id, entityManager);
                     }
                 }
+            }
+            for (const component of resolvedSetComponents) {
+                await stockMovementService.recordMovement(component.inventoryId, MovementType.BUNDLE_SALE, -component.totalQuantity, `فروش سرویس - سفارش ${savedOrder.trackingCode}`, user.id, entityManager);
             }
             return savedOrder;
         });

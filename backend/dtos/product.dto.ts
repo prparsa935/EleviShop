@@ -23,7 +23,7 @@ export class InventorySaveDto {
 }
 enum typeEnum {
   plate = "plate",
-  service = "service",
+  productSet = "productSet",
 }
 export class ProductSaveDto {
   @IsEnum(typeEnum, { message: "نوع محصول درست مشخص نشده است" })
@@ -99,16 +99,28 @@ export class PlateSaveDto extends ProductSaveDto {
   @Max(1000, { message: "حداکثر مقدار 1000" })
   width: number;
 }
-export class ServiceSaveDto extends ProductSaveDto {
+export class ProductSetItemSaveDto {
+  @IsNotEmpty({ message: "لطفا بشقاب را انتخاب کنید" })
+  @IsInt({ message: "لطفا شناسه بشقاب را به صورت عدد وارد کنید" })
+  @Min(1, { message: "شناسه بشقاب نامعتبر است" })
+  plateId: number;
+
+  @IsInt({ message: "لطفا تعداد را به عدد وارد کنید" })
+  @Min(1, { message: "حداقل تعداد 1" })
+  @Max(99, { message: "حداکثر تعداد 99" })
+  quantity: number;
+}
+
+export class ProductSetSaveDto extends ProductSaveDto {
   @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
     message: "لطفا کالا های سرویس را درست وارد کنید",
   })
   contain: string;
   @ArrayNotEmpty({ message: "حداقل یک آیتم لازم است" })
   @IsArray()
-  @IsInt({ each: true }) // هر عضو باید عدد صحیح باشد
-  @Min(1, { each: true }) // هر عدد حداقل 1 باشد
-  plateIds: number[];
+  @ValidateNested({ each: true })
+  @Type(() => ProductSetItemSaveDto)
+  items: ProductSetItemSaveDto[];
 }
 
 export class UpdateProductDto {
@@ -201,10 +213,9 @@ export class UpdateProductDto {
   @IsOptional()
   contain?: string;
 
-  @ArrayNotEmpty({ message: "حداقل یک آیتم لازم است" })
   @IsArray()
-  @IsInt({ each: true })
-  @Min(1, { each: true })
+  @ValidateNested({ each: true })
+  @Type(() => ProductSetItemSaveDto)
   @IsOptional()
-  plateIds?: number[];
+  items?: ProductSetItemSaveDto[];
 }

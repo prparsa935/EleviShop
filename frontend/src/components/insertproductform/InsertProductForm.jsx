@@ -40,7 +40,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     label: "plate",
     value: "plate",
   });
-  const [serviceProducts, setServiceProducts] = useState(null);
+  const [setItems, setSetItems] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
 
@@ -75,11 +75,14 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         label: existingProduct.type,
         value: existingProduct.type,
       });
-      // set service plates if existing product is service
-      if (existingProduct.type === "service") {
-        setServiceProducts(
-          existingProduct?.plates?.map((plate) => {
-            return { label: plate.name, value: plate.id };
+      if (existingProduct.type === "productSet") {
+        setSetItems(
+          existingProduct?.productSetItems?.map((item) => {
+            return {
+              label: item.plate.name,
+              value: item.plate.id,
+              quantity: item.quantity,
+            };
           })
         );
       }
@@ -124,10 +127,12 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       pattern: e.target.pattern.value,
       colorId: selectedColor ? selectedColor.value : undefined,
     };
-    if (typeSelect.value === "service") {
+    if (typeSelect.value === "productSet") {
       values.contain = e.target.contain.value;
-      const plateIds = serviceProducts?.map((p) => p.value);
-      values.plateIds = plateIds || [];
+      values.items = (setItems || []).map((item) => ({
+        plateId: item.value,
+        quantity: Number(item.quantity) || 1,
+      }));
     } else {
       values.weight = Number(e.target.weight.value);
       values.height = Number(e.target.height.value);
@@ -331,8 +336,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
             <InsertProductAddAttr
               errors={errors}
               type={typeSelect.value}
-              serviceProducts={serviceProducts}
-              setServiceProducts={setServiceProducts}
+              setItems={setItems}
+              setSetItems={setSetItems}
             />
           </div>
         </div>

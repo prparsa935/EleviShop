@@ -8,8 +8,7 @@ import { validate } from "class-validator";
 import { FieldErrors, OverallError } from "../errors/orderSaveError.js";
 import {
   PlateSaveDto,
-  ProductSaveDto,
-  ServiceSaveDto,
+  ProductSetSaveDto,
   UpdateProductDto,
 } from "../dtos/product.dto.js";
 // import { ProductSaveDto } from "../dtos/product.dto.js";
@@ -44,11 +43,11 @@ class ProductController {
   async createproduct(req: Request, res: Response, next: NextFunction) {
     try {
       const type = req.body["type"];
-      let productSaveDto: PlateSaveDto | ServiceSaveDto;
+      let productSaveDto: PlateSaveDto | ProductSetSaveDto;
       if (type === "plate") {
         productSaveDto = plainToInstance(PlateSaveDto, req.body);
-      } else if (type === "service") {
-        productSaveDto = plainToInstance(ServiceSaveDto, req.body);
+      } else if (type === "productSet") {
+        productSaveDto = plainToInstance(ProductSetSaveDto, req.body);
       } else {
         throw new OverallError("Invalid product type");
       }

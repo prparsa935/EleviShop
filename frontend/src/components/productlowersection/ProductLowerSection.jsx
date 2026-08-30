@@ -9,24 +9,29 @@ import schema from "../../schema/schema";
 
 const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommentModalActive }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [serviceLoading, setServiceLoading] = useState(true);
-  const [service, setService] = useState();
+  const [productSetLoading, setProductSetLoading] = useState(true);
+  const [productSet, setProductSet] = useState();
   useEffect(() => {
     fetchRelatedProducts(product?.id, product?.code, setRelatedProducts);
-    if (product?.type === "service") {
-      fetchSingleItem("service/", product?.id, setService, setServiceLoading);
+    if (product?.type === "productSet") {
+      fetchSingleItem("productSet/", product?.id, setProductSet, setProductSetLoading);
     } else if (product?.type === "plate") {
-      fetchSingleItem("service/", product?.service?.id, setService, setServiceLoading);
+      fetchSingleItem(
+        "productSet/",
+        product?.productSetItems?.[0]?.productSet?.id,
+        setProductSet,
+        setProductSetLoading
+      );
     }
   }, [product]);
   useEffect(() => {
-    console.log(service);
-  }, [service]);
+    console.log(productSet);
+  }, [productSet]);
 
   return (
     <div className="flex flex-col gap-y-10">
-      {product?.type !== "service" ? (
-        <HorizentalProductList title={"سرویس"} products={[service]}></HorizentalProductList>
+      {product?.type !== "productSet" ? (
+        <HorizentalProductList title={"سرویس"} products={[productSet]}></HorizentalProductList>
       ) : (
         <></>
       )}
@@ -39,7 +44,7 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommen
           </span>
           <h3 className="text-lg font-semibold text-[var(--color-white)]">اجزای سرویس</h3>
         </div>
-        <HorizentalProductList products={service?.plates}></HorizentalProductList>
+        <HorizentalProductList products={productSet?.productSetItems?.map((item) => item.plate)}></HorizentalProductList>
       </div>
 
       <div className="flex w-100 glass rounded-3xl p-4">

@@ -7,28 +7,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { ChildEntity, Column, OneToMany } from "typeorm";
+import { Column, ChildEntity, OneToMany } from "typeorm";
 import { Product } from "./product.js";
 import { ProductSetItem } from "./ProductSetItem.js";
-let Plate = class Plate extends Product {
+let ProductSet = class ProductSet extends Product {
 };
 __decorate([
-    Column({ nullable: true }),
-    __metadata("design:type", Number)
-], Plate.prototype, "weight", void 0);
+    Column(),
+    __metadata("design:type", String)
+], ProductSet.prototype, "contain", void 0);
 __decorate([
-    Column({ nullable: true }),
-    __metadata("design:type", Number)
-], Plate.prototype, "height", void 0);
-__decorate([
-    Column({ nullable: true }),
-    __metadata("design:type", Number)
-], Plate.prototype, "width", void 0);
-__decorate([
-    OneToMany(() => ProductSetItem, (item) => item.plate),
+    OneToMany(() => ProductSetItem, (item) => item.productSet),
     __metadata("design:type", Array)
-], Plate.prototype, "productSetItems", void 0);
-Plate = __decorate([
-    ChildEntity("plate")
-], Plate);
-export { Plate };
+], ProductSet.prototype, "productSetItems", void 0);
+ProductSet = __decorate([
+    ChildEntity("productSet")
+], ProductSet);
+export { ProductSet };

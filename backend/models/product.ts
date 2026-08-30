@@ -1,6 +1,7 @@
 import {
   Entity,
   Column,
+  Index,
   PrimaryGeneratedColumn,
   OneToOne,
   OneToMany,
@@ -31,6 +32,7 @@ import { Base } from "./Base.js";
 export abstract class Product extends Base {
   @PrimaryGeneratedColumn()
   id: number;
+  @Index()
   @Column({ type: "varchar", name: "type", default: "plate", length: 10 })
   type: string; // Explicitly define it here!
 
@@ -73,6 +75,7 @@ export abstract class Product extends Base {
   @JoinTable()
   @ManyToMany(() => Category)
   categories: Category[];
+  @Index()
   @ManyToOne(() => Category)
   mainCategory: Category;
   @OneToMany(() => Inventory, (inventory) => inventory.product)

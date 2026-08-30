@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, ManyToOne, JoinColumn, TableInheritance, } from "typeorm";
+import { Entity, Column, Index, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, ManyToOne, JoinColumn, TableInheritance, } from "typeorm";
 import { Image } from "./Image.js";
 import { Comment } from "./Comment.js";
 import { Color } from "./Color.js";
@@ -25,6 +25,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "id", void 0);
 __decorate([
+    Index(),
     Column({ type: "varchar", name: "type", default: "plate", length: 10 }),
     __metadata("design:type", String)
 ], Product.prototype, "type", void 0);
@@ -100,6 +101,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Product.prototype, "categories", void 0);
 __decorate([
+    Index(),
     ManyToOne(() => Category),
     __metadata("design:type", Category)
 ], Product.prototype, "mainCategory", void 0);

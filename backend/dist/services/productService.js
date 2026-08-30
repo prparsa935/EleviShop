@@ -3,13 +3,12 @@ import { Image } from "../models/Image.js";
 import { Category } from "../models/Category.js";
 import { Color } from "../models/Color.js";
 import { Plate } from "../models/plate.js";
-import { Service } from "../models/Service.js";
+import { ProductSet } from "../models/ProductSet.js";
+import { ProductSetItem } from "../models/ProductSetItem.js";
 import dataSource from "../utils/dbConfiguration.js";
 import { In } from "typeorm";
-// import { ProductSaveDto } from "../dtos/product.dto.js";
 import { OverallError } from "../errors/orderSaveError.js";
 import imageService from "./imageService.js";
-// import serviceService from "./serviceService.js";
 import inventoryService from "./inventoryService.js";
 import { Inventory } from "../models/Inventory.js";
 import { OrderInventory } from "../models/OrderInventory.js";
@@ -22,7 +21,6 @@ class ProductService {
     async findProductsByFillter(filter) {
         const pageSize = 10;
         const pageNumber = filter.pageNumber || 1;
-        // ایجاد query builder برای کنترل بهتر روی joinها
         const query = this.productRepo
             .createQueryBuilder("product")
             .leftJoinAndSelect("product.mainImage", "mainImage")
@@ -60,7 +58,8 @@ class ProductService {
                 "mainCategory",
                 "inventories",
                 "color",
-                "plates",
+                "productSetItems",
+                "productSetItems.plate",
             ],
         });
     }
@@ -70,11 +69,9 @@ class ProductService {
         });
     }
     async saveProduct(productSaveDto) {
-        // 1. Validate product name uniqueness
         if (await this.findProductByName(productSaveDto.productName)) {
             throw new OverallError("محصول با این نام وجود دارد", 400);
         }
-        // 2. Validate and fetch images in parallel for better performance
         const [mainImage, images] = await Promise.all([
             imageService.findImageById(productSaveDto.mainImageId),
             imageService.findImageByIds(productSaveDto.imageIds),
@@ -82,7 +79,6 @@ class ProductService {
         if (!mainImage) {
             throw new OverallError("عکس اصلی در پایگاه داده پیدا نشد", 404);
         }
-        // 3. Create inventories
         const inventories = productSaveDto.inventories.map((inventoryDto) => {
             const inventory = new Inventory();
             Object.assign(inventory, {
@@ -91,11 +87,8 @@ class ProductService {
             });
             return inventory;
         });
-        // 4. Use transaction for atomic operations
         return dataSource.transaction(async (entityManager) => {
-            // 5. Save inventories first
             await inventoryService.saveInventories(entityManager, inventories);
-            // 6. Create product based on type with proper type safety
             let product;
             if (productSaveDto.type === "plate") {
                 const plateDto = productSaveDto;
@@ -108,16 +101,26 @@ class ProductService {
                 product = plate;
             }
             else {
-                const serviceDto = productSaveDto;
-                const service = new Service();
-                const plates = await plateService.findProductByIds(serviceDto.plateIds);
-                Object.assign(service, {
-                    contain: serviceDto.contain,
-                    plates: plates, // Assuming you want to assign plates here
+                const productSetDto = productSaveDto;
+                const productSet = new ProductSet();
+                const plates = await plateService.findProductByIds(productSetDto.items.map((item) => item.plateId));
+                const plateMap = new Map(plates.map((plate) => [plate.id, plate]));
+                const setItems = productSetDto.items.map((item) => {
+                    const plate = plateMap.get(item.plateId);
+                    if (!plate) {
+                        throw new OverallError(`بشقاب با شناسه ${item.plateId} یافت نشد`, 404);
+                    }
+                    const setItem = new ProductSetItem();
+                    setItem.plate = plate;
+                    setItem.quantity = item.quantity;
+                    return setItem;
                 });
-                product = service;
+                Object.assign(productSet, {
+                    contain: productSetDto.contain,
+                    productSetItems: setItems,
+                });
+                product = productSet;
             }
-            // 7. Assign common properties
             Object.assign(product, {
                 material: productSaveDto.material,
                 name: productSaveDto.productName,
@@ -129,9 +132,8 @@ class ProductService {
                 mainImage,
                 inventories,
                 type: productSaveDto.type,
-                productName: productSaveDto.productName, // Assuming this should be included
+                productName: productSaveDto.productName,
             });
-            // 8. Save and return the product
             return await entityManager.save(Product, product);
         });
     }
@@ -236,12 +238,30 @@ class ProductService {
                 if (updateDto.width !== undefined)
                     product.width = updateDto.width;
             }
-            if (product instanceof Service) {
+            if (product instanceof ProductSet) {
                 if (updateDto.contain !== undefined)
                     product.contain = updateDto.contain;
-                if (updateDto.plateIds && updateDto.plateIds.length > 0) {
-                    const plates = await plateService.findProductByIds(updateDto.plateIds);
-                    product.plates = plates;
+                if (updateDto.items && updateDto.items.length > 0) {
+                    const plates = await plateService.findProductByIds(updateDto.items.map((item) => item.plateId));
+                    const plateMap = new Map(plates.map((plate) => [plate.id, plate]));
+                    const setItemRepo = entityManager.getRepository(ProductSetItem);
+                    const existingItems = product.productSetItems || [];
+                    if (existingItems.length > 0) {
+                        await setItemRepo.remove(existingItems);
+                    }
+                    const setItems = updateDto.items.map((item) => {
+                        const plate = plateMap.get(item.plateId);
+                        if (!plate) {
+                            throw new OverallError(`بشقاب با شناسه ${item.plateId} یافت نشد`, 404);
+                        }
+                        const setItem = new ProductSetItem();
+                        setItem.productSet = product;
+                        setItem.plate = plate;
+                        setItem.quantity = item.quantity;
+                        return setItem;
+                    });
+                    await setItemRepo.save(setItems);
+                    product.productSetItems = setItems;
                 }
             }
             if (updateDto.categoryId) {

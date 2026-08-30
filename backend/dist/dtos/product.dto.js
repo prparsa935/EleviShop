@@ -24,7 +24,7 @@ __decorate([
 var typeEnum;
 (function (typeEnum) {
     typeEnum["plate"] = "plate";
-    typeEnum["service"] = "service";
+    typeEnum["productSet"] = "productSet";
 })(typeEnum || (typeEnum = {}));
 export class ProductSaveDto {
 }
@@ -117,23 +117,35 @@ __decorate([
     Max(1000, { message: "حداکثر مقدار 1000" }),
     __metadata("design:type", Number)
 ], PlateSaveDto.prototype, "width", void 0);
-export class ServiceSaveDto extends ProductSaveDto {
+export class ProductSetItemSaveDto {
+}
+__decorate([
+    IsNotEmpty({ message: "لطفا بشقاب را انتخاب کنید" }),
+    IsInt({ message: "لطفا شناسه بشقاب را به صورت عدد وارد کنید" }),
+    Min(1, { message: "شناسه بشقاب نامعتبر است" }),
+    __metadata("design:type", Number)
+], ProductSetItemSaveDto.prototype, "plateId", void 0);
+__decorate([
+    IsInt({ message: "لطفا تعداد را به عدد وارد کنید" }),
+    Min(1, { message: "حداقل تعداد 1" }),
+    Max(99, { message: "حداکثر تعداد 99" }),
+    __metadata("design:type", Number)
+], ProductSetItemSaveDto.prototype, "quantity", void 0);
+export class ProductSetSaveDto extends ProductSaveDto {
 }
 __decorate([
     Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
         message: "لطفا کالا های سرویس را درست وارد کنید",
     }),
     __metadata("design:type", String)
-], ServiceSaveDto.prototype, "contain", void 0);
+], ProductSetSaveDto.prototype, "contain", void 0);
 __decorate([
     ArrayNotEmpty({ message: "حداقل یک آیتم لازم است" }),
     IsArray(),
-    IsInt({ each: true }) // هر عضو باید عدد صحیح باشد
-    ,
-    Min(1, { each: true }) // هر عدد حداقل 1 باشد
-    ,
+    ValidateNested({ each: true }),
+    Type(() => ProductSetItemSaveDto),
     __metadata("design:type", Array)
-], ServiceSaveDto.prototype, "plateIds", void 0);
+], ProductSetSaveDto.prototype, "items", void 0);
 export class UpdateProductDto {
 }
 __decorate([
@@ -242,10 +254,9 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "contain", void 0);
 __decorate([
-    ArrayNotEmpty({ message: "حداقل یک آیتم لازم است" }),
     IsArray(),
-    IsInt({ each: true }),
-    Min(1, { each: true }),
+    ValidateNested({ each: true }),
+    Type(() => ProductSetItemSaveDto),
     IsOptional(),
     __metadata("design:type", Array)
-], UpdateProductDto.prototype, "plateIds", void 0);
+], UpdateProductDto.prototype, "items", void 0);

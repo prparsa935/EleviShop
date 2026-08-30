@@ -7,6 +7,7 @@ import orderInventoryService from "./orderInventoryService.js";
 import { OverallError } from "../errors/orderSaveError.js";
 import stockMovementService from "./stockMovementService.js";
 import { MovementType } from "../models/StockMovement.js";
+import { ProductSetItem } from "../models/ProductSetItem.js";
 class OrderService {
     constructor() {
         this.orderRepo = dataSource.getRepository(Order);
@@ -103,6 +104,21 @@ class OrderService {
             const savedOrder = await entityManager.save(Order, order);
             for (const dto of orderSaveDto) {
                 await stockMovementService.recordMovement(dto.inventory.id, MovementType.SALE, -dto.quantity, `سفارش ${savedOrder.trackingCode}`, user.id, entityManager);
+                const inventory = inventoryMap.get(dto.inventory.id);
+                if (inventory?.product?.type === "productSet") {
+                    const setItems = await entityManager.find(ProductSetItem, {
+                        where: { productSet: { id: inventory.product.id } },
+                        relations: ["plate", "plate.inventories"],
+                    });
+                    for (const item of setItems) {
+                        const plateInventory = item.plate.inventories?.find((inv) => inv.quantity > 0) ??
+                            item.plate.inventories?.[0];
+                        if (!plateInventory) {
+                            continue;
+                        }
+                        await stockMovementService.recordMovement(plateInventory.id, MovementType.BUNDLE_SALE, -(item.quantity * dto.quantity), `فروش ست محصول - سفارش ${savedOrder.trackingCode}`, user.id, entityManager);
+                    }
+                }
             }
             return savedOrder;
         });

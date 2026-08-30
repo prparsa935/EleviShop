@@ -3,7 +3,7 @@ import ProductService from "../services/productService.js";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { FieldErrors, OverallError } from "../errors/orderSaveError.js";
-import { PlateSaveDto, ServiceSaveDto, UpdateProductDto, } from "../dtos/product.dto.js";
+import { PlateSaveDto, ProductSetSaveDto, UpdateProductDto, } from "../dtos/product.dto.js";
 // import { ProductSaveDto } from "../dtos/product.dto.js";
 class ProductController {
     async findProducts(req, res) {
@@ -35,8 +35,8 @@ class ProductController {
             if (type === "plate") {
                 productSaveDto = plainToInstance(PlateSaveDto, req.body);
             }
-            else if (type === "service") {
-                productSaveDto = plainToInstance(ServiceSaveDto, req.body);
+            else if (type === "productSet") {
+                productSaveDto = plainToInstance(ProductSetSaveDto, req.body);
             }
             else {
                 throw new OverallError("Invalid product type");

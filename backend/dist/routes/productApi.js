@@ -2,9 +2,13 @@ import { Router } from "express";
 import ProductController from "../controllers/productController.js";
 import { overallErrorHandler } from "../middlewares/errorHandler.js";
 import authController from "../controllers/authController.js";
+import productSetController from "../controllers/productSetController.js";
 const productApi = Router();
 productApi.get("", ProductController.findProducts);
 productApi.get("/id/:id", ProductController.findSingleProduct);
+productApi.get("/set/:id/available-colors", productSetController.getAvailableColors, overallErrorHandler);
+productApi.get("/set/:id/availability", productSetController.getAvailability, overallErrorHandler);
+productApi.post("/set/calc-price", authController.authorizeUser, authController.isAdmin, productSetController.calcSetPricePreview, overallErrorHandler);
 // admin
 productApi.post("/admin/save", authController.authorizeUser, authController.isAdmin, ProductController.createproduct, overallErrorHandler);
 productApi.delete("/admin/delete/:id", authController.authorizeUser, authController.isAdmin, ProductController.deleteProduct, overallErrorHandler);

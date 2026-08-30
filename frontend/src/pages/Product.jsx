@@ -10,7 +10,10 @@ import {
 } from "../components/Carousel/Carousel";
 import ProductImageShow from "../components/productimageshow/ProductImageShow";
 import ProductLowerSection from "../components/productlowersection/ProductLowerSection";
-import { fetchSingleProduct } from "../api/productApi";
+import {
+  fetchSingleProduct,
+  fetchSetAvailableColors,
+} from "../api/productApi";
 import PageLoading from "../components/pageloading/PageLoading";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 import { trackEvent } from "../hooks/useAnalytics";
@@ -36,12 +39,25 @@ const Product = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState();
   const [commentModalActive, setCommentModalActive] = useState(false);
+  const [setColorOptions, setSetColorOptions] = useState(null);
+  const [selectedSetColor, setSelectedSetColor] = useState(null);
 
   useEffect(() => {
     setLoading(true);
     fetchSingleProduct(id, setProduct, setLoading);
     trackEvent("PRODUCT_VIEW", { productId: Number(id) });
   }, [id]);
+  useEffect(() => {
+    if (product?.type === "productSet") {
+      fetchSetAvailableColors(product.id, (data) => {
+        setSetColorOptions(data);
+        setSelectedSetColor(data?.colors?.length ? data.colors[0] : null);
+      });
+    } else {
+      setSetColorOptions(null);
+      setSelectedSetColor(null);
+    }
+  }, [product]);
   useDidUpdateEffect(() => {
     let lastAvailableInv = null;
     const inventory = product?.inventories?.find((inventory) => {
@@ -98,6 +114,9 @@ const Product = () => {
           imageSiderActive={imageSiderActive}
           setImageSiderActive={setImageSiderActive}
           product={product}
+          colorOptions={setColorOptions}
+          selectedSetColor={selectedSetColor}
+          setSelectedSetColor={setSelectedSetColor}
         ></ProductUpperSection>
 
         <div className="w-100 my-6 rounded-3xl glass py-6 px-3">

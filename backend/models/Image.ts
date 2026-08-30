@@ -8,5 +8,5 @@ export class Image extends Base {
   @ManyToOne(() => Product)
   product: Relation<Product>;
   @Column({ nullable: false })
-  filePath: String;
+  filePath: string;
 }

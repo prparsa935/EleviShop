@@ -9,7 +9,9 @@ import formApiHandler from "../../api/form";
 import {
   fetchSingleProduct,
   searchProducByNametWithCallback,
+  calcSetPricePreview,
 } from "../../api/productApi";
+import { formatNumber } from "../../utils/helperMehods";
 import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 import Loading from "../icons/Loading";
 import SelectCategories from "../selectcategories/SelectCategories";
@@ -43,6 +45,8 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const [setItems, setSetItems] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [manualPrice, setManualPrice] = useState("");
+  const [setPricePreview, setSetPricePreview] = useState(null);
 
   useEffect(() => {
     if (searchParams.has("productId"))
@@ -64,6 +68,11 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       if (existingProduct.color) {
         setSelectedColor({ value: existingProduct.color.id, label: existingProduct.color.name });
       }
+      setManualPrice(
+        existingProduct.manualPriceOverride != null
+          ? String(existingProduct.manualPriceOverride)
+          : ""
+      );
       
       if (existingProduct.type === "plate") {
         currentForm.weight.value = existingProduct.weight;
@@ -104,6 +113,24 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   };
   useDidUpdateEffect(ExistingProductFormSetter, [existingProduct]);
 
+  useEffect(() => {
+    if (
+      typeSelect.value !== "productSet" ||
+      !setItems ||
+      setItems.length === 0
+    ) {
+      setSetPricePreview(null);
+      return;
+    }
+    calcSetPricePreview(
+      setItems.map((item) => ({
+        plateId: item.value,
+        quantity: Number(item.quantity) || 1,
+      })),
+      (data) => setSetPricePreview(data)
+    );
+  }, [typeSelect.value, setItems]);
+
   // const formik = useFormik({
   //   initialValues: {
   //     email: "",
@@ -133,6 +160,12 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         plateId: item.value,
         quantity: Number(item.quantity) || 1,
       }));
+      const manualPriceValue = Number(manualPrice);
+      if (manualPrice !== "" && !isNaN(manualPriceValue)) {
+        values.manualPriceOverride = manualPriceValue;
+      } else if (searchParams.get("productId")) {
+        values.manualPriceOverride = null;
+      }
     } else {
       values.weight = Number(e.target.weight.value);
       values.height = Number(e.target.height.value);
@@ -339,6 +372,38 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
               setItems={setItems}
               setSetItems={setSetItems}
             />
+            {typeSelect.value === "productSet" &&
+            (setItems || []).length > 0 ? (
+              <div className="col-span-12 flex flex-col gap-y-3 glass rounded-2xl p-4">
+                {setPricePreview?.hasNoCommonColor ? (
+                  <div className="text-sm font-semibold text-[var(--bf-red)]">
+                    هشدار: این سرویس هیچ رنگ مشترکی بین قطعاتش نداره، مشتری نمی‌تونه سفارشش بده
+                  </div>
+                ) : setPricePreview?.colors?.[0] ? (
+                  <div className="text-sm text-[var(--color-white)]">
+                    قیمت پیشنهادی سرویس:{" "}
+                    <span className="font-bold text-[var(--color-gold)]">
+                      {formatNumber(setPricePreview.colors[0].calculatedPrice)}
+                    </span>{" "}
+                    تومان
+                  </div>
+                ) : null}
+                <div className="flex flex-col">
+                  <div className="mb-2 font-medium text-sm">
+                    قیمت دستی (اختیاری)
+                  </div>
+                  <Input
+                    name="manualPriceOverride"
+                    type="number"
+                    value={manualPrice}
+                    onChange={(e) => setManualPrice(e.target.value)}
+                  />
+                  <p className="mt-2 text-xs text-[var(--sub-text-color)]">
+                    اگه خالی بمونه، قیمت خودکار از جمع قطعات محاسبه میشه
+                  </p>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

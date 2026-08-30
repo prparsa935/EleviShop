@@ -146,6 +146,12 @@ __decorate([
     Type(() => ProductSetItemSaveDto),
     __metadata("design:type", Array)
 ], ProductSetSaveDto.prototype, "items", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا قیمت دستی را به صورت عدد وارد کنید" }),
+    Min(0, { message: "حداقل مقدار 0" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], ProductSetSaveDto.prototype, "manualPriceOverride", void 0);
 export class UpdateProductDto {
 }
 __decorate([
@@ -260,3 +266,9 @@ __decorate([
     IsOptional(),
     __metadata("design:type", Array)
 ], UpdateProductDto.prototype, "items", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا قیمت دستی را به صورت عدد وارد کنید" }),
+    Min(0, { message: "حداقل مقدار 0" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "manualPriceOverride", void 0);

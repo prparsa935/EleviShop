@@ -121,6 +121,10 @@ export class ProductSetSaveDto extends ProductSaveDto {
   @ValidateNested({ each: true })
   @Type(() => ProductSetItemSaveDto)
   items: ProductSetItemSaveDto[];
+  @IsNumber({}, { message: "لطفا قیمت دستی را به صورت عدد وارد کنید" })
+  @Min(0, { message: "حداقل مقدار 0" })
+  @IsOptional()
+  manualPriceOverride?: number;
 }
 
 export class UpdateProductDto {
@@ -218,4 +222,9 @@ export class UpdateProductDto {
   @Type(() => ProductSetItemSaveDto)
   @IsOptional()
   items?: ProductSetItemSaveDto[];
+
+  @IsNumber({}, { message: "لطفا قیمت دستی را به صورت عدد وارد کنید" })
+  @Min(0, { message: "حداقل مقدار 0" })
+  @IsOptional()
+  manualPriceOverride?: number | null;
 }

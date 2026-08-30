@@ -90,10 +90,51 @@ const fetchRelatedProducts = async (productId, productCode, setProducts) => {
   } catch (error) {}
 };
 
+const fetchSetAvailableColors = async (productSetId, callback) => {
+  try {
+    const res = await Axios.get(
+      serverAddress + "product/set/" + productSetId + "/available-colors"
+    );
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback({ colors: [], hasNoCommonColor: true });
+  }
+};
+const fetchSetAvailability = async (productSetId, colorId, callback) => {
+  try {
+    const res = await Axios.get(
+      serverAddress + "product/set/" + productSetId + "/availability",
+      { params: { colorId: colorId } }
+    );
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+const calcSetPricePreview = async (items, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "product/set/calc-price", {
+      items: items,
+    });
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
 export {
   searchProducts,
   fetchSingleProduct,
   fetchRelatedProducts,
   fetchOffProducts,
   searchProducByNametWithCallback,
+  fetchSetAvailableColors,
+  fetchSetAvailability,
+  calcSetPricePreview,
 };

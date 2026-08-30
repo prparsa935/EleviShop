@@ -6,16 +6,57 @@ import { useNavigate } from "react-router";
 import { formatNumber } from "../../utils/helperMehods";
 import { trackEvent } from "../../hooks/useAnalytics";
 
-const AddToCart = ({ product, inventory }) => {
+const AddToCart = ({
+  product,
+  inventory,
+  colorOptions,
+  selectedSetColor,
+  setSelectedSetColor,
+}) => {
   const {
     shoppingCart,
     findProductInCart,
     addToCart,
+    addItemsToCart,
     sumProductInCart,
     subtractProductInCart,
     isProductInCartValid,
     deleteProductFromCart,
   } = useContext(AuthContext);
+  const isSet = product?.type === "productSet";
+  const setColors = colorOptions?.colors || [];
+  const setHasNoCommonColor = colorOptions?.hasNoCommonColor === true;
+  const displayPrice = isSet ? selectedSetColor?.price : inventory?.price;
+  const availableQuantity = isSet
+    ? selectedSetColor?.availableQuantity
+    : inventory?.quantity;
+  const handleAddSetToCart = () => {
+    if (!selectedSetColor?.components?.length) {
+      return;
+    }
+    addItemsToCart(
+      selectedSetColor.components.map((component) => ({
+        product: {
+          id: component.plateId,
+          name: component.plateName,
+          type: "plate",
+          mainImage: component.plateMainImage
+            ? { filePath: component.plateMainImage }
+            : null,
+        },
+        inventory: {
+          id: component.inventoryId,
+          price: component.inventoryPrice,
+          quantity: component.inventoryQuantity,
+        },
+        quantity: component.perSetQuantity,
+      }))
+    );
+    trackEvent("ADD_TO_CART", {
+      productId: product?.id,
+      metadata: { colorId: selectedSetColor?.colorId, quantity: 1 },
+    });
+  };
   const [productInCart, setProductInCart] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
@@ -58,7 +99,7 @@ const AddToCart = ({ product, inventory }) => {
             {product?.offPercent ? (
               <div className="flex align-bottom ">
                 <span className="line-through mx-3 text-xs text-[var(--sub-text-color)] flex items-center">
-                  {formatNumber(inventory?.price)}
+                  {formatNumber(displayPrice)}
                 </span>
                 <Tag size="xs" bgColor="bg-[var(--bf-red)]" txtColor="text-white" morCss="">
                   {formatNumber(product?.offPercent)} %
@@ -71,7 +112,7 @@ const AddToCart = ({ product, inventory }) => {
             <div className="font-bold text-[var(--color-white)]">
               <span className="mx-1 text-lg tracking-wide">
                 {formatNumber(
-                  ((100 - product?.offPercent) / 100) * inventory?.price
+                  ((100 - product?.offPercent) / 100) * displayPrice
                 )}
               </span>
               <span>تومان</span>
@@ -87,7 +128,54 @@ const AddToCart = ({ product, inventory }) => {
           </div>
         </div>
         <div className="select-none flex flex-col ">
-          {inventory?.quantity === 0 ? (
+          {isSet ? (
+            <div className="flex flex-col gap-y-3">
+              <div className="flex flex-wrap gap-x-2 gap-y-2">
+                {setColors.map((color) => (
+                  <button
+                    key={color.colorId}
+                    type="button"
+                    onClick={() => setSelectedSetColor(color)}
+                    title={color.name}
+                    className={`w-8 h-8 rounded-full border-2 ${
+                      selectedSetColor?.colorId === color.colorId
+                        ? "border-[var(--color-gold)] scale-110"
+                        : "border-[var(--glass-border)]"
+                    }`}
+                    style={{ backgroundColor: color.hexCode }}
+                  ></button>
+                ))}
+              </div>
+              {setHasNoCommonColor ? (
+                <div className="text-xs text-[var(--bf-red)]">
+                  این سرویس رنگ مشترکی بین قطعاتش ندارد و در حال حاضر قابل سفارش نیست
+                </div>
+              ) : (
+                <div className="text-xs text-[var(--sub-text-color)]">
+                  {availableQuantity === 0
+                    ? "موجود نیست"
+                    : availableQuantity < 5
+                    ? `${availableQuantity} عدد موجود، بیشتر نیاز به تولید دارد`
+                    : "موجود"}
+                </div>
+              )}
+              {!setHasNoCommonColor && !productInCart ? (
+                <Button
+                  onClick={handleAddSetToCart}
+                  txtColor="text-white"
+                  bgColor="bg-[var(--color-gold)]"
+                  size="lg"
+                  moreCss="w-100"
+                  shape="rounded-2xl"
+                  hoverClass="hover:brightness-105"
+                >
+                  افزودن به سبد
+                </Button>
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : inventory?.quantity === 0 ? (
             <div className="flex justify-center text-[var(--bf-red)]">موجود نیست</div>
           ) : !productInCart ? (
             <Button

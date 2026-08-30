@@ -19,6 +19,7 @@ import {
 import { Inventory } from "../models/Inventory.js";
 import { OrderInventory } from "../models/OrderInventory.js";
 import plateService from "./plateService.js";
+import productSetService from "./productSetService.js";
 
 class ProductService {
   private productRepo = dataSource.getRepository(Product);
@@ -142,7 +143,13 @@ class ProductService {
         Object.assign(productSet, {
           contain: productSetDto.contain,
           productSetItems: setItems,
+          calculatedPrice: await productSetService.computeCalculatedPriceFromPlateItems(
+            productSetDto.items
+          ),
         });
+        if (productSetDto.manualPriceOverride != null) {
+          productSet.manualPriceOverride = productSetDto.manualPriceOverride;
+        }
         product = productSet;
       }
 
@@ -297,6 +304,12 @@ class ProductService {
           });
           await setItemRepo.save(setItems);
           product.productSetItems = setItems;
+          product.calculatedPrice = await productSetService.computeCalculatedPriceFromPlateItems(
+            updateDto.items
+          );
+        }
+        if (updateDto.manualPriceOverride !== undefined) {
+          product.manualPriceOverride = updateDto.manualPriceOverride;
         }
       }
 

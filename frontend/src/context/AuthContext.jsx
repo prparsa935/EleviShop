@@ -237,6 +237,28 @@ const AuthProvider = (props) => {
       return [...prev, { product: product, inventory: inventory, quantity: 1 }];
     });
   };
+  const addItemsToCart = (items) => {
+    setShoppingCart((prev) => {
+      const next = JSON.parse(JSON.stringify(prev));
+      for (const item of items || []) {
+        const idx = next.findIndex(
+          (p) =>
+            p.product?.id === item.product?.id &&
+            p.inventory?.id === item.inventory?.id
+        );
+        if (idx !== -1) {
+          next[idx].quantity += item.quantity;
+        } else {
+          next.push({
+            product: item.product,
+            inventory: item.inventory,
+            quantity: item.quantity,
+          });
+        }
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
     // const authority=sessionStorage.getItem('Authority')
@@ -396,6 +418,7 @@ const AuthProvider = (props) => {
         subtractProductInCart: subtractProductInCart,
         sumProductInCart: sumProductInCart,
         addToCart: addToCart,
+        addItemsToCart: addItemsToCart,
         isProductInCartValid: isProductInCartValid,
         deleteProductFromCart: deleteProductFromCart,
         updateShoppingCart: updateShoppingCart,

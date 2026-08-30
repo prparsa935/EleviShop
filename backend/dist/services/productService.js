@@ -13,6 +13,7 @@ import inventoryService from "./inventoryService.js";
 import { Inventory } from "../models/Inventory.js";
 import { OrderInventory } from "../models/OrderInventory.js";
 import plateService from "./plateService.js";
+import productSetService from "./productSetService.js";
 class ProductService {
     constructor() {
         this.productRepo = dataSource.getRepository(Product);
@@ -60,6 +61,7 @@ class ProductService {
                 "color",
                 "productSetItems",
                 "productSetItems.plate",
+                "productSetItems.productSet",
             ],
         });
     }
@@ -118,7 +120,11 @@ class ProductService {
                 Object.assign(productSet, {
                     contain: productSetDto.contain,
                     productSetItems: setItems,
+                    calculatedPrice: await productSetService.computeCalculatedPriceFromPlateItems(productSetDto.items),
                 });
+                if (productSetDto.manualPriceOverride != null) {
+                    productSet.manualPriceOverride = productSetDto.manualPriceOverride;
+                }
                 product = productSet;
             }
             Object.assign(product, {
@@ -262,6 +268,10 @@ class ProductService {
                     });
                     await setItemRepo.save(setItems);
                     product.productSetItems = setItems;
+                    product.calculatedPrice = await productSetService.computeCalculatedPriceFromPlateItems(updateDto.items);
+                }
+                if (updateDto.manualPriceOverride !== undefined) {
+                    product.manualPriceOverride = updateDto.manualPriceOverride;
                 }
             }
             if (updateDto.categoryId) {

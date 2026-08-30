@@ -20,6 +20,14 @@ __decorate([
     OneToMany(() => ProductSetItem, (item) => item.productSet),
     __metadata("design:type", Array)
 ], ProductSet.prototype, "productSetItems", void 0);
+__decorate([
+    Column({ type: "int", nullable: true, default: null }),
+    __metadata("design:type", Number)
+], ProductSet.prototype, "manualPriceOverride", void 0);
+__decorate([
+    Column({ type: "int", default: 0 }),
+    __metadata("design:type", Number)
+], ProductSet.prototype, "calculatedPrice", void 0);
 ProductSet = __decorate([
     ChildEntity("productSet")
 ], ProductSet);

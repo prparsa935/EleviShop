@@ -4,7 +4,7 @@ import { Base } from "./Base.js";
 @Entity()
 export class Color extends Base {
   @Column({ length: 20 })
-  hexCode: String;
+  hexCode: string;
   @Column({ nullable: false, unique: true, length: 20 })
   name: string;
 }

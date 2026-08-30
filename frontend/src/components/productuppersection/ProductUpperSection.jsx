@@ -5,7 +5,7 @@ import { imageServerAddress } from "../../App";
 import SmartImage from "../smartimage/SmartImage";
 import schema from "../../schema/schema";
 
-const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSelectedSize }) => {
+const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSelectedSize, colorOptions, selectedSetColor, setSelectedSetColor }) => {
   const [liked, setLiked] = useState(false);
 
   return (
@@ -97,7 +97,13 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
               </div>
             </div>
           </div>
-          <AddToCart inventory={selectedSize?.value} product={product} />
+          <AddToCart
+            inventory={selectedSize?.value}
+            product={product}
+            colorOptions={colorOptions}
+            selectedSetColor={selectedSetColor}
+            setSelectedSetColor={setSelectedSetColor}
+          />
         </div>
       </div>
     </div>

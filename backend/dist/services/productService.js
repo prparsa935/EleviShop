@@ -1,12 +1,15 @@
 import { Product } from "../models/product.js";
 import { Image } from "../models/Image.js";
 import { Category } from "../models/Category.js";
-import { Color } from "../models/Color.js";
 import { Plate } from "../models/plate.js";
 import { ProductSet } from "../models/ProductSet.js";
 import { ProductSetItem } from "../models/ProductSetItem.js";
+import { Mold } from "../models/Mold.js";
+import { MoldSize } from "../models/MoldSize.js";
+import { MoldPattern } from "../models/MoldPattern.js";
+import { Pattern } from "../models/Pattern.js";
 import dataSource from "../utils/dbConfiguration.js";
-import { In } from "typeorm";
+import { In, Not } from "typeorm";
 import { OverallError } from "../errors/orderSaveError.js";
 import imageService from "./imageService.js";
 import inventoryService from "./inventoryService.js";
@@ -18,6 +21,10 @@ class ProductService {
     constructor() {
         this.productRepo = dataSource.getRepository(Product);
         this.orderInventoryRepo = dataSource.getRepository(OrderInventory);
+        this.moldRepo = dataSource.getRepository(Mold);
+        this.moldSizeRepo = dataSource.getRepository(MoldSize);
+        this.moldPatternRepo = dataSource.getRepository(MoldPattern);
+        this.patternRepo = dataSource.getRepository(Pattern);
     }
     async findProductsByFillter(filter) {
         const pageSize = 10;
@@ -26,15 +33,18 @@ class ProductService {
             .createQueryBuilder("product")
             .leftJoinAndSelect("product.mainImage", "mainImage")
             .leftJoinAndSelect("product.inventories", "inventory")
-            .skip((pageNumber - 1) * pageSize)
-            .take(pageSize);
+            .leftJoinAndSelect("product.moldPattern", "moldPattern")
+            .leftJoinAndSelect("moldPattern.mold", "mold")
+            .leftJoinAndSelect("moldPattern.pattern", "pattern")
+            .where("product.type IN (:...types)", {
+            types: ["plate", "productSet"],
+        });
         if (filter.categoryId) {
             query.andWhere("product.mainCategoryId = :categoryId", {
                 categoryId: filter.categoryId,
             });
         }
         if (filter.enableOff === "true") {
-            console.log("here");
             query.andWhere("product.offPercent BETWEEN 1 AND 99");
         }
         if (filter.name) {
@@ -42,13 +52,162 @@ class ProductService {
                 name: `%${filter.name}%`,
             });
         }
+        const products = await query.getMany();
+        let filtered = products;
         if (filter.minPrice && filter.maxPrice) {
-            query.andWhere("inventory.price BETWEEN :minPrice AND :maxPrice", {
-                minPrice: filter.minPrice,
-                maxPrice: filter.maxPrice,
+            filtered = filtered.filter((product) => (product.inventories ?? []).some((inv) => inv.price >= filter.minPrice && inv.price <= filter.maxPrice));
+        }
+        const patternGroups = new Map();
+        const standaloneProducts = [];
+        for (const product of filtered) {
+            if (product.type === "productSet") {
+                standaloneProducts.push(product);
+            }
+            else if (product.moldPatternId != null) {
+                if (!patternGroups.has(product.moldPatternId)) {
+                    patternGroups.set(product.moldPatternId, []);
+                }
+                patternGroups.get(product.moldPatternId).push(product);
+            }
+            else {
+                standaloneProducts.push(product);
+            }
+        }
+        const cards = [];
+        for (const [moldPatternId, group] of patternGroups) {
+            cards.push(this.buildPatternCard(moldPatternId, group));
+        }
+        for (const product of standaloneProducts) {
+            cards.push({
+                cardType: "productSet",
+                id: product.id,
+                productId: product.id,
+                name: product.name,
+                shape: null,
+                patternName: product.pattern ?? null,
+                mainImage: product.mainImage
+                    ? { filePath: product.mainImage.filePath }
+                    : null,
+                inventories: (product.inventories ?? [])
+                    .map((inv) => ({ id: inv.id, price: inv.price, quantity: inv.quantity }))
+                    .sort((a, b) => a.price - b.price),
+                offPercent: product.offPercent ?? 0,
+                rate: product.rate ?? 0,
+                rateCount: product.rateCount ?? 0,
+                commentCount: product.commentCount ?? 0,
+                buyerCount: product.buyerCount ?? 0,
+                totalQuantity: (product.inventories ?? []).reduce((sum, inv) => sum + (inv.quantity ?? 0), 0),
             });
         }
-        return await query.getMany();
+        return cards.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    }
+    buildPatternCard(moldPatternId, group) {
+        const moldPattern = group[0].moldPattern;
+        const allInventories = group.flatMap((product) => product.inventories ?? []);
+        const inStock = allInventories.filter((inv) => (inv.quantity ?? 0) > 0);
+        const pricePool = inStock.length > 0
+            ? inStock
+                .map((inv) => ({ id: inv.id, price: inv.price, quantity: inv.quantity }))
+                .sort((a, b) => a.price - b.price)
+            : allInventories
+                .map((inv) => ({ id: inv.id, price: inv.price, quantity: inv.quantity }))
+                .sort((a, b) => a.price - b.price);
+        const withImage = group.find((product) => product.mainImage) ?? group[0];
+        const patternName = moldPattern?.pattern?.name ?? null;
+        const moldName = moldPattern?.mold?.name ?? group[0].name;
+        return {
+            cardType: "pattern",
+            id: moldPatternId,
+            productId: withImage.id,
+            name: patternName ? `${moldName} ${patternName}` : moldName,
+            shape: moldPattern?.mold?.shape ?? null,
+            patternName,
+            mainImage: withImage.mainImage
+                ? { filePath: withImage.mainImage.filePath }
+                : null,
+            inventories: pricePool,
+            offPercent: Math.max(...group.map((product) => product.offPercent ?? 0)),
+            rate: Math.max(...group.map((product) => product.rate ?? 0)),
+            rateCount: group.reduce((sum, product) => sum + (product.rateCount ?? 0), 0),
+            commentCount: group.reduce((sum, product) => sum + (product.commentCount ?? 0), 0),
+            buyerCount: group.reduce((sum, product) => sum + (product.buyerCount ?? 0), 0),
+            totalQuantity: inStock.reduce((sum, inv) => sum + (inv.quantity ?? 0), 0),
+        };
+    }
+    async findMoldPatternDetail(moldPatternId) {
+        const moldPattern = await this.moldPatternRepo.findOne({
+            where: { id: moldPatternId },
+            relations: ["mold", "pattern"],
+        });
+        if (!moldPattern) {
+            throw new OverallError("طرح مورد نظر یافت نشد", 404);
+        }
+        const products = await this.productRepo.find({
+            where: { moldPatternId },
+            relations: [
+                "mainImage",
+                "images",
+                "mainCategory",
+                "inventories",
+                "inventories.color",
+                "moldSize",
+            ],
+        });
+        if (products.length === 0) {
+            throw new OverallError("محصولی برای این طرح یافت نشد", 404);
+        }
+        const sizeMap = new Map();
+        for (const product of products) {
+            const size = product.moldSize;
+            const sizeId = size?.id ?? 0;
+            if (!sizeMap.has(sizeId)) {
+                sizeMap.set(sizeId, {
+                    sizeId,
+                    sizeLabel: size?.sizeLabel ?? "استاندارد",
+                    height: size?.height ?? null,
+                    width: size?.width ?? null,
+                    weight: size?.weight ?? null,
+                    productIds: [],
+                    inventories: [],
+                });
+            }
+            const sizeEntry = sizeMap.get(sizeId);
+            sizeEntry.productIds.push(product.id);
+            for (const inv of product.inventories ?? []) {
+                sizeEntry.inventories.push({
+                    id: inv.id,
+                    price: inv.price,
+                    quantity: inv.quantity,
+                    colorId: inv.colorId,
+                    colorName: inv.color?.name ?? null,
+                    colorHex: inv.color?.hexCode ?? null,
+                });
+            }
+        }
+        const withImage = products.find((product) => product.mainImage) ?? products[0];
+        return {
+            kind: "pattern",
+            id: moldPattern.id,
+            name: moldPattern.pattern
+                ? `${moldPattern.mold.name} ${moldPattern.pattern.name}`
+                : moldPattern.mold.name,
+            description: withImage.description,
+            material: withImage.material,
+            code: withImage.code,
+            offPercent: Math.max(...products.map((p) => p.offPercent ?? 0)),
+            rate: Math.max(...products.map((p) => p.rate ?? 0)),
+            rateScore: Math.max(...products.map((p) => p.rateScore ?? 0)),
+            rateCount: products.reduce((sum, p) => sum + (p.rateCount ?? 0), 0),
+            commentCount: products.reduce((sum, p) => sum + (p.commentCount ?? 0), 0),
+            buyerCount: products.reduce((sum, p) => sum + (p.buyerCount ?? 0), 0),
+            mainImage: withImage.mainImage,
+            images: products.flatMap((p) => p.images ?? []),
+            mainCategory: withImage.mainCategory,
+            representativeProductId: withImage.id,
+            mold: moldPattern.mold,
+            pattern: moldPattern.pattern,
+            sizes: [...sizeMap.values()],
+        };
     }
     async findProductById(id) {
         return await this.productRepo.findOne({
@@ -58,7 +217,12 @@ class ProductService {
                 "images",
                 "mainCategory",
                 "inventories",
-                "color",
+                "inventories.color",
+                "moldPattern",
+                "moldPattern.mold",
+                "moldPattern.pattern",
+                "moldSize",
+                "moldSize.mold",
                 "productSetItems",
                 "productSetItems.plate",
                 "productSetItems.productSet",
@@ -70,10 +234,18 @@ class ProductService {
             where: { name: name },
         });
     }
+    async findRelatedProducts(id, code) {
+        return await this.productRepo.find({
+            where: { code: code, id: Not(id) },
+            relations: ["mainImage", "inventories"],
+            take: 10,
+        });
+    }
     async saveProduct(productSaveDto) {
         if (await this.findProductByName(productSaveDto.productName)) {
             throw new OverallError("محصول با این نام وجود دارد", 400);
         }
+        let resolvedPattern = productSaveDto.pattern ?? "";
         const [mainImage, images] = await Promise.all([
             imageService.findImageById(productSaveDto.mainImageId),
             imageService.findImageByIds(productSaveDto.imageIds),
@@ -86,6 +258,7 @@ class ProductService {
             Object.assign(inventory, {
                 price: inventoryDto.price,
                 quantity: inventoryDto.quantity,
+                colorId: inventoryDto.colorId ?? null,
             });
             return inventory;
         });
@@ -94,12 +267,23 @@ class ProductService {
             let product;
             if (productSaveDto.type === "plate") {
                 const plateDto = productSaveDto;
-                const plate = new Plate();
-                Object.assign(plate, {
-                    width: plateDto.width,
-                    weight: plateDto.weight,
-                    height: plateDto.height,
+                const moldSize = await this.moldSizeRepo.findOne({
+                    where: { id: plateDto.moldSizeId },
                 });
+                if (!moldSize) {
+                    throw new OverallError("سایز قالب یافت نشد", 404);
+                }
+                const moldPattern = await this.moldPatternRepo.findOne({
+                    where: { id: plateDto.moldPatternId },
+                    relations: ["pattern"],
+                });
+                if (!moldPattern) {
+                    throw new OverallError("ترکیب قالب و طرح یافت نشد", 404);
+                }
+                const plate = new Plate();
+                plate.moldSize = moldSize;
+                plate.moldPattern = moldPattern;
+                resolvedPattern = moldPattern.pattern?.name ?? resolvedPattern;
                 product = plate;
             }
             else {
@@ -130,7 +314,7 @@ class ProductService {
             Object.assign(product, {
                 material: productSaveDto.material,
                 name: productSaveDto.productName,
-                pattern: productSaveDto.pattern,
+                pattern: resolvedPattern,
                 code: productSaveDto.code,
                 description: productSaveDto.description,
                 offPercent: productSaveDto.offPercent,
@@ -138,7 +322,6 @@ class ProductService {
                 mainImage,
                 inventories,
                 type: productSaveDto.type,
-                productName: productSaveDto.productName,
             });
             return await entityManager.save(Product, product);
         });
@@ -174,9 +357,10 @@ class ProductService {
             const inventoryRepo = entityManager.getRepository(Inventory);
             const imageRepo = entityManager.getRepository(Image);
             const categoryRepo = entityManager.getRepository(Category);
-            const colorRepo = entityManager.getRepository(Color);
             if (updateDto.mainImageId) {
-                const mainImage = await imageRepo.findOne({ where: { id: updateDto.mainImageId } });
+                const mainImage = await imageRepo.findOne({
+                    where: { id: updateDto.mainImageId },
+                });
                 if (!mainImage) {
                     throw new OverallError("عکس اصلی در پایگاه داده پیدا نشد", 404);
                 }
@@ -202,6 +386,7 @@ class ProductService {
                             const inventory = new Inventory();
                             inventory.price = inventoryDto.price;
                             inventory.quantity = inventoryDto.quantity;
+                            inventory.colorId = inventoryDto.colorId ?? null;
                             inventory.product = product;
                             return inventory;
                         });
@@ -215,6 +400,7 @@ class ProductService {
                         const inventory = new Inventory();
                         inventory.price = inventoryDto.price;
                         inventory.quantity = inventoryDto.quantity;
+                        inventory.colorId = inventoryDto.colorId ?? null;
                         inventory.product = product;
                         return inventory;
                     });
@@ -236,14 +422,10 @@ class ProductService {
                 product.pattern = updateDto.pattern;
             if (updateDto.type !== undefined)
                 product.type = updateDto.type;
-            if (product instanceof Plate) {
-                if (updateDto.height !== undefined)
-                    product.height = updateDto.height;
-                if (updateDto.weight !== undefined)
-                    product.weight = updateDto.weight;
-                if (updateDto.width !== undefined)
-                    product.width = updateDto.width;
-            }
+            if (updateDto.moldSizeId !== undefined)
+                product.moldSizeId = updateDto.moldSizeId;
+            if (updateDto.moldPatternId !== undefined)
+                product.moldPatternId = updateDto.moldPatternId;
             if (product instanceof ProductSet) {
                 if (updateDto.contain !== undefined)
                     product.contain = updateDto.contain;
@@ -268,22 +450,19 @@ class ProductService {
                     });
                     await setItemRepo.save(setItems);
                     product.productSetItems = setItems;
-                    product.calculatedPrice = await productSetService.computeCalculatedPriceFromPlateItems(updateDto.items);
+                    product.calculatedPrice =
+                        await productSetService.computeCalculatedPriceFromPlateItems(updateDto.items);
                 }
                 if (updateDto.manualPriceOverride !== undefined) {
                     product.manualPriceOverride = updateDto.manualPriceOverride;
                 }
             }
             if (updateDto.categoryId) {
-                const category = await categoryRepo.findOne({ where: { id: updateDto.categoryId } });
+                const category = await categoryRepo.findOne({
+                    where: { id: updateDto.categoryId },
+                });
                 if (category) {
                     product.mainCategory = category;
-                }
-            }
-            if (updateDto.colorId) {
-                const color = await colorRepo.findOne({ where: { id: updateDto.colorId } });
-                if (color) {
-                    product.color = color;
                 }
             }
             return await productRepo.save(product);

@@ -201,6 +201,10 @@ const AddToCart = ({
                 <></>
               )}
             </div>
+          ) : !inventory ? (
+            <div className="flex justify-center text-[var(--sub-text-color)] text-sm">
+              لطفا سایز و رنگ را انتخاب کنید
+            </div>
           ) : inventory?.quantity === 0 ? (
             <div className="flex justify-center text-[var(--bf-red)]">موجود نیست</div>
           ) : !productInCart ? (

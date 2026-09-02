@@ -1,14 +1,12 @@
 import { Like } from "typeorm";
 import { Color } from "../models/Color.js";
 import { Inventory } from "../models/Inventory.js";
-import { Product } from "../models/product.js";
 import dataSource from "../utils/dbConfiguration.js";
 import { OverallError } from "../errors/orderSaveError.js";
 class ColorService {
     constructor() {
         this.colorRepo = dataSource.getRepository(Color);
         this.inventoryRepo = dataSource.getRepository(Inventory);
-        this.productRepo = dataSource.getRepository(Product);
     }
     async findColors() {
         return await this.colorRepo.find();
@@ -33,12 +31,12 @@ class ColorService {
         if (!color) {
             throw new OverallError("رنگ مورد نظر یافت نشد", 404);
         }
-        const productsWithColor = await this.productRepo
-            .createQueryBuilder("product")
-            .where("product.colorId = :colorId", { colorId: id })
+        const inventoriesWithColor = await this.inventoryRepo
+            .createQueryBuilder("inventory")
+            .where("inventory.colorId = :colorId", { colorId: id })
             .getCount();
-        if (productsWithColor > 0) {
-            throw new OverallError("امکان حذف وجود ندارد: این رنگ در محصولات استفاده شده است", 400);
+        if (inventoriesWithColor > 0) {
+            throw new OverallError("امکان حذف وجود ندارد: این رنگ در موجودی محصولات استفاده شده است", 400);
         }
         await this.colorRepo.remove(color);
     }

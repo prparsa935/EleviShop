@@ -21,6 +21,11 @@ __decorate([
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
     __metadata("design:type", Number)
 ], InventorySaveDto.prototype, "price", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], InventorySaveDto.prototype, "colorId", void 0);
 var typeEnum;
 (function (typeEnum) {
     typeEnum["plate"] = "plate";
@@ -71,6 +76,7 @@ __decorate([
     Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
         message: "لطفا طرح محصول را درست واردکنید",
     }),
+    IsOptional(),
     __metadata("design:type", String)
 ], ProductSaveDto.prototype, "pattern", void 0);
 __decorate([
@@ -78,11 +84,6 @@ __decorate([
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
     __metadata("design:type", Number)
 ], ProductSaveDto.prototype, "categoryId", void 0);
-__decorate([
-    IsNotEmpty({ message: "لطفا رنگ را انتخاب کنید" }),
-    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
-    __metadata("design:type", Number)
-], ProductSaveDto.prototype, "colorId", void 0);
 __decorate([
     IsNotEmpty({ message: "لطفا تصویر اصلی را انتخاب کنید" }),
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
@@ -97,26 +98,15 @@ __decorate([
 export class PlateSaveDto extends ProductSaveDto {
 }
 __decorate([
-    IsNotEmpty({ message: "لطفا خالی نگذارید" }),
-    IsNumber({}, { message: "لطفا عرض را به صورت عدد وارد کنید" }),
-    Min(1, { message: "حداقل مقدار 1" }),
-    Max(1000, { message: "حداکثر مقدار 1000" }),
+    IsNotEmpty({ message: "لطفا سایز قالب را انتخاب کنید" }),
+    IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" }),
     __metadata("design:type", Number)
-], PlateSaveDto.prototype, "height", void 0);
+], PlateSaveDto.prototype, "moldSizeId", void 0);
 __decorate([
-    IsNotEmpty({ message: "لطفا خالی نگذارید" }),
-    IsNumber({}, { message: "لطفا وزن را به صورت عدد وارد کنید" }),
-    Min(1, { message: "حداقل مقدار 1" }),
-    Max(1000, { message: "حداکثر مقدار 1000" }),
+    IsNotEmpty({ message: "لطفا طرح را انتخاب کنید" }),
+    IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" }),
     __metadata("design:type", Number)
-], PlateSaveDto.prototype, "weight", void 0);
-__decorate([
-    IsNotEmpty({ message: "لطفا خالی نگذارید" }),
-    IsNumber({}, { message: "لطفا طول را به صورت عدد وارد کنید" }),
-    Min(1, { message: "حداقل مقدار 1" }),
-    Max(1000, { message: "حداکثر مقدار 1000" }),
-    __metadata("design:type", Number)
-], PlateSaveDto.prototype, "width", void 0);
+], PlateSaveDto.prototype, "moldPatternId", void 0);
 export class ProductSetItemSaveDto {
 }
 __decorate([
@@ -216,11 +206,6 @@ __decorate([
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
     IsOptional(),
     __metadata("design:type", Number)
-], UpdateProductDto.prototype, "colorId", void 0);
-__decorate([
-    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
-    IsOptional(),
-    __metadata("design:type", Number)
 ], UpdateProductDto.prototype, "mainImageId", void 0);
 __decorate([
     IsArray(),
@@ -229,29 +214,15 @@ __decorate([
     __metadata("design:type", Array)
 ], UpdateProductDto.prototype, "imageIds", void 0);
 __decorate([
-    IsNotEmpty({ message: "لطفا خالی نگذارید" }),
-    IsNumber({}, { message: "لطفا عرض را به صورت عدد وارد کنید" }),
-    Min(1, { message: "حداقل مقدار 1" }),
-    Max(1000, { message: "حداکثر مقدار 1000" }),
+    IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" }),
     IsOptional(),
     __metadata("design:type", Number)
-], UpdateProductDto.prototype, "height", void 0);
+], UpdateProductDto.prototype, "moldSizeId", void 0);
 __decorate([
-    IsNotEmpty({ message: "لطفا خالی نگذارید" }),
-    IsNumber({}, { message: "لطفا وزن را به صورت عدد وارد کنید" }),
-    Min(1, { message: "حداقل مقدار 1" }),
-    Max(1000, { message: "حداکثر مقدار 1000" }),
+    IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" }),
     IsOptional(),
     __metadata("design:type", Number)
-], UpdateProductDto.prototype, "weight", void 0);
-__decorate([
-    IsNotEmpty({ message: "لطفا خالی نگذارید" }),
-    IsNumber({}, { message: "لطفا طول را به صورت عدد وارد کنید" }),
-    Min(1, { message: "حداقل مقدار 1" }),
-    Max(1000, { message: "حداکثر مقدار 1000" }),
-    IsOptional(),
-    __metadata("design:type", Number)
-], UpdateProductDto.prototype, "width", void 0);
+], UpdateProductDto.prototype, "moldPatternId", void 0);
 __decorate([
     Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
         message: "لطفا کالا های سرویس را درست وارد کنید",

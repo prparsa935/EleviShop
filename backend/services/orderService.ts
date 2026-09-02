@@ -132,7 +132,6 @@ class OrderService {
           where: { productSet: { id: dto.productSetId } },
           relations: [
             "plate",
-            "plate.color",
             "plate.inventories",
             "plate.inventories.product",
           ],
@@ -144,24 +143,17 @@ class OrderService {
           );
         }
         for (const item of setItems) {
-          const plateColorId = item.plate?.color?.id ?? null;
-          if (plateColorId !== dto.colorId) {
-            throw new OverallError(
-              `قطعه «${
-                item.plate?.name ?? item.plate?.id
-              }» در رنگ انتخابی موجود نیست`,
-              400
-            );
-          }
-          const plateInventories = (item.plate?.inventories ?? [])
+          const plateInventories = (item.plate?.inventories ?? []).filter(
+            (inv) => inv.colorId === dto.colorId
+          );
+          const componentInventory = plateInventories
             .slice()
-            .sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0));
-          const componentInventory = plateInventories[0];
+            .sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0))[0];
           if (!componentInventory) {
             throw new OverallError(
               `قطعه «${
                 item.plate?.name ?? item.plate?.id
-              }» موجودی ثبت‌شده ندارد`,
+              }» در رنگ انتخابی موجود نیست`,
               400
             );
           }

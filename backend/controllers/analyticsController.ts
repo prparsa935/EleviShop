@@ -10,7 +10,7 @@ import userService from "../services/userService.js";
 import { User } from "../models/User.js";
 
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 120;
+const RATE_LIMIT_MAX_REQUESTS = 300;
 const rateLimitStore = new Map<string, number[]>();
 
 /**

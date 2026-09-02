@@ -4,7 +4,7 @@ import { AnalyticsEventType } from "../models/AnalyticsEvent.js";
 import authService from "../services/authService.js";
 import userService from "../services/userService.js";
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 120;
+const RATE_LIMIT_MAX_REQUESTS = 300;
 const rateLimitStore = new Map();
 /**
  * Rate limit ساده در-memory برای /track (بدون نیاز به dependency).

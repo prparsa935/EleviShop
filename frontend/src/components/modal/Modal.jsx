@@ -4,6 +4,9 @@ const Modal = (props) => {
   const modalRef = useRef();
   const modalContent = useRef();
   const modalControl = (enable) => {
+    if (!modalRef.current || !modalContent.current) {
+      return;
+    }
     if (!enable) {
       document.body.classList.remove("overflow-hidden");
       modalRef.current.classList.add("opa-0");

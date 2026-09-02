@@ -20,6 +20,9 @@ export class InventorySaveDto {
   quantity: number;
   @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
   price: number;
+  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
+  @IsOptional()
+  colorId?: number;
 }
 enum typeEnum {
   plate = "plate",
@@ -61,15 +64,12 @@ export class ProductSaveDto {
   @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
     message: "لطفا طرح محصول را درست واردکنید",
   })
-  pattern: string;
+  @IsOptional()
+  pattern?: string;
 
   @IsNotEmpty({ message: "لطفا دسته‌بندی را انتخاب کنید" })
   @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
   categoryId: number;
-
-  @IsNotEmpty({ message: "لطفا رنگ را انتخاب کنید" })
-  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
-  colorId: number;
 
   @IsNotEmpty({ message: "لطفا تصویر اصلی را انتخاب کنید" })
   @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
@@ -81,23 +81,13 @@ export class ProductSaveDto {
   imageIds: number[];
 }
 export class PlateSaveDto extends ProductSaveDto {
-  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
-  @IsNumber({}, { message: "لطفا عرض را به صورت عدد وارد کنید" })
-  @Min(1, { message: "حداقل مقدار 1" })
-  @Max(1000, { message: "حداکثر مقدار 1000" })
-  height: number;
+  @IsNotEmpty({ message: "لطفا سایز قالب را انتخاب کنید" })
+  @IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" })
+  moldSizeId: number;
 
-  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
-  @IsNumber({}, { message: "لطفا وزن را به صورت عدد وارد کنید" })
-  @Min(1, { message: "حداقل مقدار 1" })
-  @Max(1000, { message: "حداکثر مقدار 1000" })
-  weight: number;
-
-  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
-  @IsNumber({}, { message: "لطفا طول را به صورت عدد وارد کنید" })
-  @Min(1, { message: "حداقل مقدار 1" })
-  @Max(1000, { message: "حداکثر مقدار 1000" })
-  width: number;
+  @IsNotEmpty({ message: "لطفا طرح را انتخاب کنید" })
+  @IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" })
+  moldPatternId: number;
 }
 export class ProductSetItemSaveDto {
   @IsNotEmpty({ message: "لطفا بشقاب را انتخاب کنید" })
@@ -179,10 +169,6 @@ export class UpdateProductDto {
 
   @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
   @IsOptional()
-  colorId?: number;
-
-  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
-  @IsOptional()
   mainImageId?: number;
 
   @IsArray()
@@ -190,26 +176,13 @@ export class UpdateProductDto {
   @IsOptional()
   imageIds?: number[];
 
-  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
-  @IsNumber({}, { message: "لطفا عرض را به صورت عدد وارد کنید" })
-  @Min(1, { message: "حداقل مقدار 1" })
-  @Max(1000, { message: "حداکثر مقدار 1000" })
+  @IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" })
   @IsOptional()
-  height?: number;
+  moldSizeId?: number;
 
-  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
-  @IsNumber({}, { message: "لطفا وزن را به صورت عدد وارد کنید" })
-  @Min(1, { message: "حداقل مقدار 1" })
-  @Max(1000, { message: "حداکثر مقدار 1000" })
+  @IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" })
   @IsOptional()
-  weight?: number;
-
-  @IsNotEmpty({ message: "لطفا خالی نگذارید" })
-  @IsNumber({}, { message: "لطفا طول را به صورت عدد وارد کنید" })
-  @Min(1, { message: "حداقل مقدار 1" })
-  @Max(1000, { message: "حداکثر مقدار 1000" })
-  @IsOptional()
-  width?: number;
+  moldPatternId?: number;
 
   @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
     message: "لطفا کالا های سرویس را درست وارد کنید",

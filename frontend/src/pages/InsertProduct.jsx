@@ -6,7 +6,7 @@ import NavBar from "../components/navbar/NavBar";
 import Alert from "../components/alert/Alert";
 
 const InsertProduct = () => {
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({});
   const [toastList, setToastList] = useState([]);
 
   return (

@@ -35,7 +35,7 @@ const MobileFooter = () => {
         col
         size="md"
         border="none "
-        icon={<i class="fa-light fa-objects-column"></i>}
+        icon={<i className="fa-light fa-objects-column"></i>}
         onClick={() => navigate("/search")}
       >
         جست و جو
@@ -68,7 +68,7 @@ const MobileFooter = () => {
         col
         size="md"
         border="none "
-        icon={<i class="fa-light fa-user"></i>}
+        icon={<i className="fa-light fa-user"></i>}
       >
         {user ? "پروفایل" : "ورود"}
       </Button>

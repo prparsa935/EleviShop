@@ -1,12 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
 import { imageServerAddress } from "../../App";
 import SmartImage from "../smartimage/SmartImage";
 import schema from "../../schema/schema";
 
-const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSelectedSize, colorOptions, selectedSetColor, setSelectedSetColor }) => {
+const ProductUpperSection = ({
+  setImageSiderActive,
+  product,
+  selectedSize,
+  colorOptions,
+  selectedSetColor,
+  moldSizeOptions,
+  selectedMoldSize,
+  onMoldSizeChange,
+  inventoryColorOptions,
+  selectedColorInv,
+  onColorInvChange,
+}) => {
   const [liked, setLiked] = useState(false);
+  const isPatternCard = product?.type === "patternCard";
 
   return (
     <div className="flex flex-col lg:flex-row justify-between glass rounded-3xl p-4">
@@ -32,7 +45,7 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
            <div className="mx-auto ">
              <SmartImage
                className="h-[250px] lg:h-auto rounded-2xl"
-               src={imageServerAddress + product?.mainImage.filePath}
+               src={imageServerAddress + product?.mainImage?.filePath}
                alt={product?.name}
                eager
                ratio="1/1"
@@ -59,6 +72,62 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
             {product?.name}
           </p>
         </div>
+        {isPatternCard ? (
+          <div className="flex flex-col gap-y-4 px-3 pb-1">
+            {(moldSizeOptions || []).length > 0 ? (
+              <div className="flex flex-col gap-y-2">
+                <span className="text-sm font-medium text-[var(--sub-text-color)]">
+                  سایز
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {moldSizeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => onMoldSizeChange(option.size)}
+                      className={`px-3 py-1.5 rounded-xl text-sm border transition-colors ${
+                        selectedMoldSize?.sizeId === option.value
+                          ? "border-[var(--color-gold)] text-[var(--color-gold)]"
+                          : "border-[var(--glass-border)] text-[var(--sub-text-color)]"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+            {(inventoryColorOptions || []).length > 0 ? (
+              <div className="flex flex-col gap-y-2">
+                <span className="text-sm font-medium text-[var(--sub-text-color)]">
+                  رنگ
+                </span>
+                <div className="flex flex-wrap gap-x-2 gap-y-2">
+                  {inventoryColorOptions.map((option) => (
+                    <button
+                      key={option.colorId}
+                      type="button"
+                      onClick={() => onColorInvChange(option)}
+                      title={option.name}
+                      className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                        selectedColorInv?.colorId === option.colorId
+                          ? "border-[var(--color-gold)] scale-110"
+                          : "border-[var(--glass-border)]"
+                      }`}
+                      style={{ backgroundColor: option.hexCode }}
+                    ></button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex lg:flex-row flex-col w-100">
           <div className="grow flex flex-col gap-y-4 mt-2 border-t border-[var(--glass-border)] pt-3 mx-5 ">
             <div className="flex items-center text-xs ">
@@ -102,7 +171,6 @@ const ProductUpperSection = ({ setImageSiderActive, product, selectedSize, setSe
             product={product}
             colorOptions={colorOptions}
             selectedSetColor={selectedSetColor}
-            setSelectedSetColor={setSelectedSetColor}
           />
         </div>
       </div>

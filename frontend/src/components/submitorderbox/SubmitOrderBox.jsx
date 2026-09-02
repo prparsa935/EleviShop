@@ -34,6 +34,14 @@ const SubmitOrderBox = ({ price, setToastList }) => {
             ? item.productSetId && item.colorId
             : item.inventory?.id
       );
+    if (orderData.length === 0) {
+      setToastList((prev) => [
+        ...prev,
+        { type: "danger", message: "سبد خرید شما خالی است" },
+      ]);
+      setLoading(false);
+      return;
+    }
     const success = await formApiHandler("order/save", orderData, setToastList, setErrors, setLoading);
     if (success) {
       trackEvent("PURCHASE_COMPLETE", {

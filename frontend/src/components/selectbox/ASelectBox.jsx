@@ -27,7 +27,7 @@ const ASelectBox = (props) => {
         }}
         loadOptions={props.loadOptions}
         isMulti={props.isMulti}
-    
+        classNamePrefix="aselect"
         onChange={props.onChange}
         styles={{
           container: (prevCss) => {
@@ -36,19 +36,54 @@ const ASelectBox = (props) => {
               width: props.width,
             };
           },
-          control: (prevCss) => {
+          control: (prevCss, state) => {
             return {
-              height: props.height,
               ...prevCss,
+              height: props.height,
+              backgroundColor: "var(--glass-bg-strong)",
+              color: "var(--color-white)",
+              borderColor: state.isFocused
+                ? "var(--color-gold)"
+                : "var(--glass-border)",
+              boxShadow: state.isFocused
+                ? "0 0 0 1px var(--color-gold)"
+                : "none",
+              ":hover": {
+                borderColor: "var(--color-gold)",
+              },
             };
           },
-          //   menu:(prevCss)=>{
-          //     return({
-          //       ...prevCss,
-
-          //     })
-
-          // },
+          singleValue: (prevCss) => ({
+            ...prevCss,
+            color: "var(--color-white)",
+          }),
+          input: (prevCss) => ({
+            ...prevCss,
+            color: "var(--color-white)",
+          }),
+          placeholder: (prevCss) => ({
+            ...prevCss,
+            color: "var(--sub-text-color)",
+          }),
+          menu: (prevCss) => ({
+            ...prevCss,
+            backgroundColor: "var(--color-productcolor)",
+            border: "1px solid var(--glass-border)",
+            zIndex: 50,
+          }),
+          menuList: (prevCss) => ({
+            ...prevCss,
+            backgroundColor: "var(--color-productcolor)",
+          }),
+          option: (prevCss, state) => ({
+            ...prevCss,
+            color: "var(--color-white)",
+            backgroundColor: state.isSelected
+              ? "var(--color-gold-light)"
+              : state.isFocused
+              ? "var(--color-383946)"
+              : "var(--color-productcolor)",
+          }),
         }}
       />
       {props?.error && (

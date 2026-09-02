@@ -10,25 +10,23 @@ import {
   fetchSingleProduct,
   searchProducByNametWithCallback,
   calcSetPricePreview,
+  fetchMolds,
+  fetchPatterns,
+  createMold,
+  createMoldSize,
+  createPattern,
+  createMoldPatternLink,
 } from "../../api/productApi";
 import { formatNumber } from "../../utils/helperMehods";
 import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 import Loading from "../icons/Loading";
 import SelectCategories from "../selectcategories/SelectCategories";
-import { imageServerAddress } from "../../App";
 import SmartImage from "../smartimage/SmartImage";
-import schema from "../../schema/schema";
+import { imageServerAddress } from "../../App";
 import InsertProductAddAttr from "../insertproductadattr/InsertProductAddAttr";
 import ASelectBox from "../selectbox/ASelectBox";
-import { findColorByName, findColorById } from "../../api/color";
-// const ValidationSchema = Yup.object().shape({
-//   email: Yup.string()
-//     .email("Invalid email address")
-//     .required("Email is required"),
-//   password: Yup.string()
-//     .required("Password is required")
-//     .min(6, "Password must be at least 6 characters"),
-// });
+import { findColorByName } from "../../api/color";
+
 const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   const form = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,43 +41,111 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     value: "plate",
   });
   const [setItems, setSetItems] = useState(null);
+  const [containValue, setContainValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(null);
   const [manualPrice, setManualPrice] = useState("");
   const [setPricePreview, setSetPricePreview] = useState(null);
+
+  const [moldOptions, setMoldOptions] = useState([]);
+  const [patternOptions, setPatternOptions] = useState([]);
+  const [selectedMold, setSelectedMold] = useState(null);
+  const [newMoldName, setNewMoldName] = useState("");
+  const [selectedMoldSize, setSelectedMoldSize] = useState(null);
+  const [newSizeLabel, setNewSizeLabel] = useState("");
+  const [newSizeHeight, setNewSizeHeight] = useState("");
+  const [newSizeWidth, setNewSizeWidth] = useState("");
+  const [newSizeWeight, setNewSizeWeight] = useState("");
+  const [selectedMoldPattern, setSelectedMoldPattern] = useState(null);
+  const [selectedPattern, setSelectedPattern] = useState(null);
+  const [newPatternName, setNewPatternName] = useState("");
+  const [inventoryRows, setInventoryRows] = useState([
+    { colorId: null, price: "", quantity: "" },
+  ]);
+
+  const refreshMolds = () => fetchMolds(setMoldOptions);
+  const refreshPatterns = () => fetchPatterns(setPatternOptions);
+
+  useEffect(() => {
+    refreshMolds();
+    refreshPatterns();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedMold) return;
+    const freshMold = moldOptions.find((m) => m.id === selectedMold.id);
+    if (freshMold && freshMold !== selectedMold) {
+      setSelectedMold(freshMold);
+    }
+  }, [moldOptions]);
+
+  const sizeOptions = (selectedMold?.sizes || []).map((size) => ({
+    label: size.sizeLabel,
+    value: size.id,
+  }));
+
+  const moldPatternOptions = (selectedMold?.moldPatterns || []).map((mp) => ({
+    label: mp.pattern ? mp.pattern.name : "بدون طرح (فقط رنگی)",
+    value: mp.id,
+  }));
 
   useEffect(() => {
     if (searchParams.has("productId"))
       fetchSingleProduct(searchParams.get("productId"), setExistingProduct);
-    // todo declear product state and use useeffect([product])
   }, [searchParams.get("productId")]);
+
   const ExistingProductFormSetter = () => {
     try {
+      if (!existingProduct?.id) return;
+      const moldFromList = existingProduct.moldSize?.mold
+        ? moldOptions.find((m) => m.id === existingProduct.moldSize.mold.id)
+        : null;
+      const moldToSelect = moldFromList || existingProduct.moldSize?.mold || null;
       const currentForm = form.current;
       currentForm.code.value = existingProduct.code;
       currentForm.productName.value = existingProduct.name;
       currentForm.description.value = existingProduct.description;
-      currentForm.price.value = existingProduct.inventories[0].price;
       currentForm.offPercent.value = existingProduct.offPercent;
       currentForm.material.value = existingProduct.material;
-      currentForm.pattern.value = existingProduct.pattern;
-      currentForm.quantity.value = existingProduct.inventories[0].quantity;
-      currentForm.colorId.value = existingProduct.color?.id || "";
-      if (existingProduct.color) {
-        setSelectedColor({ value: existingProduct.color.id, label: existingProduct.color.name });
-      }
+      setContainValue(existingProduct.contain || "");
       setManualPrice(
         existingProduct.manualPriceOverride != null
           ? String(existingProduct.manualPriceOverride)
           : ""
       );
-      
+
+      setInventoryRows(
+        (existingProduct.inventories || []).map((inv) => ({
+          colorId: inv.colorId ?? null,
+          colorLabel: inv.color?.name ?? null,
+          price: String(inv.price ?? ""),
+          quantity: String(inv.quantity ?? ""),
+        }))
+      );
+
       if (existingProduct.type === "plate") {
-        currentForm.weight.value = existingProduct.weight;
-        currentForm.height.value = existingProduct.height;
-        currentForm.width.value = existingProduct.width;
+        if (moldToSelect) {
+          setSelectedMold(moldToSelect);
+          setSelectedMoldSize({
+            label: existingProduct.moldSize.sizeLabel,
+            value: existingProduct.moldSize.id,
+          });
+        }
+        if (existingProduct.moldPattern) {
+          setSelectedMoldPattern({
+            label: existingProduct.moldPattern.pattern
+              ? existingProduct.moldPattern.pattern.name
+              : "بدون طرح (فقط رنگی)",
+            value: existingProduct.moldPattern.id,
+          });
+          if (existingProduct.moldPattern.pattern) {
+            setSelectedPattern({
+              label: existingProduct.moldPattern.pattern.name,
+              value: existingProduct.moldPattern.pattern.id,
+            });
+          }
+        }
       }
-      
+
       setTypeSelect({
         label: existingProduct.type,
         value: existingProduct.type,
@@ -131,31 +197,109 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
     );
   }, [typeSelect.value, setItems]);
 
-  // const formik = useFormik({
-  //   initialValues: {
-  //     email: "",
-  //     password: "",
-  //   },
-  //   validationSchema: ValidationSchema,
-  //   onSubmit: (values) => {
+  const handleCreateMold = async () => {
+    if (!newMoldName.trim()) return;
+    const created = await new Promise((resolve) =>
+      createMold({ name: newMoldName.trim() }, resolve)
+    );
+    if (created) {
+      setNewMoldName("");
+      refreshMolds();
+      setSelectedMold(created);
+    } else {
+      setToastList((prev) => [
+        ...prev,
+        { type: "danger", message: "ثبت قالب ناموفق بود" }
+      ]);
+    }
+  };
 
-  //   },
-  // });
+  const handleCreateSize = async () => {
+    if (!selectedMold || !newSizeLabel.trim()) return;
+    const created = await new Promise((resolve) =>
+      createMoldSize(
+        {
+          moldId: selectedMold.id,
+          sizeLabel: newSizeLabel.trim(),
+          height: newSizeHeight,
+          width: newSizeWidth,
+          weight: newSizeWeight,
+        },
+        resolve
+      )
+    );
+    if (created) {
+      setNewSizeLabel("");
+      setNewSizeHeight("");
+      setNewSizeWidth("");
+      setNewSizeWeight("");
+      refreshMolds();
+      setSelectedMoldSize({ label: created.sizeLabel, value: created.id });
+    } else {
+      setToastList((prev) => [
+        ...prev,
+        { type: "danger", message: "ثبت سایز ناموفق بود" }
+      ]);
+    }
+  };
 
-  const getFormValues = (e) => {
+  const handleCreatePattern = async () => {
+    if (!newPatternName.trim()) return;
+    const created = await new Promise((resolve) =>
+      createPattern(newPatternName.trim(), undefined, resolve)
+    );
+    if (created) {
+      setNewPatternName("");
+      refreshPatterns();
+      setSelectedPattern({ label: created.name, value: created.id });
+    } else {
+      setToastList((prev) => [
+        ...prev,
+        { type: "danger", message: "ثبت طرح ناموفق بود" }
+      ]);
+    }
+  };
+
+  const handleLinkPattern = async () => {
+    if (!selectedMold) return null;
+    const patternId = selectedPattern ? selectedPattern.value : null;
+    const existingLink = (selectedMold?.moldPatterns || []).find(
+      (mp) => (mp.pattern?.id ?? null) === (patternId ?? null)
+    );
+    if (existingLink) {
+      return existingLink;
+    }
+    const created = await new Promise((resolve) =>
+      createMoldPatternLink(
+        { moldId: selectedMold.id, patternId: patternId },
+        resolve
+      )
+    );
+    if (created) {
+      refreshMolds();
+      return created;
+    }
+    return null;
+  };
+
+  const getFormValues = () => {
+    const priceValues = inventoryRows
+      .filter((row) => Number(row.price) > 0 && Number(row.quantity) > 0)
+      .map((row) => ({
+        colorId: row.colorId ? Number(row.colorId) : undefined,
+        price: Number(row.price),
+        quantity: Number(row.quantity),
+      }));
     let values = {
-      code: e.target.code.value,
-      productName: e.target.productName.value,
-      description: e.target.description.value,
-      price: Number(e.target.price.value),
-      offPercent: Number(e.target.offPercent.value),
-      quantity: Number(e.target.quantity.value),
-      material: e.target.material.value,
-      pattern: e.target.pattern.value,
-      colorId: selectedColor ? selectedColor.value : undefined,
+      code: form.current.code.value,
+      productName: form.current.productName.value,
+      description: form.current.description.value,
+      offPercent: Number(form.current.offPercent.value),
+      material: form.current.material.value,
+      inventories: priceValues,
     };
     if (typeSelect.value === "productSet") {
-      values.contain = e.target.contain.value;
+      values.contain = containValue;
       values.items = (setItems || []).map((item) => ({
         plateId: item.value,
         quantity: Number(item.quantity) || 1,
@@ -166,14 +310,11 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       } else if (searchParams.get("productId")) {
         values.manualPriceOverride = null;
       }
-    } else {
-      values.weight = Number(e.target.weight.value);
-      values.height = Number(e.target.height.value);
-      values.width = Number(e.target.width.value);
     }
     return values;
   };
-  const preparePayload = (values) => {
+
+  const preparePayload = (values, moldPatternId) => {
     const mainImageIdValue = mainImage ? Number(mainImage.id) : undefined;
     const imageIds = uploadedImages
       .filter((img) => !mainImageIdValue || img.id !== mainImageIdValue)
@@ -184,58 +325,140 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
       ...values,
       type: typeSelect.value,
       imageIds,
-      inventories: [{ quantity: values.quantity, price: values.price }],
     };
 
-    // Only add categoryId if it's valid
     if (!isNaN(categoryId) && categoryId > 0) {
       payload.categoryId = categoryId;
     }
-
-    // Only add mainImageId if it's valid
     if (mainImageIdValue) {
       payload.mainImageId = mainImageIdValue;
     }
-
-    // Remove colorId if it's 0 or undefined
-    if (!payload.colorId || payload.colorId === 0) {
-      delete payload.colorId;
+    if (typeSelect.value === "plate") {
+      payload.moldSizeId = selectedMoldSize ? Number(selectedMoldSize.value) : undefined;
+      payload.moldPatternId = moldPatternId;
+      delete payload.pattern;
     }
-    // Remove price and quantity from root (they're in inventories)
-    delete payload.price;
-    delete payload.quantity;
-
     return payload;
   };
-  const submitFormHandler = (e) => {
+
+  const submitFormHandler = async (e) => {
     e.preventDefault();
 
-    setErrors([]);
+    setErrors({});
     setLoading(true);
 
-    // 1. جمع‌آوری داده‌ها از فرم
-    const formValues = getFormValues(e);
+    const validInventoryRows = inventoryRows.filter(
+      (row) => Number(row.price) > 0 && Number(row.quantity) > 0
+    );
+    if (validInventoryRows.length === 0) {
+      setToastList((prev) => [
+        ...prev,
+        {
+          type: "danger",
+          message: "حداقل یک ردیف موجودی با قیمت و تعداد معتبر لازم است"
+        }
+      ]);
+      setLoading(false);
+      return;
+    }
+    if (uploadedImages.length === 0) {
+      setToastList((prev) => [
+        ...prev,
+        { type: "danger", message: "لطفا حداقل یک تصویر آپلود کنید" }
+      ]);
+      setLoading(false);
+      return;
+    }
+    if (!mainImage) {
+      setToastList((prev) => [
+        ...prev,
+        {
+          type: "danger",
+          message: "لطفا با آیکون پرچم تصویر اصلی را مشخص کنید"
+        }
+      ]);
+      setLoading(false);
+      return;
+    }
+    const selectedCategoryId = Number(searchParams.get("categoryId"));
+    if (isNaN(selectedCategoryId) || selectedCategoryId <= 0) {
+      setToastList((prev) => [
+        ...prev,
+        { type: "danger", message: "لطفا دسته بندی کالا را انتخاب کنید" }
+      ]);
+      setLoading(false);
+      return;
+    }
 
-    // // 2. اعتبارسنجی ساده (در صورت نیاز می‌تونه عمیق‌تر باشه)
-    // const validationErrors = validateForm(formValues);
-    // if (validationErrors.length > 0) {
-    //   setErrors(validationErrors);
-    //   setLoading(false);
-    //   return;
-    // }
+    try {
+      let moldPatternId = undefined;
+      if (typeSelect.value === "plate") {
+        if (!selectedMold || !selectedMoldSize) {
+          setToastList((prev) => [
+            ...prev,
+            { type: "danger", message: "لطفا قالب و سایز را انتخاب کنید" }
+          ]);
+          setLoading(false);
+          return;
+        }
+        const linked = await handleLinkPattern();
+        if (!linked) {
+          setToastList((prev) => [
+            ...prev,
+            { type: "danger", message: "ثبت ترکیب قالب و طرح ناموفق بود" }
+          ]);
+          setLoading(false);
+          return;
+        }
+        moldPatternId = linked.id;
+      }
 
-    // 3. آماده‌سازی payload نهایی
-    const payload = preparePayload(formValues);
+      const formValues = getFormValues();
+      const payload = preparePayload(formValues, moldPatternId);
 
-    // 4. ارسال به API
-    const productId = searchParams.get("productId");
-    const endpoint = productId
-      ? `product/admin/update/${productId}`
-      : `product/admin/save`;
+      const productId = searchParams.get("productId");
+      const endpoint = productId
+        ? `product/admin/update/${productId}`
+        : `product/admin/save`;
 
-    formApiHandler(endpoint, payload, setToastList, setErrors, setLoading);
+      const ok = await formApiHandler(
+        endpoint,
+        payload,
+        setToastList,
+        setErrors,
+        setLoading
+      );
+      if (ok && !productId) {
+        form.current.reset();
+        setInventoryRows([{ colorId: null, price: "", quantity: "" }]);
+        setUploadedImages([]);
+        setMainImage(null);
+        setSelectedMold(null);
+        setSelectedMoldSize(null);
+        setSelectedMoldPattern(null);
+        setSelectedPattern(null);
+        setSetItems(null);
+        setContainValue("");
+        setManualPrice("");
+        setTypeSelect({ label: "plate", value: "plate" });
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
+
   const loadcolorOptions = useCallback(findColorByName);
+
+  const handleInventoryRowChange = (index, field, value, label) => {
+    setInventoryRows((prev) =>
+      prev.map((row, i) =>
+        i === index
+          ? { ...row, [field]: value, ...(label !== undefined ? { colorLabel: label } : {}) }
+          : row
+      )
+    );
+  };
 
   return (
     <form
@@ -271,44 +494,45 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
               </div>
               <Input iMessage={errors?.productName} name="productName" />
             </div>
-            <div className="flex flex-col col-span-2">
+            <div className="flex flex-col lg:col-span-3 col-span-12">
               <div className="mb-2 font-medium text-sm">
                 <span className="text-red-500 text-lg">*</span>
-                تعداد
+                جنس
               </div>
-              <Input iMessage={errors?.quantity} name="quantity" />
+              <Input iMessage={errors?.material} name="material" />
             </div>
             <div className="flex flex-col lg:col-span-3 col-span-12">
               <div className="mb-2 font-medium text-sm">
                 <span className="text-red-500 text-lg">*</span>
-                قیمت
-              </div>
-              <Input iMessage={errors?.price} name="price" />
-            </div>
-            <div className="flex flex-col col-span-3">
-              <div className="mb-2 font-medium text-sm">
                 درصد تخفیف
               </div>
-              <Input iMessage={errors?.offPercent} name="offPercent" />
+              <Input iMessage={errors?.offPercent} name="offPercent" type="number" />
             </div>
-            <div className="flex flex-col col-span-4">
+            <div className="flex flex-col lg:col-span-3 col-span-12">
               <div className="mb-2 font-medium text-sm">
                 <span className="text-red-500 text-lg">*</span>
                 کد
               </div>
               <Input iMessage={errors?.code} name="code" />
             </div>
-            <div className="flex flex-col col-span-4">
+            <div className="flex flex-col lg:col-span-4 col-span-12">
               <div className="mb-2 font-medium text-sm">
                 <span className="text-red-500 text-lg">*</span>
-                رنگ
+                نوع محصول
               </div>
-              <ASelectBox
-                loadOptions={loadcolorOptions}
-                isSearchable={true}
-                name="colorId"
-                value={selectedColor}
-                onChange={(val) => setSelectedColor(val)}
+              <SelectBox
+                options={[
+                  { label: "بشقاب (تکی)", value: "plate" },
+                  { label: "سرویس (ست)", value: "productSet" }
+                ]}
+                value={typeSelect}
+                onChange={(val) => {
+                  setTypeSelect(val);
+                  setSetItems(null);
+                  setSetPricePreview(null);
+                  setManualPrice("");
+                }}
+                name="type"
               />
             </div>
             <div className="flex flex-col col-span-12">
@@ -326,85 +550,324 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
         </div>
       </div>
 
+      {typeSelect.value === "plate" ? (
+        <div className="glass rounded-2xl p-5 flex gap-x-4">
+          <div className="self-start mt-1">
+            <i className="fa-solid fa-2x fa-cubes-stacked text-amber-400"></i>
+          </div>
+          <div className="grow flex flex-col gap-y-6">
+            <div className="text-lg font-bold text-[var(--color-white)]">
+              گام سوم: انتخاب قالب، سایز و طرح
+            </div>
+            <div className="grid grid-cols-12 gap-x-3 gap-y-4 items-center">
+              <div className="flex flex-col lg:col-span-6 col-span-12">
+                <div className="mb-2 font-medium text-sm">
+                  <span className="text-red-500 text-lg">*</span>
+                  قالب
+                </div>
+                <ASelectBox
+                  loadOptions={(input, callback) =>
+                    callback(
+                      moldOptions
+                        .filter((m) => m.name.includes(input || ""))
+                        .map((m) => ({ label: m.name, value: m.id }))
+                    )
+                  }
+                  isSearchable={true}
+                  value={
+                    selectedMold
+                      ? { label: selectedMold.name, value: selectedMold.id }
+                      : null
+                  }
+                  onChange={(val) => {
+                    setSelectedMold(
+                      moldOptions.find((m) => m.id === val?.value) || null
+                    );
+                    setSelectedMoldSize(null);
+                    setSelectedMoldPattern(null);
+                    setSelectedPattern(null);
+                  }}
+                />
+              </div>
+              <div className="flex flex-col lg:col-span-6 col-span-12">
+                <div className="mb-2 font-medium text-sm">قالب جدید</div>
+                <div className="flex gap-x-2">
+                  <Input
+                    name="newMoldName"
+                    value={newMoldName}
+                    onChange={(e) => setNewMoldName(e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    bgColor="bg-[var(--bf-sky)]"
+                    txtColor="text-white"
+                    shape="rounded-lg"
+                    moreCss="cursor-pointer shrink-0"
+                    onClick={handleCreateMold}
+                  >
+                    ثبت قالب
+                  </Button>
+                </div>
+              </div>
+
+              {selectedMold ? (
+                <>
+                  <div className="flex flex-col lg:col-span-6 col-span-12">
+                    <div className="mb-2 font-medium text-sm">
+                      <span className="text-red-500 text-lg">*</span>
+                      سایز
+                    </div>
+                    <ASelectBox
+                      loadOptions={(input, callback) =>
+                        callback(
+                          sizeOptions.filter((s) => s.label.includes(input || ""))
+                        )
+                      }
+                      isSearchable={true}
+                      value={selectedMoldSize}
+                      onChange={(val) => setSelectedMoldSize(val)}
+                    />
+                  </div>
+                  <div className="flex flex-col lg:col-span-6 col-span-12">
+                    <div className="mb-2 font-medium text-sm">سایز جدید</div>
+                    <div className="grid grid-cols-4 gap-x-2">
+                      <Input
+                        placeholder="نام سایز"
+                        value={newSizeLabel}
+                        onChange={(e) => setNewSizeLabel(e.target.value)}
+                      />
+                      <Input
+                        placeholder="ارتفاع"
+                        value={newSizeHeight}
+                        onChange={(e) => setNewSizeHeight(e.target.value)}
+                      />
+                      <Input
+                        placeholder="عرض"
+                        value={newSizeWidth}
+                        onChange={(e) => setNewSizeWidth(e.target.value)}
+                      />
+                      <Input
+                        placeholder="وزن"
+                        value={newSizeWeight}
+                        onChange={(e) => setNewSizeWeight(e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      bgColor="bg-[var(--bf-sky)]"
+                      txtColor="text-white"
+                      shape="rounded-lg"
+                      moreCss="cursor-pointer mt-2"
+                      onClick={handleCreateSize}
+                    >
+                      ثبت سایز
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-col lg:col-span-6 col-span-12">
+                    <div className="mb-2 font-medium text-sm">
+                      <span className="text-red-500 text-lg">*</span>
+                      ترکیب قالب + طرح
+                    </div>
+                    <ASelectBox
+                      loadOptions={(input, callback) =>
+                        callback(
+                          moldPatternOptions.filter((p) =>
+                            p.label.includes(input || "")
+                          )
+                        )
+                      }
+                      isSearchable={true}
+                      value={selectedMoldPattern}
+                      onChange={(val) => {
+                        setSelectedMoldPattern(val);
+                        const mp = (selectedMold?.moldPatterns || []).find(
+                          (item) => item.id === val?.value
+                        );
+                        setSelectedPattern(
+                          mp?.pattern
+                            ? { label: mp.pattern.name, value: mp.pattern.id }
+                            : null
+                        );
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col lg:col-span-6 col-span-12">
+                    <div className="mb-2 font-medium text-sm">طرح (برای ساخت ترکیب جدید)</div>
+                    <ASelectBox
+                      loadOptions={(input, callback) =>
+                        callback([
+                          { label: "بدون طرح (فقط رنگی)", value: null },
+                          ...patternOptions
+                            .filter((p) => p.name.includes(input || ""))
+                            .map((p) => ({ label: p.name, value: p.id })),
+                        ])
+                      }
+                      isSearchable={true}
+                      value={selectedPattern}
+                      onChange={(val) => setSelectedPattern(val)}
+                    />
+                    <div className="flex gap-x-2 mt-2">
+                      <Input
+                        placeholder="نام طرح جدید"
+                        value={newPatternName}
+                        onChange={(e) => setNewPatternName(e.target.value)}
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        bgColor="bg-[var(--bf-sky)]"
+                        txtColor="text-white"
+                        shape="rounded-lg"
+                        moreCss="cursor-pointer shrink-0"
+                        onClick={handleCreatePattern}
+                      >
+                        ثبت طرح
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+
       <div className="glass rounded-2xl p-5 flex gap-x-4">
         <div className="self-start mt-1">
           <i className="fa-solid fa-2x fa-square-plus text-red-400"></i>
         </div>
         <div className="grow flex flex-col gap-y-6">
           <div className="text-lg font-bold text-[var(--color-white)]">
-            گام سوم: درج ویژگی های کالا
+            {typeSelect.value === "plate"
+              ? "گام چهارم: موجودی رنگی"
+              : "گام سوم: ویژگی های کالا"}
           </div>
-          <div className="grid grid-cols-12 gap-x-3 gap-y-4 items-center">
-            <div className="flex flex-col col-span-12">
-              <div className="mb-2 font-medium text-sm">
-                <span className="text-red-500 text-lg">*</span>
-                نوع محصول
+          {typeSelect.value === "plate" ? (
+            <div className="flex flex-col gap-y-3">
+              <div className="grid grid-cols-12 gap-x-2 text-sm font-medium text-[var(--sub-text-color)]">
+                <div className="col-span-5">رنگ</div>
+                <div className="col-span-3">قیمت</div>
+                <div className="col-span-2">تعداد</div>
+                <div className="col-span-2"></div>
               </div>
-              <SelectBox
-                options={Object.keys(schema)
-                  .filter((key) => key !== "product")
-                  .map((key) => ({ label: key, value: key }))}
-                value={typeSelect}
-                onChange={(val) => {
-                  setTypeSelect(val);
-                }}
-                iMessage={errors?.material}
-                name="type"
-              />
-            </div>
-            <div className="flex flex-col col-span-4">
-              <div className="mb-2 font-medium text-sm">
-                <span className="text-red-500 text-lg">*</span>
-                جنس
-              </div>
-              <Input iMessage={errors?.material} name="material" />
-            </div>
-            <div className="flex flex-col col-span-4">
-              <div className="mb-2 font-medium text-sm">
-                <span className="text-red-500 text-lg">*</span>
-                طرح
-              </div>
-              <Input iMessage={errors?.pattern} name="pattern" />
-            </div>
-            <InsertProductAddAttr
-              errors={errors}
-              type={typeSelect.value}
-              setItems={setItems}
-              setSetItems={setSetItems}
-            />
-            {typeSelect.value === "productSet" &&
-            (setItems || []).length > 0 ? (
-              <div className="col-span-12 flex flex-col gap-y-3 glass rounded-2xl p-4">
-                {setPricePreview?.hasNoCommonColor ? (
-                  <div className="text-sm font-semibold text-[var(--bf-red)]">
-                    هشدار: این سرویس هیچ رنگ مشترکی بین قطعاتش نداره، مشتری نمی‌تونه سفارشش بده
+              {inventoryRows.map((row, index) => (
+                <div key={index} className="grid grid-cols-12 gap-x-2 items-center">
+                  <div className="col-span-5">
+                    <ASelectBox
+                      loadOptions={loadcolorOptions}
+                      isSearchable={true}
+                      value={
+                        row.colorId
+                          ? { label: row.colorLabel || String(row.colorId), value: row.colorId }
+                          : null
+                      }
+                      onChange={(val) =>
+                        handleInventoryRowChange(
+                          index,
+                          "colorId",
+                          val?.value ?? null,
+                          val?.label
+                        )
+                      }
+                    />
                   </div>
-                ) : setPricePreview?.colors?.[0] ? (
-                  <div className="text-sm text-[var(--color-white)]">
-                    قیمت پیشنهادی سرویس:{" "}
-                    <span className="font-bold text-[var(--color-gold)]">
-                      {formatNumber(setPricePreview.colors[0].calculatedPrice)}
-                    </span>{" "}
-                    تومان
+                  <div className="col-span-3">
+                    <Input
+                      type="number"
+                      value={row.price}
+                      onChange={(e) =>
+                        handleInventoryRowChange(index, "price", e.target.value)
+                      }
+                    />
                   </div>
-                ) : null}
-                <div className="flex flex-col">
-                  <div className="mb-2 font-medium text-sm">
-                    قیمت دستی (اختیاری)
+                  <div className="col-span-2">
+                    <Input
+                      type="number"
+                      value={row.quantity}
+                      onChange={(e) =>
+                        handleInventoryRowChange(index, "quantity", e.target.value)
+                      }
+                    />
                   </div>
-                  <Input
-                    name="manualPriceOverride"
-                    type="number"
-                    value={manualPrice}
-                    onChange={(e) => setManualPrice(e.target.value)}
-                  />
-                  <p className="mt-2 text-xs text-[var(--sub-text-color)]">
-                    اگه خالی بمونه، قیمت خودکار از جمع قطعات محاسبه میشه
-                  </p>
+                  <div className="col-span-2 flex justify-center">
+                    {inventoryRows.length > 1 ? (
+                      <i
+                        onClick={() =>
+                          setInventoryRows(inventoryRows.filter((_, i) => i !== index))
+                        }
+                        className="fa-solid fa-trash text-bf-red cursor-pointer"
+                      ></i>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ) : null}
-          </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  setInventoryRows([
+                    ...inventoryRows,
+                    { colorId: null, price: "", quantity: "" },
+                  ])
+                }
+                className="self-start text-sm font-semibold text-[var(--color-gold)] cursor-pointer"
+              >
+                + افزودن ردیف رنگ
+              </button>
+            </div>
+          ) : typeSelect.value === "productSet" ? (
+            <div className="grid grid-cols-12 gap-x-3 gap-y-4 items-center">
+              <InsertProductAddAttr
+                errors={errors}
+                type={typeSelect.value}
+                setItems={setItems}
+                setSetItems={setSetItems}
+                containValue={containValue}
+                onContainChange={(e) => setContainValue(e.target.value)}
+              />
+              {(setItems || []).length > 0 ? (
+                <div className="col-span-12 flex flex-col gap-y-3 glass rounded-2xl p-4">
+                  {setPricePreview?.hasNoCommonColor ? (
+                    <div className="text-sm font-semibold text-[var(--bf-red)]">
+                      هشدار: این سرویس هیچ رنگ مشترکی بین قطعاتش نداره، مشتری نمی‌تونه سفارشش بده
+                    </div>
+                  ) : setPricePreview?.colors?.[0] ? (
+                    <div className="text-sm text-[var(--color-white)]">
+                      قیمت پیشنهادی سرویس:{" "}
+                      <span className="font-bold text-[var(--color-gold)]">
+                        {formatNumber(setPricePreview.colors[0].calculatedPrice)}
+                      </span>{" "}
+                      تومان
+                    </div>
+                  ) : null}
+                  <div className="flex flex-col">
+                    <div className="mb-2 font-medium text-sm">
+                      قیمت دستی (اختیاری)
+                    </div>
+                    <Input
+                      name="manualPriceOverride"
+                      type="number"
+                      value={manualPrice}
+                      onChange={(e) => setManualPrice(e.target.value)}
+                    />
+                    <p className="mt-2 text-xs text-[var(--sub-text-color)]">
+                      اگه خالی بمونه، قیمت خودکار از جمع قطعات محاسبه میشه
+                    </p>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
 
@@ -413,7 +876,7 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
           <i className="fa-solid fa-2x fa-square-plus text-purple-400"></i>
         </div>
         <div className="grow flex flex-col gap-y-6">
-          <div className="text-lg font-bold text-[var(--color-white)]">گام چهارم: آپلود عکس</div>
+          <div className="text-lg font-bold text-[var(--color-white)]">آپلود عکس</div>
           <div className="flex border justify-center items-center border-[var(--glass-border)] border-dashed rounded-xl p-10 relative cursor-pointer hover:border-[var(--color-gold)] transition-colors">
             {isUploading ? (
               <>

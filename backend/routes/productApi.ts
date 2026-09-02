@@ -8,6 +8,21 @@ const productApi = Router();
 productApi.get("", ProductController.findProducts);
 productApi.get("/id/:id", ProductController.findSingleProduct);
 productApi.get(
+  "/id/:id/code/:code",
+  ProductController.findRelatedProducts,
+  overallErrorHandler
+);
+productApi.get(
+  "/pattern/:id",
+  ProductController.findMoldPatternDetail,
+  overallErrorHandler
+);
+productApi.get(
+  "/pattern/:id",
+  ProductController.findMoldPatternDetail,
+  overallErrorHandler
+);
+productApi.get(
   "/set/:id/available-colors",
   productSetController.getAvailableColors,
   overallErrorHandler

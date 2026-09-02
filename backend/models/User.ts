@@ -30,12 +30,12 @@ export class User {
 
   @JoinColumn()
   @OneToOne(() => Person, (person) => person.user)
-  person: Person;
+  person: Relation<Person>;
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
   @JoinColumn()
   @OneToOne(() => TfLogin)
-  tfLogin: TfLogin;
+  tfLogin: Relation<TfLogin>;
   @OneToMany(
     () => ShoppingCartItem,
     (shoppingCartItem) => shoppingCartItem.user

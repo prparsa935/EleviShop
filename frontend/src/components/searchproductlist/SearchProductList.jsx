@@ -54,7 +54,18 @@ const SearchProductList = () => {
       >
         {productList?.map((product, index) => (
           <div
-            onClick={() => navigate("/product/" + product.id)}
+            key={
+              product?.cardType === "pattern"
+                ? "pattern-" + product.id
+                : "product-" + (product.productId || product.id)
+            }
+            onClick={() =>
+              navigate(
+                product?.cardType === "pattern"
+                  ? "/pattern/" + product.id
+                  : "/product/" + (product.productId || product.id)
+              )
+            }
             className="flex flex-col p-3 gap-y-3 glass glass-hover rounded-2xl cursor-pointer"
           >
             <div className="mx-auto mt-4">

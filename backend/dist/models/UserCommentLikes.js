@@ -18,7 +18,7 @@ __decorate([
 ], UserCommentLikes.prototype, "id", void 0);
 __decorate([
     ManyToOne(() => User),
-    __metadata("design:type", User)
+    __metadata("design:type", Object)
 ], UserCommentLikes.prototype, "user", void 0);
 __decorate([
     ManyToOne(() => Comment, (comment) => comment.likes),

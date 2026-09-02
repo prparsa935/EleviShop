@@ -31,12 +31,12 @@ __decorate([
     __metadata("design:type", Number)
 ], Comment.prototype, "dislikesCount", void 0);
 __decorate([
-    ManyToOne(() => Product, (product) => product.comments, { nullable: false }),
+    ManyToOne(() => Product, { nullable: false }),
     __metadata("design:type", Object)
 ], Comment.prototype, "product", void 0);
 __decorate([
     ManyToOne(() => User, (user) => user.comments, { nullable: false }),
-    __metadata("design:type", User)
+    __metadata("design:type", Object)
 ], Comment.prototype, "user", void 0);
 __decorate([
     OneToMany(() => UserCommentLikes, (userCommentLikes) => userCommentLikes.comment),

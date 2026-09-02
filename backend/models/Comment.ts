@@ -15,10 +15,10 @@ export class Comment extends Base {
   @Column({ default: 0 })
   dislikesCount: number;
 
-  @ManyToOne(() => Product, (product) => product.comments, { nullable: false })
+  @ManyToOne(() => Product, { nullable: false })
   product: Relation<Product>;
   @ManyToOne(() => User, (user) => user.comments, { nullable: false })
-  user: User;
+  user: Relation<User>;
   @OneToMany(
     () => UserCommentLikes,
     (userCommentLikes) => userCommentLikes.comment

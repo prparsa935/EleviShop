@@ -9,9 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Entity, Column, Index, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, ManyToOne, JoinColumn, TableInheritance, } from "typeorm";
 import { Image } from "./Image.js";
-import { Comment } from "./Comment.js";
-import { Color } from "./Color.js";
 import { Category } from "./Category.js";
+import { MoldSize } from "./MoldSize.js";
+import { MoldPattern } from "./MoldPattern.js";
 import { Inventory } from "./Inventory.js";
 import { Base } from "./Base.js";
 // export enum color {
@@ -87,15 +87,6 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "commentCount", void 0);
 __decorate([
-    OneToOne(() => Color),
-    JoinColumn(),
-    __metadata("design:type", Color)
-], Product.prototype, "color", void 0);
-__decorate([
-    OneToMany(() => Comment, (comment) => comment.product, { cascade: true }),
-    __metadata("design:type", Array)
-], Product.prototype, "comments", void 0);
-__decorate([
     JoinTable(),
     ManyToMany(() => Category),
     __metadata("design:type", Array)
@@ -109,6 +100,24 @@ __decorate([
     OneToMany(() => Inventory, (inventory) => inventory.product),
     __metadata("design:type", Array)
 ], Product.prototype, "inventories", void 0);
+__decorate([
+    Column({ type: "int", nullable: true, default: null }),
+    __metadata("design:type", Number)
+], Product.prototype, "moldSizeId", void 0);
+__decorate([
+    ManyToOne(() => MoldSize, { nullable: true }),
+    JoinColumn({ name: "moldSizeId" }),
+    __metadata("design:type", Object)
+], Product.prototype, "moldSize", void 0);
+__decorate([
+    Column({ type: "int", nullable: true, default: null }),
+    __metadata("design:type", Number)
+], Product.prototype, "moldPatternId", void 0);
+__decorate([
+    ManyToOne(() => MoldPattern, { nullable: true }),
+    JoinColumn({ name: "moldPatternId" }),
+    __metadata("design:type", Object)
+], Product.prototype, "moldPattern", void 0);
 Product = __decorate([
     Entity(),
     TableInheritance({

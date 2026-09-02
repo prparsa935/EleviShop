@@ -11,13 +11,14 @@ import {
   ManyToOne,
   JoinColumn,
   TableInheritance,
+  Relation,
 } from "typeorm";
 
 import { Image } from "./Image.js";
-import { Comment } from "./Comment.js";
 
-import { Color } from "./Color.js";
 import { Category } from "./Category.js";
+import { MoldSize } from "./MoldSize.js";
+import { MoldPattern } from "./MoldPattern.js";
 import { Inventory } from "./Inventory.js";
 import { Base } from "./Base.js";
 
@@ -67,11 +68,6 @@ export abstract class Product extends Base {
   buyerCount: number;
   @Column({ nullable: true, default: 0 })
   commentCount: number;
-  @OneToOne(() => Color)
-  @JoinColumn()
-  color: Color;
-  @OneToMany(() => Comment, (comment) => comment.product, { cascade: true })
-  comments: Comment[];
   @JoinTable()
   @ManyToMany(() => Category)
   categories: Category[];
@@ -80,4 +76,14 @@ export abstract class Product extends Base {
   mainCategory: Category;
   @OneToMany(() => Inventory, (inventory) => inventory.product)
   inventories: Inventory[];
+  @Column({ type: "int", nullable: true, default: null })
+  moldSizeId: number | null;
+  @ManyToOne(() => MoldSize, { nullable: true })
+  @JoinColumn({ name: "moldSizeId" })
+  moldSize: Relation<MoldSize>;
+  @Column({ type: "int", nullable: true, default: null })
+  moldPatternId: number | null;
+  @ManyToOne(() => MoldPattern, { nullable: true })
+  @JoinColumn({ name: "moldPatternId" })
+  moldPattern: Relation<MoldPattern>;
 }

@@ -69,13 +69,13 @@ const fetchSingleProduct = async (productId, setProduct, setLoading) => {
   try {
     const res = await Axios.get(serverAddress + "product/id/" + productId);
     if (res.status === 200) {
-      const resData = await res.data;
-
-      setProduct(resData);
+      setProduct(res.data);
     }
   } catch (error) {
   } finally {
-    setLoading(false);
+    if (typeof setLoading === "function") {
+      setLoading(false);
+    }
   }
 };
 const fetchRelatedProducts = async (productId, productCode, setProducts) => {
@@ -115,6 +115,94 @@ const fetchSetAvailability = async (productSetId, colorId, callback) => {
     callback(null);
   }
 };
+const fetchMoldPatternDetail = async (moldPatternId, setProduct, setLoading) => {
+  try {
+    const res = await Axios.get(
+      serverAddress + "product/pattern/" + moldPatternId
+    );
+    if (res.status === 200) {
+      setProduct(res.data);
+    }
+  } catch (error) {
+  } finally {
+    if (typeof setLoading === "function") {
+      setLoading(false);
+    }
+  }
+};
+
+const fetchMolds = async (callback) => {
+  try {
+    const res = await Axios.get(serverAddress + "mold");
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback([]);
+  }
+};
+
+const fetchPatterns = async (callback) => {
+  try {
+    const res = await Axios.get(serverAddress + "mold/patterns");
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback([]);
+  }
+};
+
+const createMold = async (payload, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "mold/admin/save", payload);
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
+const createMoldSize = async (payload, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "mold/admin/size", payload);
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
+const createPattern = async (name, previewImageId, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "mold/admin/pattern", {
+      name: name,
+      previewImageId: previewImageId,
+    });
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
+const createMoldPatternLink = async (payload, callback) => {
+  try {
+    const res = await Axios.post(
+      serverAddress + "mold/admin/mold-pattern",
+      payload
+    );
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
 const calcSetPricePreview = async (items, callback) => {
   try {
     const res = await Axios.post(serverAddress + "product/set/calc-price", {
@@ -137,4 +225,11 @@ export {
   fetchSetAvailableColors,
   fetchSetAvailability,
   calcSetPricePreview,
+  fetchMoldPatternDetail,
+  fetchMolds,
+  fetchPatterns,
+  createMold,
+  createMoldSize,
+  createPattern,
+  createMoldPatternLink,
 };

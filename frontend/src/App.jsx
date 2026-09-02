@@ -71,6 +71,16 @@ function AnimatedRoutes() {
         }
       />
       <Route
+        path="/pattern/:id"
+        element={
+          <PageTransition>
+            <Suspense fallback={<PageLoading></PageLoading>}>
+              <Product></Product>
+            </Suspense>
+          </PageTransition>
+        }
+      />
+      <Route
         path="/login"
         element={
           <PageTransition>

@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToOne } from "typeorm";
+import { Column, Entity, Index, ManyToOne, Relation } from "typeorm";
 
 import { Base } from "./Base.js";
 import { User } from "./User.js";
@@ -24,7 +24,7 @@ export class AnalyticsEvent extends Base {
 
   // nullable: کاربر مهمون ممکنه لاگین نباشه
   @ManyToOne(() => User, { nullable: true })
-  user: User;
+  user: Relation<User>;
 
   // شناسه سشن برای کاربر مهمون (تولید شده در فرانت)
   @Column({ type: "varchar", length: 64, nullable: false })
@@ -32,7 +32,7 @@ export class AnalyticsEvent extends Base {
 
   // فقط برای رویدادهای مرتبط با محصول (productId توسط TypeORM ساخته می‌شود)
   @ManyToOne(() => Product, { nullable: true })
-  product: Product;
+  product: Relation<Product>;
 
   // فقط برای CATEGORY_VIEW (categoryId توسط TypeORM ساخته می‌شود)
   @ManyToOne(() => Category, { nullable: true })

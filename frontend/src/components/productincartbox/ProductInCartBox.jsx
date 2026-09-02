@@ -8,7 +8,7 @@ import { imageServerAddress } from "../../App";
 import { formatNumber } from "../../utils/helperMehods";
 import SmartImage from "../smartimage/SmartImage";
 
-const ProductInCartBox = ({ productInCart, key }) => {
+const ProductInCartBox = ({ productInCart }) => {
   const navigate = useNavigate();
   const { sumProductInCart, subtractProductInCart, deleteCartItem } =
     useContext(AuthContext);
@@ -21,10 +21,7 @@ const ProductInCartBox = ({ productInCart, key }) => {
 
   if (isSet) {
     return (
-      <div
-        className=" border-b border-[var(--glass-border)] px-1 py-5 cursor-pointer"
-        key={key}
-      >
+      <div className=" border-b border-[var(--glass-border)] px-1 py-5 cursor-pointer">
         <div className="flex">
           <div className="flex flex-col items-center">
             <SmartImage
@@ -95,7 +92,7 @@ const ProductInCartBox = ({ productInCart, key }) => {
                 e.stopPropagation();
                 setShowComponents((prev) => !prev);
               }}
-              className="mt-3 flex items-center gap-x-2 text-xs text-[var(--color-sky)] cursor-pointer select-none w-fit"
+              className="mt-3 flex items-center gap-x-2 text-xs text-[var(--color-gold)] cursor-pointer select-none w-fit"
             >
               <i
                 className={`fa-solid fa-angle-${
@@ -151,7 +148,6 @@ const ProductInCartBox = ({ productInCart, key }) => {
         navigate("/product/" + productInCart?.productInCart?.product?.id)
       }
       className=" border-b border-[var(--glass-border)] px-1 py-5 cursor-pointer"
-      key={key}
     >
       <div className="flex">
         <div className="flex flex-col items-center">

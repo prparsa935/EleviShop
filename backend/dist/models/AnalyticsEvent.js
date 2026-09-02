@@ -30,7 +30,7 @@ __decorate([
 ], AnalyticsEvent.prototype, "eventType", void 0);
 __decorate([
     ManyToOne(() => User, { nullable: true }),
-    __metadata("design:type", User)
+    __metadata("design:type", Object)
 ], AnalyticsEvent.prototype, "user", void 0);
 __decorate([
     Column({ type: "varchar", length: 64, nullable: false }),
@@ -38,7 +38,7 @@ __decorate([
 ], AnalyticsEvent.prototype, "sessionId", void 0);
 __decorate([
     ManyToOne(() => Product, { nullable: true }),
-    __metadata("design:type", Product)
+    __metadata("design:type", Object)
 ], AnalyticsEvent.prototype, "product", void 0);
 __decorate([
     ManyToOne(() => Category, { nullable: true }),

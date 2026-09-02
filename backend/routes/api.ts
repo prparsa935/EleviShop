@@ -12,6 +12,7 @@ import productSetApi from "./productSetApi.js";
 import stockApi from "./stockApi.js";
 import analyticsApi from "./analyticsApi.js";
 import shoppingCartApi from "./shoppingCartApi.js";
+import moldApi from "./moldApi.js";
 
 const apiRouter = Router();
 apiRouter.use("/product", productApi);
@@ -26,5 +27,6 @@ apiRouter.use("/productSet", productSetApi);
 apiRouter.use("/stock", stockApi);
 apiRouter.use("/analytics", analyticsApi);
 apiRouter.use("/cart", shoppingCartApi);
+apiRouter.use("/mold", moldApi);
 
 export default apiRouter;

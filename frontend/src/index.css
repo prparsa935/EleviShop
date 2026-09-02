@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: 'Vazirmatn', sans-serif;
-  background-color: var(--clr-bg);
-  color: var(--clr-ink);
+  font-family: var(--font-family);
+  background-color: var(--tp-b-color);
+  color: var(--color-white);
 }

@@ -4,6 +4,7 @@ import { AnalyticsEvent, AnalyticsEventType } from "../models/AnalyticsEvent.js"
 import { Order, orderStatus } from "../models/Order.js";
 import { OrderInventory } from "../models/OrderInventory.js";
 import { Product } from "../models/product.js";
+import { Category } from "../models/Category.js";
 const soldOrderStatuses = [
     orderStatus.successfulPayOrValidated,
     orderStatus.waitingFordelivery,
@@ -28,10 +29,20 @@ class AnalyticsService {
             if (user)
                 event.user = user;
             if (eventData.productId) {
-                event.product = { id: eventData.productId };
+                const productExists = await this.productRepo.exist({
+                    where: { id: eventData.productId },
+                });
+                if (productExists) {
+                    event.product = { id: eventData.productId };
+                }
             }
             if (eventData.categoryId) {
-                event.category = { id: eventData.categoryId };
+                const categoryExists = await dataSource
+                    .getRepository(Category)
+                    .exist({ where: { id: eventData.categoryId } });
+                if (categoryExists) {
+                    event.category = { id: eventData.categoryId };
+                }
             }
             if (eventData.searchQuery) {
                 event.searchQuery = String(eventData.searchQuery).slice(0, 300);

@@ -1,6 +1,6 @@
 import CategoryPath from "../components/categorypath/CategoryPath";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import NavBar from "../components/navbar/NavBar";
 import ProductUpperSection from "../components/productuppersection/ProductUpperSection";
 import {
@@ -13,6 +13,7 @@ import ProductLowerSection from "../components/productlowersection/ProductLowerS
 import {
   fetchSingleProduct,
   fetchSetAvailableColors,
+  fetchMoldPatternDetail,
 } from "../api/productApi";
 import PageLoading from "../components/pageloading/PageLoading";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
@@ -29,24 +30,60 @@ const advantages = [
   { icon: "fa-badge-check", label: "ضمانت اصل بودن کالا" },
 ];
 
+const buildColorOptionsForSize = (size) => {
+  if (!size) return [];
+  const colorMap = new Map();
+  (size.inventories || []).forEach((inv) => {
+    const key = inv.colorId ?? "default";
+    const existing = colorMap.get(key);
+    if (
+      !existing ||
+      (inv.quantity ?? 0) > (existing.inventory?.quantity ?? 0)
+    ) {
+      colorMap.set(key, {
+        colorId: inv.colorId ?? null,
+        name: inv.colorName ?? "پیش‌فرض",
+        hexCode: inv.colorHex ?? null,
+        inventory: inv,
+      });
+    }
+  });
+  return Array.from(colorMap.values());
+};
+
 const Product = () => {
   const [errors, setErrors] = useState([]);
   const [toastList, setToastList] = useState([]);
   const { id } = useParams();
+  const location = useLocation();
+  const isPatternRoute = location.pathname.startsWith("/pattern/");
   const [imageSiderActive, setImageSiderActive] = useState(false);
   const { shoppingCart } = useContext(AuthContext);
   const [product, setProduct] = useState(null);
+  const [patternDetail, setPatternDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState();
   const [commentModalActive, setCommentModalActive] = useState(false);
   const [setColorOptions, setSetColorOptions] = useState(null);
   const [selectedSetColor, setSelectedSetColor] = useState(null);
+  const [selectedMoldSize, setSelectedMoldSize] = useState(null);
+  const [selectedColorInv, setSelectedColorInv] = useState(null);
 
   useEffect(() => {
     setLoading(true);
-    fetchSingleProduct(id, setProduct, setLoading);
-    trackEvent("PRODUCT_VIEW", { productId: Number(id) });
-  }, [id]);
+    setSelectedMoldSize(null);
+    setSelectedColorInv(null);
+    if (isPatternRoute) {
+      setProduct(null);
+      fetchMoldPatternDetail(id, setPatternDetail, setLoading);
+      trackEvent("PRODUCT_VIEW", { kind: "pattern" });
+    } else {
+      setPatternDetail(null);
+      fetchSingleProduct(id, setProduct, setLoading);
+      trackEvent("PRODUCT_VIEW", { productId: Number(id) });
+    }
+  }, [id, isPatternRoute]);
+
   useEffect(() => {
     if (product?.type === "productSet") {
       fetchSetAvailableColors(product.id, (data) => {
@@ -58,7 +95,34 @@ const Product = () => {
       setSelectedSetColor(null);
     }
   }, [product]);
+
+  useEffect(() => {
+    if (!isPatternRoute || !patternDetail) return;
+    const sizes = patternDetail.sizes || [];
+    const firstAvailable =
+      sizes.find((size) =>
+        (size.inventories || []).some((inv) => (inv.quantity ?? 0) > 0)
+      ) ||
+      sizes[0] ||
+      null;
+    setSelectedMoldSize(firstAvailable);
+  }, [patternDetail, isPatternRoute]);
+
+  useEffect(() => {
+    if (!isPatternRoute || !selectedMoldSize) {
+      setSelectedColorInv(null);
+      return;
+    }
+    const options = buildColorOptionsForSize(selectedMoldSize);
+    const firstInStock =
+      options.find((option) => (option.inventory?.quantity ?? 0) > 0) ||
+      options[0] ||
+      null;
+    setSelectedColorInv(firstInStock);
+  }, [selectedMoldSize, isPatternRoute]);
+
   useDidUpdateEffect(() => {
+    if (isPatternRoute) return;
     let lastAvailableInv = null;
     const inventory = product?.inventories?.find((inventory) => {
       const productInCartIndex = shoppingCart.findIndex((productInCart) => {
@@ -75,11 +139,48 @@ const Product = () => {
       setSelectedSize({ label: lastAvailableInv.size, value: lastAvailableInv });
     } else {
       setSelectedSize({
-        label: product?.inventories[0]?.size,
-        value: product?.inventories[0],
+        label: product?.inventories?.[0]?.size,
+        value: product?.inventories?.[0],
       });
     }
   }, [product]);
+
+  const patternProduct = patternDetail
+    ? {
+        id: patternDetail.representativeProductId ?? patternDetail.id,
+        type: "patternCard",
+        name: patternDetail.name,
+        description: patternDetail.description,
+        material: patternDetail.material,
+        code: patternDetail.code,
+        offPercent: patternDetail.offPercent,
+        rate: patternDetail.rate,
+        rateCount: patternDetail.rateCount,
+        commentCount: patternDetail.commentCount,
+        buyerCount: patternDetail.buyerCount,
+        countPerProduct: 1,
+        mainImage: patternDetail.mainImage,
+        images: patternDetail.images,
+        mainCategory: patternDetail.mainCategory,
+        inventories: selectedColorInv ? [selectedColorInv.inventory] : [],
+        moldPatternId: patternDetail.id,
+      }
+    : null;
+  const displayProduct = isPatternRoute ? patternProduct : product;
+  const resolvedInventory = isPatternRoute
+    ? selectedColorInv?.inventory
+    : selectedSize?.value;
+  const syntheticSelectedSize = isPatternRoute
+    ? { label: selectedMoldSize?.sizeLabel, value: resolvedInventory }
+    : selectedSize;
+  const moldSizeOptions = (patternDetail?.sizes || []).map((size) => ({
+    label: size.sizeLabel,
+    value: size.sizeId,
+    size,
+  }));
+  const inventoryColorOptions = isPatternRoute
+    ? buildColorOptionsForSize(selectedMoldSize)
+    : null;
 
   if (loading) {
     return <PageLoading></PageLoading>;
@@ -95,28 +196,34 @@ const Product = () => {
         ))}
       </div>
       <ProductImageShow
-        productImageList={product?.images}
+        productImageList={displayProduct?.images}
         active={imageSiderActive}
         setActive={setImageSiderActive}
       ></ProductImageShow>
       <CommentModalForm
         setErrors={setErrors}
-        product={product}
+        product={displayProduct}
         setToastList={setToastList}
         commentModalActive={commentModalActive}
         setCommentModalActive={setCommentModalActive}
       />
       <div className="flex flex-col gap-y-5 mt-7 mx-auto max-w-screen-2xl px-3">
-        <CategoryPath categoryPath={product?.mainCategory?.categoryPath} />
+        <CategoryPath categoryPath={displayProduct?.mainCategory?.categoryPath} />
         <ProductUpperSection
-          selectedSize={selectedSize}
-          setSelectedSize={setSelectedSize}
+          selectedSize={syntheticSelectedSize}
+          setSelectedSize={isPatternRoute ? () => {} : setSelectedSize}
           imageSiderActive={imageSiderActive}
           setImageSiderActive={setImageSiderActive}
-          product={product}
+          product={displayProduct}
           colorOptions={setColorOptions}
           selectedSetColor={selectedSetColor}
           setSelectedSetColor={setSelectedSetColor}
+          moldSizeOptions={moldSizeOptions}
+          selectedMoldSize={selectedMoldSize}
+          onMoldSizeChange={setSelectedMoldSize}
+          inventoryColorOptions={inventoryColorOptions}
+          selectedColorInv={selectedColorInv}
+          onColorInvChange={setSelectedColorInv}
         ></ProductUpperSection>
 
         <div className="w-100 my-6 rounded-3xl glass py-6 px-3">
@@ -142,9 +249,9 @@ const Product = () => {
         <ProductLowerSection
           setToastList={setToastList}
           setCommentModalActive={setCommentModalActive}
-          selectedSize={selectedSize}
-          setSelectedSize={setSelectedSize}
-          product={product}
+          selectedSize={syntheticSelectedSize}
+          setSelectedSize={isPatternRoute ? () => {} : setSelectedSize}
+          product={displayProduct}
         ></ProductLowerSection>
       </div>
       <div className="h-[200px]"></div>

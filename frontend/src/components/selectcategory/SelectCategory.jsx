@@ -45,7 +45,7 @@ const SelectCategory = ({ category, allwaysActive }) => {
         >
           <span> {category.name}</span>
           {searchParam.get("categoryId") === String(category.id) ? (
-            <i class="fa-solid fa-check text-sky-400"></i>
+            <i className="fa-solid fa-check text-[var(--bf-sky)]"></i>
           ) : (
             ""
           )}

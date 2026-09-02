@@ -37,7 +37,58 @@ class ProductController {
         );
     }
 
-    return res.json(await ProductService.findProductById(productId));
+    const product = await ProductService.findProductById(productId);
+    if (!product) {
+      try {
+        return res.json(await ProductService.findMoldPatternDetail(productId));
+      } catch {
+        return res
+          .status(404)
+          .json(
+            new ResponseDTO({}, { message: "محصول مورد نظر یافت نشد" }, false)
+          );
+      }
+    }
+    return res.json(product);
+  }
+
+  async findMoldPatternDetail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const moldPatternId: number = Number(req.params.id);
+      if (isNaN(moldPatternId)) {
+        return res
+          .status(404)
+          .json(
+            new ResponseDTO({}, { message: "طرح مورد نظر یافت نشد" }, false)
+          );
+      }
+      return res.json(
+        await ProductService.findMoldPatternDetail(moldPatternId)
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async findRelatedProducts(req: Request, res: Response) {
+    try {
+      const productId: number = Number(req.params.id);
+      const code: string = req.params.code;
+      if (isNaN(productId)) {
+        return res
+          .status(404)
+          .json(
+            new ResponseDTO({}, { message: "محصول مورد نظر یافت نشد" }, false)
+          );
+      }
+      return res.json(
+        await ProductService.findRelatedProducts(productId, code)
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
+    }
   }
 
   async createproduct(req: Request, res: Response, next: NextFunction) {

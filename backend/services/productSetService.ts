@@ -2,6 +2,7 @@ import { ProductSet } from "../models/ProductSet.js";
 import { ProductSetItem } from "../models/ProductSetItem.js";
 import { Plate } from "../models/plate.js";
 import { Color } from "../models/Color.js";
+import { Inventory } from "../models/Inventory.js";
 import dataSource from "../utils/dbConfiguration.js";
 import { In } from "typeorm";
 import { OverallError } from "../errors/orderSaveError.js";
@@ -48,7 +49,6 @@ class ProductSetService {
         "productSetItems.plate",
         "productSetItems.plate.mainImage",
         "productSetItems.plate.inventories",
-        "productSetItems.plate.color",
         "inventories",
         "mainImage",
       ],
@@ -58,45 +58,54 @@ class ProductSetService {
   private async loadSetItems(productSetId: number): Promise<ProductSetItem[]> {
     return await this.setItemRepo.find({
       where: { productSet: { id: productSetId } },
-      relations: [
-        "plate",
-        "plate.inventories",
-        "plate.color",
-        "plate.mainImage",
-      ],
+      relations: ["plate", "plate.inventories", "plate.mainImage"],
     });
   }
 
-  private getCommonColorId(setItems: ProductSetItem[]): number | null {
+  private getInventoriesForColor(
+    inventories: Inventory[] | undefined,
+    colorId: number
+  ): Inventory[] {
+    return (inventories ?? []).filter((inv) => inv.colorId === colorId);
+  }
+
+  private getCommonColorIds(setItems: ProductSetItem[]): number[] {
     if (!setItems || setItems.length === 0) {
-      return null;
+      return [];
     }
-    let commonColorId: number | null = null;
+    let common: Set<number> | null = null;
     for (const item of setItems) {
-      const plateColorId = item.plate?.color?.id ?? null;
-      if (plateColorId == null) {
-        return null;
+      const colorIds = new Set<number>(
+        (item.plate?.inventories ?? [])
+          .filter((inv) => inv.colorId != null && (inv.quantity ?? 0) > 0)
+          .map((inv) => inv.colorId as number)
+      );
+      if (common == null) {
+        common = colorIds;
+      } else {
+        common = new Set([...common].filter((id) => colorIds.has(id)));
       }
-      if (commonColorId == null) {
-        commonColorId = plateColorId;
-      } else if (commonColorId !== plateColorId) {
-        return null;
+      if (common.size === 0) {
+        return [];
       }
     }
-    return commonColorId;
+    return [...(common ?? [])].sort((a, b) => a - b);
   }
 
   private getAvailableQuantityFromItems(
     setItems: ProductSetItem[],
     colorId?: number
   ): number {
+    if (colorId == null) {
+      return 0;
+    }
     let minRatio: number | null = null;
     for (const item of setItems) {
-      const plateColorId = item.plate?.color?.id ?? null;
-      if (colorId != null && plateColorId != null && plateColorId !== colorId) {
-        return 0;
-      }
-      const stock = (item.plate?.inventories ?? []).reduce(
+      const matching = this.getInventoriesForColor(
+        item.plate?.inventories,
+        colorId
+      );
+      const stock = matching.reduce(
         (sum, inv) => sum + (inv.quantity ?? 0),
         0
       );
@@ -112,21 +121,20 @@ class ProductSetService {
     setItems: ProductSetItem[],
     colorId?: number
   ): number {
+    if (colorId == null) {
+      return 0;
+    }
     let totalPrice = 0;
     for (const item of setItems) {
-      const plateColorId = item.plate?.color?.id ?? null;
-      if (colorId != null && plateColorId != null && plateColorId !== colorId) {
-        throw new OverallError(
-          `قطعه «${item.plate?.name ?? item.plate?.id}» در رنگ انتخابی موجود نیست`,
-          400
-        );
-      }
-      const inventories = item.plate?.inventories ?? [];
-      const inStock = inventories.filter((inv) => (inv.quantity ?? 0) > 0);
-      const priceList = inStock.length > 0 ? inStock : inventories;
+      const matching = this.getInventoriesForColor(
+        item.plate?.inventories,
+        colorId
+      );
+      const inStock = matching.filter((inv) => (inv.quantity ?? 0) > 0);
+      const priceList = inStock.length > 0 ? inStock : matching;
       if (priceList.length === 0) {
         throw new OverallError(
-          `قطعه «${item.plate?.name ?? item.plate?.id}» موجودی ثبت‌شده ندارد`,
+          `قطعه «${item.plate?.name ?? item.plate?.id}» در رنگ انتخابی موجود نیست`,
           400
         );
       }
@@ -140,22 +148,21 @@ class ProductSetService {
     setItems: ProductSetItem[],
     colorId?: number
   ): SetComponent[] {
+    if (colorId == null) {
+      throw new OverallError("رنگ انتخاب نشده است", 400);
+    }
     const components: SetComponent[] = [];
     for (const item of setItems) {
-      const plateColorId = item.plate?.color?.id ?? null;
-      if (colorId != null && plateColorId != null && plateColorId !== colorId) {
-        throw new OverallError(
-          `قطعه «${item.plate?.name ?? item.plate?.id}» در رنگ انتخابی موجود نیست`,
-          400
-        );
-      }
-      const inventories = (item.plate?.inventories ?? [])
+      const matching = this.getInventoriesForColor(
+        item.plate?.inventories,
+        colorId
+      );
+      const inventory = matching
         .slice()
-        .sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0));
-      const inventory = inventories[0];
+        .sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0))[0];
       if (!inventory) {
         throw new OverallError(
-          `قطعه «${item.plate?.name ?? item.plate?.id}» موجودی ثبت‌شده ندارد`,
+          `قطعه «${item.plate?.name ?? item.plate?.id}» در رنگ انتخابی موجود نیست`,
           400
         );
       }
@@ -180,17 +187,14 @@ class ProductSetService {
     if (!setItems || setItems.length === 0) {
       return { colors: [], hasNoCommonColor: false };
     }
-    const commonColorId = this.getCommonColorId(setItems);
-    if (commonColorId == null) {
+    const commonColorIds = this.getCommonColorIds(setItems);
+    if (commonColorIds.length === 0) {
       return { colors: [], hasNoCommonColor: true };
     }
-    const color = await this.colorRepo.findOne({
-      where: { id: commonColorId },
+    const colors = await this.colorRepo.find({
+      where: { id: In(commonColorIds) },
     });
-    const calculatedPrice = this.calculatePriceFromItems(
-      setItems,
-      commonColorId
-    );
+    const colorMap = new Map(colors.map((color) => [color.id, color]));
     const productSet = await this.productSetRepo.findOne({
       where: { id: productSetId },
     });
@@ -199,21 +203,26 @@ class ProductSetService {
         ? Number(productSet.manualPriceOverride)
         : null;
     const isManual = manualOverride != null && manualOverride > 0;
-    const option: SetColorOption = {
-      colorId: commonColorId,
-      name: color?.name ?? "",
-      hexCode: color?.hexCode ?? "",
-      calculatedPrice,
-      price:
-        isManual && manualOverride != null ? manualOverride : calculatedPrice,
-      isManual,
-      availableQuantity: this.getAvailableQuantityFromItems(
-        setItems,
-        commonColorId
-      ),
-      components: this.buildComponentsFromItems(setItems, commonColorId),
-    };
-    return { colors: [option], hasNoCommonColor: false };
+    const options = commonColorIds.map((colorId) => {
+      const calculatedPrice = this.calculatePriceFromItems(setItems, colorId);
+      return {
+        colorId,
+        name: colorMap.get(colorId)?.name ?? "",
+        hexCode: colorMap.get(colorId)?.hexCode ?? "",
+        calculatedPrice,
+        price:
+          isManual && manualOverride != null
+            ? manualOverride
+            : calculatedPrice,
+        isManual,
+        availableQuantity: this.getAvailableQuantityFromItems(
+          setItems,
+          colorId
+        ),
+        components: this.buildComponentsFromItems(setItems, colorId),
+      };
+    });
+    return { colors: options, hasNoCommonColor: false };
   }
 
   async getAvailableSetQuantity(
@@ -271,7 +280,7 @@ class ProductSetService {
     }
     const plates = await dataSource.getRepository(Plate).find({
       where: { id: In(items.map((item) => item.plateId)) },
-      relations: ["inventories", "color"],
+      relations: ["inventories"],
     });
     const plateMap = new Map(plates.map((plate) => [plate.id, plate]));
     const setItems = items.map((item) => {
@@ -284,29 +293,28 @@ class ProductSetService {
       setItem.quantity = item.quantity || 1;
       return setItem;
     });
-    const commonColorId = this.getCommonColorId(setItems);
-    if (commonColorId == null) {
+    let commonColorIds = this.getCommonColorIds(setItems);
+    if (commonColorIds.length === 0) {
       return { colors: [], hasNoCommonColor: true };
     }
-    const color = await this.colorRepo.findOne({
-      where: { id: commonColorId },
+    if (colorId != null) {
+      commonColorIds = commonColorIds.filter((id) => id === colorId);
+      if (commonColorIds.length === 0) {
+        return { colors: [], hasNoCommonColor: true };
+      }
+    }
+    const colors = await this.colorRepo.find({
+      where: { id: In(commonColorIds) },
     });
+    const colorMap = new Map(colors.map((color) => [color.id, color]));
     return {
-      colors: [
-        {
-          colorId: commonColorId,
-          name: color?.name ?? "",
-          hexCode: color?.hexCode ?? "",
-          calculatedPrice: this.calculatePriceFromItems(
-            setItems,
-            commonColorId
-          ),
-          availableQuantity: this.getAvailableQuantityFromItems(
-            setItems,
-            commonColorId
-          ),
-        },
-      ],
+      colors: commonColorIds.map((cid) => ({
+        colorId: cid,
+        name: colorMap.get(cid)?.name ?? "",
+        hexCode: colorMap.get(cid)?.hexCode ?? "",
+        calculatedPrice: this.calculatePriceFromItems(setItems, cid),
+        availableQuantity: this.getAvailableQuantityFromItems(setItems, cid),
+      })),
       hasNoCommonColor: false,
     };
   }

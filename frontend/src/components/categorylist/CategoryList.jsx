@@ -4,7 +4,9 @@ const CategoryList = ({ categoryListData }) => {
   return (
     <div className="flex flex-col ">
       {categoryListData?.map((categoryData) => {
-        return <Category isSub={true} categoryData={categoryData} />;
+        return (
+          <Category key={categoryData.id} isSub={true} categoryData={categoryData} />
+        );
       })}
     </div>
   );

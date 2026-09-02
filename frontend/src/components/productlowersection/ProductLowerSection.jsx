@@ -24,13 +24,10 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommen
       );
     }
   }, [product]);
-  useEffect(() => {
-    console.log(productSet);
-  }, [productSet]);
 
   return (
     <div className="flex flex-col gap-y-10">
-      {product?.type !== "productSet" ? (
+      {product?.type !== "productSet" && product?.type !== "patternCard" ? (
         <HorizentalProductList title={"سرویس"} products={[productSet]}></HorizentalProductList>
       ) : (
         <></>

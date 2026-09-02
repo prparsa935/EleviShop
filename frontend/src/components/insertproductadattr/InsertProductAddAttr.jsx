@@ -8,6 +8,8 @@ const InsertProductAddAttr = ({
   type,
   setItems,
   setSetItems,
+  containValue,
+  onContainChange,
 }) => {
   const loadProductOptions = useCallback(searchProducByNametWithCallback);
   const handleSetPlatesChange = (selectedOptions) => {
@@ -29,75 +31,55 @@ const InsertProductAddAttr = ({
       )
     );
   };
-  if (type === "plate") {
-    return (
-      <>
-        <div className="flex flex-col col-span-4">
-          <div className="mb-2 font-medium text-sm">
-            <span className="text-red-500 text-lg">*</span>
-            طول
-          </div>
-          <Input iMessage={errors?.height} name="height" />
+  if (type !== "productSet") {
+    return null;
+  }
+  return (
+    <>
+      <div className="flex flex-col col-span-4">
+        <div className="mb-2 font-medium text-sm">
+          <span className="text-red-500 text-lg">*</span>
+          شامل
         </div>
-        <div className="flex flex-col col-span-4">
-          <div className="mb-2 font-medium text-sm">
-            <span className="text-red-500 text-lg">*</span>
-            عرض
-          </div>
-          <Input iMessage={errors?.width} name="width" />
+        <Input
+          iMessage={errors?.contain}
+          name="contain"
+          value={containValue}
+          onChange={onContainChange}
+        />
+      </div>
+      <div className="flex flex-col col-span-12">
+        <div className="mb-2 font-medium text-sm">
+          <span className="text-red-500 text-lg">*</span>
+          محصولات ست
         </div>
-        <div className="flex flex-col col-span-4">
+        <ASelectBox
+          loadOptions={loadProductOptions}
+          isSearchable={true}
+          name="productIds"
+          isMulti={true}
+          error={errors?.items}
+          onChange={handleSetPlatesChange}
+          value={setItems}
+        />
+      </div>
+      {(setItems || []).map((item) => (
+        <div key={item.value} className="flex flex-col col-span-3">
           <div className="mb-2 font-medium text-sm">
             <span className="text-red-500 text-lg">*</span>
-            وزن
+            تعداد {item.label}
           </div>
-          <Input iMessage={errors?.weight} name="weight" />
-        </div>
-      </>
-    );
-  } else if (type === "productSet") {
-    return (
-      <>
-        <div className="flex flex-col col-span-4">
-          <div className="mb-2 font-medium text-sm">
-            <span className="text-red-500 text-lg">*</span>
-            شامل
-          </div>
-          <Input iMessage={errors?.contain} name="contain" />
-        </div>
-        <div className="flex flex-col col-span-12">
-          <div className="mb-2 font-medium text-sm">
-            <span className="text-red-500 text-lg">*</span>
-            محصولات ست
-          </div>
-          <ASelectBox
-            loadOptions={loadProductOptions}
-            isSearchable={true}
-            name="productIds"
-            isMulti={true}
-            error={errors?.items}
-            onChange={handleSetPlatesChange}
-            value={setItems}
+          <Input
+            name={`setItemQuantity_${item.value}`}
+            type="number"
+            value={item.quantity ?? 1}
+            onChange={(e) =>
+              handleSetItemQuantityChange(item.value, Number(e.target.value))
+            }
           />
         </div>
-        {(setItems || []).map((item) => (
-          <div key={item.value} className="flex flex-col col-span-3">
-            <div className="mb-2 font-medium text-sm">
-              <span className="text-red-500 text-lg">*</span>
-              تعداد {item.label}
-            </div>
-            <Input
-              name={`setItemQuantity_${item.value}`}
-              type="number"
-              value={item.quantity ?? 1}
-              onChange={(e) =>
-                handleSetItemQuantityChange(item.value, Number(e.target.value))
-              }
-            />
-          </div>
-        ))}
-      </>
-    );
-  }
+      ))}
+    </>
+  );
 };
 export default InsertProductAddAttr;

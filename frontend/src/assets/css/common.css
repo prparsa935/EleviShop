@@ -4,6 +4,16 @@
 html{
     font-family:var(--font-family)
 }
+input,
+textarea,
+button,
+select {
+    font-family: inherit;
+}
+.aselect,
+.aselect * {
+    font-family: var(--font-family);
+}
 
 ::-webkit-scrollbar {
     width: 3px;

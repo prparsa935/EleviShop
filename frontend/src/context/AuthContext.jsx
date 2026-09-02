@@ -18,20 +18,26 @@ const getCartItemKey = (item) => {
 };
 
 const toSyncPayload = (items) =>
-  (items || []).map((item) => {
-    if (item?.itemType === "SET") {
+  (items || [])
+    .filter((item) =>
+      item?.itemType === "SET"
+        ? item?.product?.id != null && item?.color?.id != null
+        : item?.inventory?.id != null
+    )
+    .map((item) => {
+      if (item?.itemType === "SET") {
+        return {
+          itemType: "SET",
+          productSetId: item?.product?.id,
+          colorId: item?.color?.id,
+          count: item?.quantity,
+        };
+      }
       return {
-        itemType: "SET",
-        productSetId: item?.product?.id,
-        colorId: item?.color?.id,
+        inventoryId: item?.inventory?.id,
         count: item?.quantity,
       };
-    }
-    return {
-      inventoryId: item?.inventory?.id,
-      count: item?.quantity,
-    };
-  });
+    });
 
 const AuthProvider = (props) => {
   const navigate = useNavigate();
@@ -123,33 +129,46 @@ const AuthProvider = (props) => {
     invalidKeys,
     lShoppingCart
   ) => {
-    const res = await Axios.get(
-      serverAddress + "product/id/" + productInCart.product.id
-    );
-    if (res.status === 200) {
-      const product = await res.data;
-      const iSelectedInventory = product?.inventories.find((inventory) => {
-        return inventory.id === productInCart.inventory.id;
-      });
-
-      if (
-        isProductInCartValid(
-          iSelectedInventory?.quantity,
-          productInCart?.quantity
-        ) ||
-        iSelectedInventory?.quantity !== 0
-      ) {
+    if (!productInCart?.product?.id) {
+      invalidKeys.push(getCartItemKey(productInCart));
+      return;
+    }
+    try {
+      const res = await Axios.get(
+        serverAddress + "product/id/" + productInCart.product.id
+      );
+      if (res.status === 200) {
+        const product = res.data;
+        const inventories = product?.inventories || [];
+        let effectiveInventory = productInCart.inventory?.id
+          ? inventories.find(
+              (inventory) => inventory.id === productInCart.inventory.id
+            )
+          : undefined;
+        if (!effectiveInventory && productInCart.inventory?.id) {
+          effectiveInventory = productInCart.inventory;
+        }
+        if (!effectiveInventory) {
+          effectiveInventory = inventories.find(
+            (inventory) => (inventory?.quantity ?? 0) > 0
+          );
+        }
+        if (!effectiveInventory || (effectiveInventory.quantity ?? 0) === 0) {
+          invalidKeys.push(getCartItemKey(productInCart));
+          return;
+        }
         updateItemInCart(
           productInCartIndex,
           productInCart,
           product,
-          iSelectedInventory,
+          effectiveInventory,
           lShoppingCart
         );
-      } else {
+      }
+    } catch (error) {
+      if (error?.response?.status === 404) {
         invalidKeys.push(getCartItemKey(productInCart));
       }
-    } else {
     }
   };
   const checkSetItemInCart = async (
@@ -195,17 +214,18 @@ const AuthProvider = (props) => {
     iSelectedInventory,
     lShoppingCart
   ) => {
-    lShoppingCart[productInCartIndex]["product"] = product;
+    if (!iSelectedInventory) {
+      return;
+    }
+    lShoppingCart[productInCartIndex]["product"] =
+      product || productInCart.product;
     lShoppingCart[productInCartIndex]["inventory"] = iSelectedInventory;
     if (
-      iSelectedInventory?.quantity !== 0 &&
-      !isProductInCartValid(
-        iSelectedInventory?.quantity,
-        productInCart?.quantity
-      )
+      iSelectedInventory.quantity !== 0 &&
+      productInCart?.quantity > iSelectedInventory.quantity
     ) {
       lShoppingCart[productInCartIndex]["quantity"] =
-        iSelectedInventory?.quantity;
+        iSelectedInventory.quantity;
     }
   };
   const deleteInvalidItems = (invalidKeys, lShoppingCart) => {

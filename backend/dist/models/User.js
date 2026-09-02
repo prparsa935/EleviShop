@@ -33,7 +33,7 @@ __decorate([
 __decorate([
     JoinColumn(),
     OneToOne(() => Person, (person) => person.user),
-    __metadata("design:type", Person)
+    __metadata("design:type", Object)
 ], User.prototype, "person", void 0);
 __decorate([
     OneToMany(() => Comment, (comment) => comment.user),
@@ -42,7 +42,7 @@ __decorate([
 __decorate([
     JoinColumn(),
     OneToOne(() => TfLogin),
-    __metadata("design:type", TfLogin)
+    __metadata("design:type", Object)
 ], User.prototype, "tfLogin", void 0);
 __decorate([
     OneToMany(() => ShoppingCartItem, (shoppingCartItem) => shoppingCartItem.user),

@@ -42,10 +42,20 @@ class AnalyticsService {
       event.sessionId = eventData.sessionId || "anonymous";
       if (user) event.user = user;
       if (eventData.productId) {
-        event.product = { id: eventData.productId } as Product;
+        const productExists = await this.productRepo.exist({
+          where: { id: eventData.productId },
+        });
+        if (productExists) {
+          event.product = { id: eventData.productId } as Product;
+        }
       }
       if (eventData.categoryId) {
-        event.category = { id: eventData.categoryId } as Category;
+        const categoryExists = await dataSource
+          .getRepository(Category)
+          .exist({ where: { id: eventData.categoryId } });
+        if (categoryExists) {
+          event.category = { id: eventData.categoryId } as Category;
+        }
       }
       if (eventData.searchQuery) {
         event.searchQuery = String(eventData.searchQuery).slice(0, 300);

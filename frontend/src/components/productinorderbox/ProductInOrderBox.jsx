@@ -34,7 +34,9 @@ const ProductInOrderBox = ({ orderInventory }) => {
           </span>
           <div className="flex flex-col text-sm font-medium text-neutral-500">
             <span>گارانتی اصالت و سلامت فیزیکی کالا</span>
-            <span>سایز {orderInventory?.inventory?.size}</span>
+            {orderInventory?.inventory?.size?.sizeLabel ? (
+              <span>سایز {orderInventory?.inventory?.size?.sizeLabel}</span>
+            ) : null}
             <div className="flex items-center gap-x-2">
               <span
                 className=" w-5 h-5 rounded-full"

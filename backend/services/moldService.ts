@@ -4,6 +4,7 @@ import { MoldPattern } from "../models/MoldPattern.js";
 import { Pattern } from "../models/Pattern.js";
 import { Image } from "../models/Image.js";
 import { Product } from "../models/product.js";
+import { Inventory } from "../models/Inventory.js";
 import dataSource from "../utils/dbConfiguration.js";
 import { OverallError } from "../errors/orderSaveError.js";
 
@@ -62,11 +63,12 @@ class MoldService {
     const sizeIds = (mold.sizes ?? []).map((size) => size.id);
     const moldPatternIds = (mold.moldPatterns ?? []).map((mp) => mp.id);
     const productRepo = dataSource.getRepository(Product);
+    const inventoryRepo = dataSource.getRepository(Inventory);
     let usedCount = 0;
     if (sizeIds.length > 0) {
-      usedCount += await productRepo
-        .createQueryBuilder("product")
-        .where("product.moldSizeId IN (:...sizeIds)", { sizeIds })
+      usedCount += await inventoryRepo
+        .createQueryBuilder("inventory")
+        .where("inventory.sizeId IN (:...sizeIds)", { sizeIds })
         .getCount();
     }
     if (moldPatternIds.length > 0) {

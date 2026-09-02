@@ -4,25 +4,29 @@ import { CommentOrders, CommentSaveDto } from "../dtos/comment.dto.js";
 import productService from "./productService.js";
 import { OverallError } from "../errors/orderSaveError.js";
 import { User } from "../models/User.js";
+import { UserCommentLikes } from "../models/UserCommentLikes.js";
+import { Order, orderStatus } from "../models/Order.js";
+
+const COMMENTS_PAGE_SIZE = 10;
+
 class CommentService {
   private commentRepo = dataSource.getRepository(Comment);
+  private commentLikeRepo = dataSource.getRepository(UserCommentLikes);
+
   async findComments(
     productId: number,
     commentOrder: string,
     userId: number,
     pageNumber: number
   ): Promise<Comment[]> {
-    // const pagesize
-    const pageSize = 10;
-    // creating query
+    const safePage = Number.isFinite(pageNumber) && pageNumber > 0 ? Math.floor(pageNumber) : 1;
     const queryBuilder = await this.commentRepo
       .createQueryBuilder("comment")
-      .leftJoinAndSelect("comment.product", "product")
       .leftJoinAndSelect("comment.user", "user")
       .leftJoinAndSelect("user.person", "profile")
       .where("comment.productId = :productId", { productId })
-      .skip((pageNumber - 1) * pageSize)
-      .take(pageSize)
+      .skip((safePage - 1) * COMMENTS_PAGE_SIZE)
+      .take(COMMENTS_PAGE_SIZE)
       .select([
         "comment.id",
         "comment.content",
@@ -34,7 +38,7 @@ class CommentService {
         "profile.firstName",
         "profile.lastName",
       ]);
-    // if userlogin show does he like
+    // if user login show does he like
     if (userId) {
       queryBuilder.leftJoinAndSelect(
         "comment.likes",
@@ -49,15 +53,111 @@ class CommentService {
     // if ordering filter
     if (CommentOrders.best === commentOrder) {
       queryBuilder.orderBy("comment.likesCount", "DESC");
-    } else if (CommentOrders.earliest === commentOrder) {
+      queryBuilder.addOrderBy("comment.dateCreated", "DESC");
+    } else {
       queryBuilder.orderBy("comment.dateCreated", "DESC");
     }
 
     // fetch
     const comments = await queryBuilder.getMany();
 
+    // mark comments of users who bought this product (buyer tag)
+    if (comments.length > 0) {
+      const buyerUserIds = await this.findBuyerUserIds(productId);
+      for (const comment of comments) {
+        comment["isBuyer"] = buyerUserIds.has(comment.user?.id);
+      }
+    }
+
     return comments;
   }
+
+  // users whose delivered/paid orders contain this product
+  private async findBuyerUserIds(productId: number): Promise<Set<number>> {
+    const rows = await dataSource
+      .getRepository(Order)
+      .createQueryBuilder("order")
+      .innerJoin("order.orderInventories", "orderInventory")
+      .innerJoin("orderInventory.inventory", "inventory")
+      .where("inventory.productId = :productId", { productId })
+      .andWhere("order.orderStatus IN (:...statuses)", {
+        statuses: [
+          orderStatus.delivered,
+          orderStatus.successfulPayOrValidated,
+          orderStatus.waitingFordelivery,
+        ],
+      })
+      .select("DISTINCT order.userId", "userId")
+      .getRawMany();
+    return new Set(rows.map((row) => Number(row.userId)));
+  }
+
+  async getProductCommentStats(productId: number): Promise<{
+    averageRate: number;
+    commentsCount: number;
+  }> {
+    const result = await this.commentRepo
+      .createQueryBuilder("comment")
+      .where("comment.productId = :productId", { productId })
+      .select("COUNT(comment.id)", "commentsCount")
+      .addSelect("COALESCE(AVG(comment.rate), 0)", "averageRate")
+      .getRawOne();
+    return {
+      commentsCount: Number(result?.commentsCount ?? 0),
+      averageRate: Math.round(Number(result?.averageRate ?? 0) * 10) / 10,
+    };
+  }
+
+  async setCommentReaction(
+    commentId: number,
+    user: User,
+    isLike: boolean
+  ): Promise<{ likesCount: number; dislikesCount: number; myReaction: boolean | null }> {
+    const comment = await this.commentRepo.findOne({ where: { id: commentId } });
+    if (!comment) {
+      throw new OverallError("دیدگاه مورد نظر یافت نشد", 404);
+    }
+
+    const existing = await this.commentLikeRepo.findOne({
+      where: { comment: { id: commentId }, user: { id: user.id } },
+    });
+
+    if (existing && existing.isLike === isLike) {
+      // clicking the same reaction again removes it
+      await this.commentLikeRepo.remove(existing);
+    } else if (existing) {
+      existing.isLike = isLike;
+      await this.commentLikeRepo.save(existing);
+    } else {
+      const like = new UserCommentLikes();
+      like.comment = comment;
+      like.user = user;
+      like.isLike = isLike;
+      await this.commentLikeRepo.save(like);
+    }
+
+    // recount from the source of truth instead of manual increments
+    const likesCount = await this.commentLikeRepo.count({
+      where: { comment: { id: commentId }, isLike: true },
+    });
+    const dislikesCount = await this.commentLikeRepo.count({
+      where: { comment: { id: commentId }, isLike: false },
+    });
+    comment.likesCount = likesCount;
+    comment.dislikesCount = dislikesCount;
+    await this.commentRepo.save(comment);
+
+    const myReactionRow = await this.commentLikeRepo.findOne({
+      where: { comment: { id: commentId }, user: { id: user.id } },
+    });
+
+    return {
+      likesCount,
+      dislikesCount,
+      myReaction: myReactionRow ? myReactionRow.isLike : null,
+    };
+  }
+
   async saveComment(
     commentSaveDto: CommentSaveDto,
     productId: number,
@@ -71,7 +171,7 @@ class CommentService {
     const newComment = new Comment();
     newComment.product = product;
     newComment.rate = commentSaveDto.rate;
-    newComment.content = commentSaveDto.content;
+    newComment.content = commentSaveDto.content.trim();
     newComment.user = user;
     await this.commentRepo.save(newComment);
     return newComment;

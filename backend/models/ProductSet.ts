@@ -6,7 +6,11 @@ import { ProductSetItem } from "./ProductSetItem.js";
 export class ProductSet extends Product {
   @Column()
   contain: string;
-  @OneToMany(() => ProductSetItem, (item) => item.productSet)
+  // cascade: saving a NEW ProductSet must persist its member rows too,
+  // otherwise newly created sets silently end up with no items
+  @OneToMany(() => ProductSetItem, (item) => item.productSet, {
+    cascade: true,
+  })
   productSetItems: Relation<ProductSetItem>[];
   @Column({ type: "int", nullable: true, default: null })
   manualPriceOverride: number | null;

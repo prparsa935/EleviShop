@@ -286,7 +286,10 @@ class ProductSetService {
     const setItems = items.map((item) => {
       const plate = plateMap.get(item.plateId);
       if (!plate) {
-        throw new OverallError(`بشقاب با شناسه ${item.plateId} یافت نشد`, 404);
+        throw new OverallError(
+          `بشقابی با شناسه ${item.plateId} در پایگاه داده یافت نشد (شناسه‌های نمایش‌داده‌شده باید بشقاب باشند، نه طرح یا سرویس)`,
+          404
+        );
       }
       const setItem = new ProductSetItem();
       setItem.plate = plate;

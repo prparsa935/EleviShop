@@ -53,15 +53,15 @@ const PersonInformaionForm = ({
     <Modal
       setModalActive={setPersonFormModalActive}
       enable={personFormModalActive}
-      className="lg:h-[70vh] h-full lg:w-[550px] w-100 p-6 rounded-2xl "
+      className="lg:h-[70vh] h-full lg:w-[550px] w-100 p-6 rounded-2xl glass-strong"
     >
       <form onSubmit={submitHandler} className="flex-col flex gap-y-4">
-        <div className="  font-semibold  border-b pb-5 ">
+        <div className="  font-semibold  border-b border-[var(--glass-border)] pb-5 ">
           <span>تکمیل پروفایل</span>
         </div>
         <div className=" grid md:grid-cols-2 grid-cols-1 gap-x-2">
           <div className="flex flex-col gap-y-2">
-            <label className="text-neutral-500 mr-2 font-semibold">نام</label>
+            <label className="text-[var(--sub-text-color)] mr-2 font-semibold">نام</label>
 
             <Input
               name="firstName"
@@ -71,7 +71,7 @@ const PersonInformaionForm = ({
             ></Input>
           </div>
           <div className="flex flex-col gap-y-2">
-            <label className="text-neutral-500 mr-2 font-semibold">
+            <label className="text-[var(--sub-text-color)] mr-2 font-semibold">
               نام خانوادگی
             </label>
             <Input
@@ -82,7 +82,7 @@ const PersonInformaionForm = ({
             ></Input>
           </div>
           <div className="flex flex-col gap-y-2">
-            <label className="text-neutral-500 mr-2 font-semibold">
+            <label className="text-[var(--sub-text-color)] mr-2 font-semibold">
               شماره موبایل
             </label>
             <Input
@@ -94,7 +94,7 @@ const PersonInformaionForm = ({
           </div>
         </div>
         <div className="flex flex-col gap-y-2">
-          <label className=" text-neutral-500 mr-2 font-semibold">
+          <label className=" text-[var(--sub-text-color)] mr-2 font-semibold">
             کد پستی
           </label>
           <Input
@@ -105,7 +105,7 @@ const PersonInformaionForm = ({
           ></Input>
         </div>
         <div className="flex flex-col gap-y-2">
-          <label className=" text-neutral-500 mr-2 font-semibold">
+          <label className=" text-[var(--sub-text-color)] mr-2 font-semibold">
             نشانی پستی
           </label>
           <Input
@@ -119,9 +119,10 @@ const PersonInformaionForm = ({
 
         <Button
           size="lg"
-          moreCss="border-rose-500"
-          txtColor="text-rose-500"
+          bgColor="bg-[var(--color-gold)]"
+          txtColor="text-white"
           shape="rounded-xl"
+          hoverClass="hover:brightness-105"
           disabled={loading}
         >
           {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت اطلاعات"}

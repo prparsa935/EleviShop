@@ -26,6 +26,16 @@ __decorate([
     IsOptional(),
     __metadata("design:type", Number)
 ], InventorySaveDto.prototype, "colorId", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], InventorySaveDto.prototype, "sizeId", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], InventorySaveDto.prototype, "id", void 0);
 var typeEnum;
 (function (typeEnum) {
     typeEnum["plate"] = "plate";
@@ -97,11 +107,6 @@ __decorate([
 ], ProductSaveDto.prototype, "imageIds", void 0);
 export class PlateSaveDto extends ProductSaveDto {
 }
-__decorate([
-    IsNotEmpty({ message: "لطفا سایز قالب را انتخاب کنید" }),
-    IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" }),
-    __metadata("design:type", Number)
-], PlateSaveDto.prototype, "moldSizeId", void 0);
 __decorate([
     IsNotEmpty({ message: "لطفا طرح را انتخاب کنید" }),
     IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" }),
@@ -213,11 +218,6 @@ __decorate([
     IsOptional(),
     __metadata("design:type", Array)
 ], UpdateProductDto.prototype, "imageIds", void 0);
-__decorate([
-    IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" }),
-    IsOptional(),
-    __metadata("design:type", Number)
-], UpdateProductDto.prototype, "moldSizeId", void 0);
 __decorate([
     IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" }),
     IsOptional(),

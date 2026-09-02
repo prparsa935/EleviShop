@@ -8,9 +8,23 @@ class OrderController {
     async findCurrentOrders(req, res) {
         try {
             const user = req["user"];
+            const pageNumber = Number(req.query.pageNumber ?? 1);
             return res
                 .status(200)
-                .json(await orderService.findOrderByCurrentStatus(user));
+                .json(await orderService.findOrderByCurrentStatus(user, pageNumber));
+        }
+        catch (error) {
+            return res
+                .status(500)
+                .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
+        }
+    }
+    async orderCounts(req, res) {
+        try {
+            const user = req["user"];
+            return res
+                .status(200)
+                .json(await orderService.getOrderCounts(user));
         }
         catch (error) {
             return res
@@ -21,9 +35,10 @@ class OrderController {
     async findDeliveredOrders(req, res) {
         try {
             const user = req["user"];
+            const pageNumber = Number(req.query.pageNumber ?? 1);
             return res
                 .status(200)
-                .json(await orderService.findOrderByDeliveredStatus(user));
+                .json(await orderService.findOrderByDeliveredStatus(user, pageNumber));
         }
         catch (error) {
             return res
@@ -34,9 +49,10 @@ class OrderController {
     async findCanceledOrders(req, res) {
         try {
             const user = req["user"];
+            const pageNumber = Number(req.query.pageNumber ?? 1);
             return res
                 .status(200)
-                .json(await orderService.findOrderByCancledStatus(user));
+                .json(await orderService.findOrderByCancledStatus(user, pageNumber));
         }
         catch (error) {
             return res

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import ProductInCartBox from "../productincartbox/ProductInCartBox";
 import ProductInOrderBox from "../productinorderbox/ProductInOrderBox";
-import { formatNumber } from "../../utils/helperMehods";
+import { formatNumber, transformToPersianNumber } from "../../utils/helperMehods";
 
 const OrderDetailsC = ({ order }) => {
   const navigate = useNavigate();
@@ -13,7 +13,14 @@ const OrderDetailsC = ({ order }) => {
           onClick={() => navigate("/profile/orders")}
           class="ml-2  fa-solid fa-arrow-right cursor-pointer gold-text"
         ></i>
-        <span className=" font-semibold text-lg text-[var(--color-white)]">جزیات سفارش</span>
+        <span className=" font-semibold text-lg text-[var(--color-white)]">جزییات سفارش</span>
+        {order?.trackingCode ? (
+          <span className="mr-3 text-sm text-[var(--sub-text-color)]">
+            سفارش {transformToPersianNumber(String(order.trackingCode))}
+          </span>
+        ) : (
+          ""
+        )}
       </div>
       {/* order ovarall details and person details */}
       <div className=" flex flex-col gap-y-10 p-5 border-b border-[var(--glass-border)] text-xs lg:text-sm font-semibold">

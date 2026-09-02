@@ -7,7 +7,7 @@ import HorizentalProductList from "../horizentalproductlist/HorizentalProductLis
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tab/Tab";
 import schema from "../../schema/schema";
 
-const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommentModalActive }) => {
+const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommentModalActive, setToastList, commentsRefreshKey }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [productSetLoading, setProductSetLoading] = useState(true);
   const [productSet, setProductSet] = useState();
@@ -70,7 +70,12 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommen
             </div>
           </TabsContent>
           <TabsContent data-state="active" value="comments">
-            <Comments product={product} setCommentModalActive={setCommentModalActive} />
+            <Comments
+              product={product}
+              setCommentModalActive={setCommentModalActive}
+              setToastList={setToastList}
+              refreshKey={commentsRefreshKey}
+            />
           </TabsContent>
         </Tabs>
         <div>

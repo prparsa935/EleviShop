@@ -89,7 +89,7 @@ class ProductController {
                 throw new FieldErrors(flattenErrors);
             }
             const product = await ProductService.saveProduct(productSaveDto);
-            return res.json(product);
+            return res.json(new ResponseDTO(null, null, true, "محصول با موفقیت ثبت شد", product));
         }
         catch (error) {
             console.log(error);

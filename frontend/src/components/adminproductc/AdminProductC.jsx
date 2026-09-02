@@ -95,7 +95,9 @@ const AdminProductC = ({ handleDeleteItem }) => {
                 key={index}
                 onDelete={() => handleDeleteItem(product?.id)}
                 onEdit={() =>
-                  navigate(`/admin/product/save?productId=${product?.id}`)
+                  navigate(
+                    `/admin/product/save?productId=${product?.productId || product?.id}`
+                  )
                 }
               >
                 <div className="flex items-center gap-x-3">

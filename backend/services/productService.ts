@@ -1,6 +1,7 @@
 import { Product } from "../models/product.js";
 import { Image } from "../models/Image.js";
 import { Category } from "../models/Category.js";
+import { Color } from "../models/Color.js";
 import { Plate } from "../models/plate.js";
 import { ProductSet } from "../models/ProductSet.js";
 import { ProductSetItem } from "../models/ProductSetItem.js";
@@ -9,7 +10,7 @@ import { MoldSize } from "../models/MoldSize.js";
 import { MoldPattern } from "../models/MoldPattern.js";
 import { Pattern } from "../models/Pattern.js";
 import dataSource from "../utils/dbConfiguration.js";
-import { In, Not } from "typeorm";
+import { EntityManager, In, Not } from "typeorm";
 import { ProductFilter } from "../types/productTypes.js";
 import { OverallError } from "../errors/orderSaveError.js";
 import imageService from "./imageService.js";
@@ -83,6 +84,37 @@ class ProductService {
     }
 
     const products = await query.getMany();
+
+    // flat plate-only listing (real product ids) for admin pickers such as the
+    // set member selector — picking a pattern/_set id there used to fail with
+    // "بشقاب با شناسه ... یافت نشد"
+    if (filter.type === "plate") {
+      return products
+        .filter((product) => product.type === "plate")
+        .map((product) => ({
+          cardType: "productSet" as const,
+          id: product.id,
+          productId: product.id,
+          name: product.name,
+          shape: product.moldPattern?.mold?.name ?? null,
+          patternName: product.moldPattern?.pattern?.name ?? product.pattern ?? null,
+          mainImage: product.mainImage
+            ? { filePath: product.mainImage.filePath }
+            : null,
+          inventories: (product.inventories ?? [])
+            .map((inv) => ({ id: inv.id, price: inv.price, quantity: inv.quantity }))
+            .sort((a, b) => a.price - b.price),
+          offPercent: product.offPercent ?? 0,
+          rate: product.rate ?? 0,
+          rateCount: product.rateCount ?? 0,
+          commentCount: product.commentCount ?? 0,
+          buyerCount: product.buyerCount ?? 0,
+          totalQuantity: (product.inventories ?? []).reduce(
+            (sum, inv) => sum + (inv.quantity ?? 0),
+            0
+          ),
+        }));
+    }
 
     let filtered = products;
     if (filter.minPrice && filter.maxPrice) {
@@ -210,7 +242,7 @@ class ProductService {
         "mainCategory",
         "inventories",
         "inventories.color",
-        "moldSize",
+        "inventories.size",
       ],
     });
     if (products.length === 0) {
@@ -236,22 +268,24 @@ class ProductService {
       }
     >();
     for (const product of products) {
-      const size = product.moldSize;
-      const sizeId = size?.id ?? 0;
-      if (!sizeMap.has(sizeId)) {
-        sizeMap.set(sizeId, {
-          sizeId,
-          sizeLabel: size?.sizeLabel ?? "استاندارد",
-          height: size?.height ?? null,
-          width: size?.width ?? null,
-          weight: size?.weight ?? null,
-          productIds: [],
-          inventories: [],
-        });
-      }
-      const sizeEntry = sizeMap.get(sizeId)!;
-      sizeEntry.productIds.push(product.id);
       for (const inv of product.inventories ?? []) {
+        const size = inv.size;
+        const sizeId = size?.id ?? 0;
+        if (!sizeMap.has(sizeId)) {
+          sizeMap.set(sizeId, {
+            sizeId,
+            sizeLabel: size?.sizeLabel ?? "استاندارد",
+            height: size?.height ?? null,
+            width: size?.width ?? null,
+            weight: size?.weight ?? null,
+            productIds: [],
+            inventories: [],
+          });
+        }
+        const sizeEntry = sizeMap.get(sizeId)!;
+        if (!sizeEntry.productIds.includes(product.id)) {
+          sizeEntry.productIds.push(product.id);
+        }
         sizeEntry.inventories.push({
           id: inv.id,
           price: inv.price,
@@ -300,8 +334,7 @@ class ProductService {
         "moldPattern",
         "moldPattern.mold",
         "moldPattern.pattern",
-        "moldSize",
-        "moldSize.mold",
+        "inventories.size",
         "productSetItems",
         "productSetItems.plate",
         "productSetItems.productSet",
@@ -347,6 +380,7 @@ class ProductService {
         price: inventoryDto.price,
         quantity: inventoryDto.quantity,
         colorId: inventoryDto.colorId ?? null,
+        sizeId: inventoryDto.sizeId ?? null,
       });
       return inventory;
     });
@@ -354,15 +388,19 @@ class ProductService {
     return dataSource.transaction(async (entityManager) => {
       await inventoryService.saveInventories(entityManager, inventories);
 
+      if (!productSaveDto.categoryId) {
+        throw new OverallError("لطفا دسته‌بندی را انتخاب کنید", 400);
+      }
+      const category = await entityManager
+        .getRepository(Category)
+        .findOne({ where: { id: productSaveDto.categoryId } });
+      if (!category) {
+        throw new OverallError("دسته‌بندی یافت نشد", 404);
+      }
+
       let product: Product;
       if (productSaveDto.type === "plate") {
         const plateDto = productSaveDto as PlateSaveDto;
-        const moldSize = await this.moldSizeRepo.findOne({
-          where: { id: plateDto.moldSizeId },
-        });
-        if (!moldSize) {
-          throw new OverallError("سایز قالب یافت نشد", 404);
-        }
         const moldPattern = await this.moldPatternRepo.findOne({
           where: { id: plateDto.moldPatternId },
           relations: ["pattern"],
@@ -371,7 +409,6 @@ class ProductService {
           throw new OverallError("ترکیب قالب و طرح یافت نشد", 404);
         }
         const plate = new Plate();
-        plate.moldSize = moldSize;
         plate.moldPattern = moldPattern;
         resolvedPattern = moldPattern.pattern?.name ?? resolvedPattern;
         product = plate;
@@ -412,10 +449,11 @@ class ProductService {
         material: productSaveDto.material,
         name: productSaveDto.productName,
         pattern: resolvedPattern,
+        mainCategory: category,
         code: productSaveDto.code,
         description: productSaveDto.description,
         offPercent: productSaveDto.offPercent,
-        images,
+        images: await this.ownOrCopyGalleryImages(entityManager, images, null),
         mainImage,
         inventories,
         type: productSaveDto.type,
@@ -423,6 +461,42 @@ class ProductService {
 
       return await entityManager.save(Product, product);
     });
+  }
+
+  /**
+   * Gallery images are owned by exactly one product (image.productId). When a
+   * save reuses an image that already belongs to another product, duplicate
+   * the image row (same file) instead of stealing it from the other product —
+   * otherwise the previous product silently loses the image from its gallery.
+   */
+  private async ownOrCopyGalleryImages(
+    entityManager: EntityManager,
+    images: Image[],
+    targetProductId: number | null
+  ): Promise<Image[]> {
+    const imageRepo = entityManager.getRepository(Image);
+    const resolved: Image[] = [];
+    for (const image of images) {
+      let ownerId: number | null = null;
+      if (image.id != null) {
+        const rows: { productId: number | null }[] = await entityManager.query(
+          'SELECT "productId" FROM image WHERE id = $1',
+          [image.id]
+        );
+        ownerId = rows?.[0]?.productId ?? null;
+      }
+      if (
+        ownerId == null ||
+        (targetProductId != null && ownerId === targetProductId)
+      ) {
+        resolved.push(image);
+        continue;
+      }
+      const copy = new Image();
+      copy.filePath = image.filePath;
+      resolved.push(await imageRepo.save(copy));
+    }
+    return resolved;
   }
 
   async deleteProduct(id: number): Promise<void> {
@@ -444,7 +518,19 @@ class ProductService {
       );
     }
 
-    await this.productRepo.remove(product);
+    await dataSource.transaction(async (entityManager) => {
+      // detach gallery images instead of leaving rows referencing the product:
+      // the FK would block the delete and other products may still use the
+      // same file as their main image
+      await entityManager
+        .getRepository(Image)
+        .createQueryBuilder()
+        .update(Image)
+        .set({ product: null })
+        .where("productId = :id", { id })
+        .execute();
+      await entityManager.remove(product);
+    });
   }
 
   async updateProduct(
@@ -485,45 +571,73 @@ class ProductService {
         const images = await imageRepo.find({
           where: { id: In(updateDto.imageIds) },
         });
-        product.images = images;
+        product.images = await this.ownOrCopyGalleryImages(
+          entityManager,
+          images,
+          product.id
+        );
       }
 
       if (updateDto.inventories && updateDto.inventories.length > 0) {
-        if (product.inventories && product.inventories.length > 0) {
-          product.inventories.forEach((inv, index) => {
-            if (updateDto.inventories[index]) {
-              inv.price = updateDto.inventories[index].price;
-              inv.quantity = updateDto.inventories[index].quantity;
-            }
-          });
-          const extraInventories = updateDto.inventories.slice(
-            product.inventories.length
-          );
-          if (extraInventories.length > 0) {
-            const newInventories = extraInventories.map((inventoryDto) => {
-              const inventory = new Inventory();
-              inventory.price = inventoryDto.price;
-              inventory.quantity = inventoryDto.quantity;
-              inventory.colorId = inventoryDto.colorId ?? null;
-              inventory.product = product;
-              return inventory;
-            });
-            await inventoryRepo.save(newInventories);
-            product.inventories = [...product.inventories, ...newInventories];
-          }
-          await inventoryRepo.save(product.inventories);
-        } else {
-          const newInventories = updateDto.inventories.map((inventoryDto) => {
+        const existingInventories = product.inventories || [];
+        const byId = new Map(existingInventories.map((inv) => [inv.id, inv]));
+        const keptIds: number[] = [];
+        const newInventories: Inventory[] = [];
+        for (const inventoryDto of updateDto.inventories) {
+          const target = inventoryDto.id ? byId.get(inventoryDto.id) : undefined;
+          if (target) {
+            target.price = inventoryDto.price;
+            target.quantity = inventoryDto.quantity;
+            // رابطه‌های لودشده باید همگام با اسکالرها به‌روز شوند وگرنه در
+            // save مقدار قبلی رابطه روی ستون FK غلبه می‌کند
+            target.colorId = inventoryDto.colorId ?? null;
+            target.color = inventoryDto.colorId
+              ? ({ id: inventoryDto.colorId } as Color)
+              : null;
+            target.sizeId = inventoryDto.sizeId ?? null;
+            target.size = inventoryDto.sizeId
+              ? ({ id: inventoryDto.sizeId } as MoldSize)
+              : null;
+            keptIds.push(target.id);
+          } else {
             const inventory = new Inventory();
             inventory.price = inventoryDto.price;
             inventory.quantity = inventoryDto.quantity;
             inventory.colorId = inventoryDto.colorId ?? null;
-            inventory.product = product;
-            return inventory;
-          });
-          await inventoryRepo.save(newInventories);
-          product.inventories = newInventories;
+            inventory.sizeId = inventoryDto.sizeId ?? null;
+            // استاب فقط-id به‌جای entity کامل تا serialize پاسخ حلقه ارجاع نسازد
+            inventory.product = { id: product.id } as Product;
+            newInventories.push(inventory);
+          }
         }
+        const removed = existingInventories.filter(
+          (inv) => !keptIds.includes(inv.id)
+        );
+        if (removed.length > 0) {
+          const usedInOrders = await this.orderInventoryRepo
+            .createQueryBuilder("oi")
+            .where("oi.inventoryId IN (:...ids)", {
+              ids: removed.map((r) => r.id),
+            })
+            .getCount();
+          if (usedInOrders > 0) {
+            throw new OverallError(
+              "امکان حذف وجود ندارد: برخی ردیف‌های موجودی در سفارش استفاده شده‌اند",
+              400
+            );
+          }
+          await inventoryRepo.remove(removed);
+        }
+        const kept = existingInventories.filter((inv) =>
+          keptIds.includes(inv.id)
+        );
+        if (kept.length > 0) {
+          await inventoryRepo.save(kept);
+        }
+        if (newInventories.length > 0) {
+          await inventoryRepo.save(newInventories);
+        }
+        product.inventories = [...kept, ...newInventories];
       }
 
       if (updateDto.code !== undefined) product.code = updateDto.code;
@@ -539,8 +653,6 @@ class ProductService {
         product.pattern = updateDto.pattern;
       if (updateDto.type !== undefined) product.type = updateDto.type;
 
-      if (updateDto.moldSizeId !== undefined)
-        product.moldSizeId = updateDto.moldSizeId;
       if (updateDto.moldPatternId !== undefined)
         product.moldPatternId = updateDto.moldPatternId;
 

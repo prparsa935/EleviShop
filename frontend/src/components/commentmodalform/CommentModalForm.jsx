@@ -6,21 +6,27 @@ import RateStar from "../ratestar/RateStar";
 import formApiHandler from "../../api/form";
 import Loading from "../icons/Loading";
 
-const CommentModalForm = ({ commentModalActive, setCommentModalActive, setToastList, setErrors, product }) => {
+const CommentModalForm = ({ commentModalActive, setCommentModalActive, setToastList, setErrors, errors, product, onCommentSaved }) => {
   const [commentStarsRate, setCommentStartRate] = useState(5);
   const [loading, setLoading] = useState(false);
   const changeCommentRateHandler = (rate) => setCommentStartRate(rate);
   const commentFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await formApiHandler(
+    const ok = await formApiHandler(
       `comment/product/${product?.id}/save`,
       { content: e.target.content.value, rate: commentStarsRate },
       setToastList,
       setErrors,
       setLoading
     );
-    setCommentModalActive(false);
+    if (ok) {
+      // keep the modal open on validation errors so the user can fix them
+      e.target.reset();
+      setCommentStartRate(5);
+      setCommentModalActive(false);
+      onCommentSaved?.();
+    }
   };
 
   return (
@@ -46,6 +52,7 @@ const CommentModalForm = ({ commentModalActive, setCommentModalActive, setToastL
           <Input
             name="content"
             type="textarea"
+            iMessage={errors?.content}
             inputclassName="bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--color-white)] rounded-xl focus:ring-2 focus:ring-[var(--color-gold)]/40"
           />
         </div>

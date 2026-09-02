@@ -3,11 +3,8 @@ import { Router } from "express";
 import authController from "../controllers/authController.js";
 
 import {
-  fieldErrorHandler,
   overallErrorHandler,
 } from "../middlewares/errorHandler.js";
-import upload from "../utils/uploadPlateImgConfig.js";
-import imageController from "../controllers/imageController.js";
 import commentController from "../controllers/commentController.js";
 const commentApi = Router();
 // check user with identify
@@ -15,6 +12,20 @@ commentApi.get(
   "/product/:productId",
   authController.authorizeUserWithoutErr,
   commentController.findProductComments,
+  overallErrorHandler
+);
+
+commentApi.get(
+  "/product/:productId/stats",
+  authController.authorizeUserWithoutErr,
+  commentController.getProductCommentStats,
+  overallErrorHandler
+);
+
+commentApi.post(
+  "/:commentId/reaction",
+  authController.authorizeUser,
+  commentController.setCommentReaction,
   overallErrorHandler
 );
 

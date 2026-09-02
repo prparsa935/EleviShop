@@ -7,6 +7,7 @@ const orderApi = Router();
 orderApi.use(authController.authorizeUser);
 
 orderApi.get("/current", orderController.findCurrentOrders);
+orderApi.get("/counts", orderController.orderCounts);
 orderApi.get("/delivered", orderController.findDeliveredOrders);
 orderApi.get("/canceled", orderController.findCanceledOrders);
 orderApi.get("/id/:id", orderController.orderDetail);

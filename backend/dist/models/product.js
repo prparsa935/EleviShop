@@ -7,10 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Column, Index, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, ManyToOne, JoinColumn, TableInheritance, } from "typeorm";
+import { Entity, Column, Index, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne, JoinColumn, TableInheritance, } from "typeorm";
 import { Image } from "./Image.js";
 import { Category } from "./Category.js";
-import { MoldSize } from "./MoldSize.js";
 import { MoldPattern } from "./MoldPattern.js";
 import { Inventory } from "./Inventory.js";
 import { Base } from "./Base.js";
@@ -46,7 +45,7 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
 __decorate([
-    OneToOne(() => Image, { nullable: false }),
+    ManyToOne(() => Image, { nullable: false }),
     JoinColumn(),
     __metadata("design:type", Image)
 ], Product.prototype, "mainImage", void 0);
@@ -100,15 +99,6 @@ __decorate([
     OneToMany(() => Inventory, (inventory) => inventory.product),
     __metadata("design:type", Array)
 ], Product.prototype, "inventories", void 0);
-__decorate([
-    Column({ type: "int", nullable: true, default: null }),
-    __metadata("design:type", Number)
-], Product.prototype, "moldSizeId", void 0);
-__decorate([
-    ManyToOne(() => MoldSize, { nullable: true }),
-    JoinColumn({ name: "moldSizeId" }),
-    __metadata("design:type", Object)
-], Product.prototype, "moldSize", void 0);
 __decorate([
     Column({ type: "int", nullable: true, default: null }),
     __metadata("design:type", Number)

@@ -1,6 +1,6 @@
 import CategoryPath from "../components/categorypath/CategoryPath";
 import { useContext, useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../components/navbar/NavBar";
 import ProductUpperSection from "../components/productuppersection/ProductUpperSection";
 import {
@@ -56,6 +56,7 @@ const Product = () => {
   const [toastList, setToastList] = useState([]);
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const isPatternRoute = location.pathname.startsWith("/pattern/");
   const [imageSiderActive, setImageSiderActive] = useState(false);
   const { shoppingCart } = useContext(AuthContext);
@@ -64,6 +65,7 @@ const Product = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState();
   const [commentModalActive, setCommentModalActive] = useState(false);
+  const [commentsRefreshKey, setCommentsRefreshKey] = useState(0);
   const [setColorOptions, setSetColorOptions] = useState(null);
   const [selectedSetColor, setSelectedSetColor] = useState(null);
   const [selectedMoldSize, setSelectedMoldSize] = useState(null);
@@ -79,7 +81,16 @@ const Product = () => {
       trackEvent("PRODUCT_VIEW", { kind: "pattern" });
     } else {
       setPatternDetail(null);
-      fetchSingleProduct(id, setProduct, setLoading);
+      fetchSingleProduct(id, (data) => {
+        if (data?.kind === "pattern") {
+          // /product/:id served a mold-pattern detail (id belongs to a pattern,
+          // not a product) — render it through the pattern route so specs and
+          // comments work on the representative product
+          navigate("/pattern/" + id, { replace: true });
+        } else {
+          setProduct(data);
+        }
+      }, setLoading);
       trackEvent("PRODUCT_VIEW", { productId: Number(id) });
     }
   }, [id, isPatternRoute]);
@@ -134,12 +145,18 @@ const Product = () => {
       return productInCartIndex !== -1;
     });
     if (inventory) {
-      setSelectedSize({ label: inventory.size, value: inventory });
+      setSelectedSize({
+        label: inventory.size?.sizeLabel ?? null,
+        value: inventory,
+      });
     } else if (lastAvailableInv) {
-      setSelectedSize({ label: lastAvailableInv.size, value: lastAvailableInv });
+      setSelectedSize({
+        label: lastAvailableInv.size?.sizeLabel ?? null,
+        value: lastAvailableInv,
+      });
     } else {
       setSelectedSize({
-        label: product?.inventories?.[0]?.size,
+        label: product?.inventories?.[0]?.size?.sizeLabel ?? null,
         value: product?.inventories?.[0],
       });
     }
@@ -202,10 +219,12 @@ const Product = () => {
       ></ProductImageShow>
       <CommentModalForm
         setErrors={setErrors}
+        errors={errors}
         product={displayProduct}
         setToastList={setToastList}
         commentModalActive={commentModalActive}
         setCommentModalActive={setCommentModalActive}
+        onCommentSaved={() => setCommentsRefreshKey((key) => key + 1)}
       />
       <div className="flex flex-col gap-y-5 mt-7 mx-auto max-w-screen-2xl px-3">
         <CategoryPath categoryPath={displayProduct?.mainCategory?.categoryPath} />
@@ -249,6 +268,7 @@ const Product = () => {
         <ProductLowerSection
           setToastList={setToastList}
           setCommentModalActive={setCommentModalActive}
+          commentsRefreshKey={commentsRefreshKey}
           selectedSize={syntheticSelectedSize}
           setSelectedSize={isPatternRoute ? () => {} : setSelectedSize}
           product={displayProduct}

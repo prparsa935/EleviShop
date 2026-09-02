@@ -23,6 +23,12 @@ export class InventorySaveDto {
   @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
   @IsOptional()
   colorId?: number;
+  @IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" })
+  @IsOptional()
+  sizeId?: number;
+  @IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" })
+  @IsOptional()
+  id?: number;
 }
 enum typeEnum {
   plate = "plate",
@@ -81,10 +87,6 @@ export class ProductSaveDto {
   imageIds: number[];
 }
 export class PlateSaveDto extends ProductSaveDto {
-  @IsNotEmpty({ message: "لطفا سایز قالب را انتخاب کنید" })
-  @IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" })
-  moldSizeId: number;
-
   @IsNotEmpty({ message: "لطفا طرح را انتخاب کنید" })
   @IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" })
   moldPatternId: number;
@@ -175,10 +177,6 @@ export class UpdateProductDto {
   @IsNumber({}, { each: true })
   @IsOptional()
   imageIds?: number[];
-
-  @IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" })
-  @IsOptional()
-  moldSizeId?: number;
 
   @IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" })
   @IsOptional()

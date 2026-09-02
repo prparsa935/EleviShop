@@ -48,10 +48,12 @@ const searchProducts = async (
     }
   }
 };
+// options for the set-member picker: only real plates (flat product ids),
+// otherwise pattern/set cards leak in and the backend rejects those ids
 const searchProducByNametWithCallback = async (name, callback) => {
   try {
     const res = await Axios.get(serverAddress + "product", {
-      params: { name: name, page: 1 },
+      params: { name: name, page: 1, type: "plate" },
     });
     if (res.status === 200) {
       const resData = await res.data;

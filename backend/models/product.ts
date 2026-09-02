@@ -17,7 +17,6 @@ import {
 import { Image } from "./Image.js";
 
 import { Category } from "./Category.js";
-import { MoldSize } from "./MoldSize.js";
 import { MoldPattern } from "./MoldPattern.js";
 import { Inventory } from "./Inventory.js";
 import { Base } from "./Base.js";
@@ -45,7 +44,10 @@ export abstract class Product extends Base {
   code: string;
   @Column({ length: 50 })
   description: string;
-  @OneToOne(() => Image, { nullable: false })
+  // ManyToOne (not OneToOne): several products (e.g. a plate and a set built
+  // from it) must be able to share the same main image. OneToOne put a UNIQUE
+  // constraint on mainImageId and crashed every such save with a 500.
+  @ManyToOne(() => Image, { nullable: false })
   @JoinColumn()
   mainImage: Image;
   // @Column({ nullable: true })
@@ -76,11 +78,6 @@ export abstract class Product extends Base {
   mainCategory: Category;
   @OneToMany(() => Inventory, (inventory) => inventory.product)
   inventories: Inventory[];
-  @Column({ type: "int", nullable: true, default: null })
-  moldSizeId: number | null;
-  @ManyToOne(() => MoldSize, { nullable: true })
-  @JoinColumn({ name: "moldSizeId" })
-  moldSize: Relation<MoldSize>;
   @Column({ type: "int", nullable: true, default: null })
   moldPatternId: number | null;
   @ManyToOne(() => MoldPattern, { nullable: true })

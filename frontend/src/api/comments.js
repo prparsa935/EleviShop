@@ -11,7 +11,6 @@ const findCommentByProductIdPaging = async (
   setHasMore
 ) => {
   try {
-    console.log(page)
     const res = await axios.get(
       serverAddress + "comment/product/" + productId,
       { params: { commentOrder: commentOrder, pageNumber: page } }
@@ -42,4 +41,28 @@ const findCommentByProductIdPaging = async (
     }
   }
 };
-export { findCommentByProductIdPaging };
+
+// average rate + total comments of a product
+const fetchCommentStats = async (productId, setStats) => {
+  try {
+    const res = await axios.get(
+      serverAddress + "comment/product/" + productId + "/stats"
+    );
+    if (res.status === 200) {
+      setStats(res.data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// isLike: true = like, false = dislike (clicking again removes the reaction)
+const setCommentReaction = async (commentId, isLike) => {
+  const res = await axios.post(
+    serverAddress + "comment/" + commentId + "/reaction",
+    { isLike }
+  );
+  return res.data?.data;
+};
+
+export { findCommentByProductIdPaging, fetchCommentStats, setCommentReaction };

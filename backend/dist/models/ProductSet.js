@@ -17,7 +17,9 @@ __decorate([
     __metadata("design:type", String)
 ], ProductSet.prototype, "contain", void 0);
 __decorate([
-    OneToMany(() => ProductSetItem, (item) => item.productSet),
+    OneToMany(() => ProductSetItem, (item) => item.productSet, {
+        cascade: true,
+    }),
     __metadata("design:type", Array)
 ], ProductSet.prototype, "productSetItems", void 0);
 __decorate([

@@ -15,8 +15,20 @@ import { ProductSetItem } from "../models/ProductSetItem.js";
 class OrderService {
   private orderRepo = dataSource.getRepository(Order);
 
-  async findOrderByCurrentStatus(user: User) {
-    const orders = await this.orderRepo.find({
+  private static ORDERS_PAGE_SIZE = 5;
+
+  private static orderPageOptions(pageNumber: number) {
+    const safePage =
+      Number.isFinite(pageNumber) && pageNumber > 0 ? Math.floor(pageNumber) : 1;
+    return {
+      skip: (safePage - 1) * OrderService.ORDERS_PAGE_SIZE,
+      take: OrderService.ORDERS_PAGE_SIZE,
+    };
+  }
+
+  async findOrderByCurrentStatus(user: User, pageNumber: number = 1) {
+    const { skip, take } = OrderService.orderPageOptions(pageNumber);
+    const [orders, total] = await this.orderRepo.findAndCount({
       where: [
         {
           orderStatus: orderStatus.waitingForPayment,
@@ -37,34 +49,70 @@ class OrderService {
           },
         },
       ],
-      relations: ["orderInventories.inventory.product.mainImage"],
+      relations: ["orderInventories.inventory.product.mainImage", "orderInventories.inventory.size"],
+      order: {
+        dateCreated: "DESC",
+      },
+      skip,
+      take,
     });
 
-    return instanceToPlain(orders);
+    return { orders: instanceToPlain(orders), total };
   }
-  async findOrderByDeliveredStatus(user: User) {
-    const orders = await this.orderRepo.find({
+  async getOrderCounts(user: User) {
+    const userWhere = { user: { id: user.id } };
+    const [current, delivered, canceled] = await Promise.all([
+      this.orderRepo.count({
+        where: [
+          { ...userWhere, orderStatus: orderStatus.waitingForPayment },
+          { ...userWhere, orderStatus: orderStatus.successfulPayOrValidated },
+          { ...userWhere, orderStatus: orderStatus.waitingFordelivery },
+        ],
+      }),
+      this.orderRepo.count({
+        where: { ...userWhere, orderStatus: orderStatus.delivered },
+      }),
+      this.orderRepo.count({
+        where: { ...userWhere, orderStatus: orderStatus.canceled },
+      }),
+    ]);
+    return { current, delivered, canceled };
+  }
+  async findOrderByDeliveredStatus(user: User, pageNumber: number = 1) {
+    const { skip, take } = OrderService.orderPageOptions(pageNumber);
+    const [orders, total] = await this.orderRepo.findAndCount({
       where: {
         orderStatus: orderStatus.delivered,
         user: {
           id: user.id,
         },
       },
-      relations: ["orderInventories.inventory.product.mainImage"],
+      relations: ["orderInventories.inventory.product.mainImage", "orderInventories.inventory.size"],
+      order: {
+        dateCreated: "DESC",
+      },
+      skip,
+      take,
     });
-    return instanceToPlain(orders);
+    return { orders: instanceToPlain(orders), total };
   }
-  async findOrderByCancledStatus(user: User) {
-    const orders = await this.orderRepo.find({
+  async findOrderByCancledStatus(user: User, pageNumber: number = 1) {
+    const { skip, take } = OrderService.orderPageOptions(pageNumber);
+    const [orders, total] = await this.orderRepo.findAndCount({
       where: {
         orderStatus: orderStatus.canceled,
         user: {
           id: user.id,
         },
       },
-      relations: ["orderInventories.inventory.product.mainImage"],
+      relations: ["orderInventories.inventory.product.mainImage", "orderInventories.inventory.size"],
+      order: {
+        dateCreated: "DESC",
+      },
+      skip,
+      take,
     });
-    return instanceToPlain(orders);
+    return { orders: instanceToPlain(orders), total };
   }
   async findOrderById(id: number, user: User) {
     const order = await this.orderRepo.findOne({
@@ -75,7 +123,7 @@ class OrderService {
         },
       },
 
-      relations: ["orderInventories.inventory.product.mainImage", "person"],
+      relations: ["orderInventories.inventory.product.mainImage", "orderInventories.inventory.size", "person"],
     });
 
     return instanceToPlain(order);

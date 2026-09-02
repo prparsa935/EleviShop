@@ -42,7 +42,7 @@ const Profile = () => {
         <div className="lg:col-span-5 lg:order-2 order-1 col-span-12 lg:mr-4">
           {/* my orders */}
 
-          <MyOrders />
+          <MyOrders setToastList={setToastList} />
         </div>
       </div>
     </div>

@@ -38,7 +38,7 @@ const SearchFilter = () => {
       </div>
 
       <div className="flex flex-col ">
-        <div className="flex justify-between items-center cursor-pointer w-100 mb-2">
+        <div className="flex justify-between items-center cursor-pointer w-100 mb-3">
           <h5 className=" text-sm font-medium text-[var(--color-white)]  ">دسته بندی</h5>
           <i class="fa-solid fa-angle-down ml-1 gold-text"></i>
         </div>

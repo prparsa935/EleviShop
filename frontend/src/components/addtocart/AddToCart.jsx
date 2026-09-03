@@ -25,7 +25,6 @@ const AddToCart = ({
     deleteProductFromCart,
   } = useContext(AuthContext);
   const isSet = product?.type === "productSet";
-  const setColors = colorOptions?.colors || [];
   const setHasNoCommonColor = colorOptions?.hasNoCommonColor === true;
   const displayPrice = isSet ? selectedSetColor?.price : inventory?.price;
   const availableQuantity = isSet
@@ -79,7 +78,7 @@ const AddToCart = ({
   return (
     <div
       className={
-        "lg:w-[333px] w-100 lg:static fixed bottom-0 glass-strong z-30 left-0 "
+        "lg:w-[333px] lg:shrink-0 w-100 lg:static fixed bottom-0 glass-strong z-30 left-0 "
       }
     >
       {/* add to cart */}
@@ -126,22 +125,6 @@ const AddToCart = ({
         <div className="select-none flex flex-col ">
           {isSet ? (
             <div className="flex flex-col gap-y-3">
-              <div className="flex flex-wrap gap-x-2 gap-y-2">
-                {setColors.map((color) => (
-                  <button
-                    key={color.colorId}
-                    type="button"
-                    onClick={() => setSelectedSetColor(color)}
-                    title={color.name}
-                    className={`w-8 h-8 rounded-full border-2 ${
-                      selectedSetColor?.colorId === color.colorId
-                        ? "border-[var(--color-gold)] scale-110"
-                        : "border-[var(--glass-border)]"
-                    }`}
-                    style={{ backgroundColor: color.hexCode }}
-                  ></button>
-                ))}
-              </div>
               {setHasNoCommonColor ? (
                 <div className="text-xs text-[var(--bf-red)]">
                   این سرویس رنگ مشترکی بین قطعاتش ندارد و در حال حاضر قابل سفارش نیست

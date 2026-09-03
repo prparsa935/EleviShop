@@ -8,6 +8,7 @@
  *
  * اجرا:  node scripts/compress-images.js
  * فقط گزارش بدون تغییر:  node scripts/compress-images.js --dry-run
+ * پارامترها: --max-width 1400  --jpeg-quality 62  --png-quality 70  --webp-quality 60  --skip-under 20
  */
 
 import fs from 'fs';
@@ -19,11 +20,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', 'public');
 const DRY_RUN = process.argv.includes('--dry-run');
 
-const MAX_WIDTH = 1920;             // حداکثر عرض
-const JPEG_QUALITY = 78;
-const PNG_QUALITY = 80;
-const WEBP_QUALITY = 75;
-const SKIP_UNDER_BYTES = 30 * 1024; // عکس‌های زیر ۳۰KB دست نمی‌خورند
+function arg(name, fallback) {
+  const i = process.argv.indexOf(`--${name}`);
+  return i !== -1 && process.argv[i + 1] ? Number(process.argv[i + 1]) : fallback;
+}
+
+const MAX_WIDTH = arg('max-width', 1920);        // حداکثر عرض
+const JPEG_QUALITY = arg('jpeg-quality', 78);
+const PNG_QUALITY = arg('png-quality', 80);
+const WEBP_QUALITY = arg('webp-quality', 75);
+const SKIP_UNDER_KB = arg('skip-under', 30);
+const SKIP_UNDER_BYTES = SKIP_UNDER_KB * 1024;   // عکس‌های کوچک‌تر دست نمی‌خورند
 
 const IMAGE_RE = /\.(jpe?g|png|webp|avif)$/i;
 
@@ -54,7 +61,8 @@ async function main() {
     process.exit(1);
   }
   const files = walk(ROOT);
-  console.log(`تعداد عکس‌ها: ${files.length}${DRY_RUN ? ' (dry-run)' : ''}\n`);
+  console.log(`تعداد عکس‌ها: ${files.length}${DRY_RUN ? ' (dry-run)' : ''}`);
+  console.log(`تنظیمات: عرض حداکثر ${MAX_WIDTH}px | JPEG q${JPEG_QUALITY} | PNG q${PNG_QUALITY} | WebP q${WEBP_QUALITY}\n`);
 
   let beforeTotal = 0, afterTotal = 0, changed = 0, skipped = 0, failed = 0;
 

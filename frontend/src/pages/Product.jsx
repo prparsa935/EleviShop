@@ -206,8 +206,8 @@ const Product = () => {
     <div className="product-page app-bg min-h-screen">
       <NavBar />
       <div className=" sticky top-24 w-100 h-0 z-50 ">
-        {toastList?.map((toast) => (
-          <Alert duration={5000} type={toast.type}>
+        {toastList?.map((toast, toastIndex) => (
+          <Alert key={toastIndex} duration={5000} type={toast.type}>
             {toast.message}
           </Alert>
         ))}
@@ -272,9 +272,12 @@ const Product = () => {
           selectedSize={syntheticSelectedSize}
           setSelectedSize={isPatternRoute ? () => {} : setSelectedSize}
           product={displayProduct}
+          colorOptions={setColorOptions}
+          selectedSetColor={selectedSetColor}
+          setSelectedSetColor={setSelectedSetColor}
         ></ProductLowerSection>
       </div>
-      <div className="h-[200px]"></div>
+      <div className="h-[200px] lg:hidden"></div>
     </div>
   );
 };

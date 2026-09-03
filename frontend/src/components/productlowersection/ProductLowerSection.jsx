@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import fetchSingleItem from "../../api/fetchSingleItem";
 import { fetchRelatedProducts } from "../../api/productApi";
 import AddToCart from "../addtocart/AddToCart";
@@ -7,7 +8,17 @@ import HorizentalProductList from "../horizentalproductlist/HorizentalProductLis
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tab/Tab";
 import schema from "../../schema/schema";
 
-const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommentModalActive, setToastList, commentsRefreshKey }) => {
+const ProductLowerSection = ({
+  selectedSize,
+  setSelectedSize,
+  product,
+  setCommentModalActive,
+  setToastList,
+  commentsRefreshKey,
+  colorOptions,
+  selectedSetColor,
+  setSelectedSetColor,
+}) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [productSetLoading, setProductSetLoading] = useState(true);
   const [productSet, setProductSet] = useState();
@@ -18,31 +29,55 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommen
     } else if (product?.type === "plate") {
       fetchSingleItem(
         "productSet/",
-        product?.productSetItems?.[0]?.productSet?.id,
+        product?.plateSetItems?.[0]?.productSet?.id,
         setProductSet,
         setProductSetLoading
       );
     }
   }, [product]);
 
+  // every set this plate belongs to; empty for sets themselves
+  const containingSets =
+    product?.plateSetItems
+      ?.map((item) => item.productSet)
+      .filter(Boolean) || [];
+
+  const addToCartBox = (
+    <AddToCart
+      inventory={selectedSize?.value}
+      product={product}
+      colorOptions={colorOptions}
+      selectedSetColor={selectedSetColor}
+      setSelectedSetColor={setSelectedSetColor}
+    ></AddToCart>
+  );
+
   return (
     <div className="flex flex-col gap-y-10">
       {product?.type !== "productSet" && product?.type !== "patternCard" ? (
-        <HorizentalProductList title={"سرویس"} products={[productSet]}></HorizentalProductList>
+        containingSets.length > 0 ? (
+          <HorizentalProductList title={"سرویس"} products={containingSets}></HorizentalProductList>
+        ) : (
+          <HorizentalProductList title={"سرویس"} products={[productSet]}></HorizentalProductList>
+        )
       ) : (
         <></>
       )}
 
-      <div>
-        <div className="flex items-center gap-x-2 mb-3 px-2">
-          <span className="relative w-7 h-7 shrink-0">
-            <span className="absolute inset-0 rounded-full border-2 border-[var(--color-gold)]"></span>
-            <span className="absolute inset-[6px] rounded-full border-2 border-[var(--color-yellow)]"></span>
-          </span>
-          <h3 className="text-lg font-semibold text-[var(--color-white)]">اجزای سرویس</h3>
+      {productSet?.productSetItems?.length ? (
+        <div>
+          <div className="flex items-center gap-x-2 mb-3 px-2">
+            <span className="relative w-7 h-7 shrink-0">
+              <span className="absolute inset-0 rounded-full border-2 border-[var(--color-gold)]"></span>
+              <span className="absolute inset-[6px] rounded-full border-2 border-[var(--color-yellow)]"></span>
+            </span>
+            <h3 className="text-lg font-semibold text-[var(--color-white)]">اجزای سرویس</h3>
+          </div>
+          <HorizentalProductList products={productSet?.productSetItems?.map((item) => item.plate)}></HorizentalProductList>
         </div>
-        <HorizentalProductList products={productSet?.productSetItems?.map((item) => item.plate)}></HorizentalProductList>
-      </div>
+      ) : (
+        <></>
+      )}
 
       <div className="flex w-100 glass rounded-3xl p-4">
         <Tabs activationMode={"manual"} defaultValue="properties" orientation="vertical" className="grow ">
@@ -79,12 +114,14 @@ const ProductLowerSection = ({ selectedSize, setSelectedSize, product, setCommen
           </TabsContent>
         </Tabs>
         <div>
-          <div className="w-[333px] xl:block hidden mr-10">
-            <AddToCart inventory={selectedSize?.value} product={product}></AddToCart>
-          </div>
+          <div className="w-[333px] xl:block hidden mr-10">{addToCartBox}</div>
         </div>
       </div>
-      <HorizentalProductList title={"محصولات مرتبط"} product={relatedProducts}></HorizentalProductList>
+      <HorizentalProductList title={"محصولات مرتبط"} products={relatedProducts}></HorizentalProductList>
+
+      {/* mobile footer-style purchase bar; portaled to body so no ancestor
+          (glass/backdrop-filter) can re-anchor the fixed element */}
+      {createPortal(<div className="lg:hidden">{addToCartBox}</div>, document.body)}
     </div>
   );
 };

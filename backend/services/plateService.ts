@@ -14,8 +14,8 @@ class PlateService {
         "images",
         "mainCategory",
         "inventories",
-        "productSetItems",
-        "productSetItems.productSet",
+        "plateSetItems",
+        "plateSetItems.productSet",
       ],
     });
   }

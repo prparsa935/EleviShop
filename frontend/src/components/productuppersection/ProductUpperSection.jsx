@@ -11,6 +11,7 @@ const ProductUpperSection = ({
   selectedSize,
   colorOptions,
   selectedSetColor,
+  setSelectedSetColor,
   moldSizeOptions,
   selectedMoldSize,
   onMoldSizeChange,
@@ -20,6 +21,7 @@ const ProductUpperSection = ({
 }) => {
   const [liked, setLiked] = useState(false);
   const isPatternCard = product?.type === "patternCard";
+  const isSetProduct = product?.type === "productSet";
 
   return (
     <div className="flex flex-col lg:flex-row justify-between glass rounded-3xl p-4">
@@ -128,6 +130,44 @@ const ProductUpperSection = ({
         ) : (
           <></>
         )}
+        {isSetProduct ? (
+          <div className="flex flex-col gap-y-2 px-3 pb-1">
+            {(colorOptions?.colors || []).length > 0 ? (
+              <>
+                <span className="text-sm font-medium text-[var(--sub-text-color)]">
+                  رنگ
+                </span>
+                <div className="flex flex-wrap gap-x-2 gap-y-2">
+                  {colorOptions.colors.map((color) => (
+                    <button
+                      key={color.colorId}
+                      type="button"
+                      onClick={() => setSelectedSetColor(color)}
+                      title={color.name}
+                      className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                        selectedSetColor?.colorId === color.colorId
+                          ? "border-[var(--color-gold)] scale-110"
+                          : "border-[var(--glass-border)]"
+                      }`}
+                      style={{ backgroundColor: color.hexCode }}
+                    ></button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+            {colorOptions?.hasNoCommonColor ? (
+              <div className="text-xs text-[var(--bf-red)]">
+                این سرویس رنگ مشترکی بین قطعاتش ندارد و در حال حاضر قابل سفارش نیست
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex lg:flex-row flex-col w-100">
           <div className="grow flex flex-col gap-y-4 mt-2 border-t border-[var(--glass-border)] pt-3 mx-5 ">
             <div className="flex items-center text-xs ">
@@ -166,12 +206,17 @@ const ProductUpperSection = ({
               </div>
             </div>
           </div>
-          <AddToCart
-            inventory={selectedSize?.value}
-            product={product}
-            colorOptions={colorOptions}
-            selectedSetColor={selectedSetColor}
-          />
+          {/* desktop upper purchase box; on mobile the single fixed footer
+              bar (portaled from ProductLowerSection) replaces it */}
+          <div className="hidden lg:block lg:w-[333px] lg:shrink-0">
+            <AddToCart
+              inventory={selectedSize?.value}
+              product={product}
+              colorOptions={colorOptions}
+              selectedSetColor={selectedSetColor}
+              setSelectedSetColor={setSelectedSetColor}
+            />
+          </div>
         </div>
       </div>
     </div>

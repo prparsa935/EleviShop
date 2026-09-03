@@ -34,7 +34,8 @@ app.use(express.json());
 
 const imageCacheHeaders = (res, path) => {
   if (/\.(png|jpe?g|webp|gif|svg|avif|ico)$/i.test(path)) {
-    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    // فایل‌ها با همان نام جایگزین می‌شوند، پس مرورگر باید هر بار با سرور چک کند (ETag → 304)
+    res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
   }
 };
 

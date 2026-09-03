@@ -13,6 +13,11 @@ import SmartImage from "../smartimage/SmartImage";
 const HorizentalProductList = ({ products, title }) => {
   const navigate = useNavigate();
 
+  // nothing to show yet (or nothing at all) — don't render an empty carousel
+  if (!products?.length) {
+    return null;
+  }
+
   return (
     <div className=" w-100 ">
       <Carousel

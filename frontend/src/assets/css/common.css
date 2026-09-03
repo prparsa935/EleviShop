@@ -4,6 +4,11 @@
 html{
     font-family:var(--font-family)
 }
+body {
+    font-family: var(--font-family);
+    background-color: var(--tp-b-color);
+    color: var(--color-white);
+}
 input,
 textarea,
 button,

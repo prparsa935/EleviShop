@@ -38,11 +38,11 @@ export abstract class Product extends Base {
 
   @OneToMany(() => Image, (image) => image.product)
   images: Image[];
-  @Column({ nullable: false, length: 20 })
+  @Column({ nullable: false, length: 100 })
   name: string;
   @Column({ nullable: false, length: 20 })
   code: string;
-  @Column({ length: 50 })
+  @Column({ length: 1000 })
   description: string;
   // ManyToOne (not OneToOne): several products (e.g. a plate and a set built
   // from it) must be able to share the same main image. OneToOne put a UNIQUE
@@ -52,13 +52,13 @@ export abstract class Product extends Base {
   mainImage: Image;
   // @Column({ nullable: true })
   // ratio: number;
-  @Column({ length: 10, nullable: false })
+  @Column({ length: 50, nullable: false })
   pattern: string;
   @Column({ default: 0 })
   offPercent: number;
   @Column({ default: 1 })
   countPerProduct: number;
-  @Column({ nullable: false })
+  @Column({ length: 50, nullable: false })
   material: string;
   @Column({ nullable: true, default: 0 })
   rate: number;

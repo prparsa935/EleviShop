@@ -93,7 +93,10 @@ const AdminProductC = ({ handleDeleteItem }) => {
             return (
               <AdminItemBox
                 key={index}
-                onDelete={() => handleDeleteItem(product?.id)}
+                // pattern cards carry the moldPattern id in `id`; the real
+                // product id lives in `productId` — deleting with `id` used to
+                // 404 with «محصول مورد نظر یافت نشد»
+                onDelete={() => handleDeleteItem(product?.productId || product?.id)}
                 onEdit={() =>
                   navigate(
                     `/admin/product/save?productId=${product?.productId || product?.id}`

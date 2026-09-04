@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult, ResultFactory } from "express-validator";
+import { ValidationError } from "class-validator";
 import ResponseDTO from "../dtos/response.dto.js";
 import { FieldErrors, OverallError } from "../errors/orderSaveError.js";
 import FieldErrorsType from "../types/fieldErrors.js";
@@ -40,11 +41,11 @@ const overallErrorHandler = (
     const flatten = (errs: ValidationError[], parent?: string): void => {
       errs.forEach((err) => {
         const property = parent ? `${parent}.${err.property}` : err.property;
-        const messages = err.constraints
-          ? Object.values(err.constraints)
-          : ["مقدار وارد شده معتبر نیست"];
-        if (!fieldErrors[property.split(".")[0]]) {
-          fieldErrors[property.split(".")[0]] = messages[0];
+        if (err.constraints) {
+          const root = property.split(".")[0];
+          if (!fieldErrors[root]) {
+            fieldErrors[root] = Object.values(err.constraints)[0];
+          }
         }
         if (err.children && err.children.length > 0) {
           flatten(err.children, property);
@@ -52,6 +53,12 @@ const overallErrorHandler = (
       });
     };
     flatten(error.validationErrors);
+    // a failing parent may carry no constraints and message-less children
+    error.validationErrors.forEach((err) => {
+      if (!fieldErrors[err.property]) {
+        fieldErrors[err.property] = "مقدار وارد شده معتبر نیست";
+      }
+    });
     return res.status(400).json(new ResponseDTO(fieldErrors, null, false));
   } else {
     return res

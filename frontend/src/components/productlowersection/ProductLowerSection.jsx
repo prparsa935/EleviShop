@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import fetchSingleItem from "../../api/fetchSingleItem";
 import { fetchRelatedProducts } from "../../api/productApi";
 import AddToCart from "../addtocart/AddToCart";
 import Comments from "../Comments/Comments";
 import HorizentalProductList from "../horizentalproductlist/HorizentalProductList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tab/Tab";
-import { serverAddress } from "../../App";
-import { useNavigate } from "react-router";
 import schema from "../../schema/schema";
 
 const ProductLowerSection = ({
@@ -14,87 +13,94 @@ const ProductLowerSection = ({
   setSelectedSize,
   product,
   setCommentModalActive,
+  setToastList,
+  commentsRefreshKey,
+  colorOptions,
+  selectedSetColor,
+  setSelectedSetColor,
 }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [serviceLoading, setServiceLoading] = useState(true);
-  const [service, setService] = useState();
-  const navigate = useNavigate();
+  const [productSetLoading, setProductSetLoading] = useState(true);
+  const [productSet, setProductSet] = useState();
   useEffect(() => {
     fetchRelatedProducts(product?.id, product?.code, setRelatedProducts);
-    console.log(product.type);
-    console.log(product.service);
-    if (product.type === "service") {
-      fetchSingleItem("service/", product?.id, setService, setServiceLoading);
-    } else if (product.type === "plate") {
+    if (product?.type === "productSet") {
+      fetchSingleItem("productSet/", product?.id, setProductSet, setProductSetLoading);
+    } else if (product?.type === "plate") {
       fetchSingleItem(
-        "service/",
-        product?.service?.id,
-        setService,
-        setServiceLoading
+        "productSet/",
+        product?.plateSetItems?.[0]?.productSet?.id,
+        setProductSet,
+        setProductSetLoading
       );
     }
   }, [product]);
-  useEffect(() => {
-    console.log(service);
-  }, [service]);
+
+  // every set this plate belongs to; empty for sets themselves
+  const containingSets =
+    product?.plateSetItems
+      ?.map((item) => item.productSet)
+      .filter(Boolean) || [];
+
+  const addToCartBox = (
+    <AddToCart
+      inventory={selectedSize?.value}
+      product={product}
+      colorOptions={colorOptions}
+      selectedSetColor={selectedSetColor}
+      setSelectedSetColor={setSelectedSetColor}
+    ></AddToCart>
+  );
+
   return (
     <div className="flex flex-col gap-y-10">
-      {product?.type !== "service" ? (
-        <HorizentalProductList
-          title={"سرویس"}
-          products={[service]}
-        ></HorizentalProductList>
+      {product?.type !== "productSet" && product?.type !== "patternCard" ? (
+        containingSets.length > 0 ? (
+          <HorizentalProductList title={"سرویس"} products={containingSets}></HorizentalProductList>
+        ) : (
+          <HorizentalProductList title={"سرویس"} products={[productSet]}></HorizentalProductList>
+        )
       ) : (
         <></>
       )}
 
-      <HorizentalProductList
-        title={"اجزای سرویس"}
-        products={service?.plates}
-      ></HorizentalProductList>
-      <div className="flex w-100 ">
-        <Tabs
-          activationMode={"manual"}
-          defaultValue="properties"
-          orientation="vertical"
-          className="grow "
-        >
-          <TabsList
-            className={
-              "w-100 lg:justify-start justify-around sticky top-[96px] mb-8  "
-            }
-          >
-            <TabsTrigger className={"lg:grow-0 grow"} value="introduction">
-              معرفی
-            </TabsTrigger>
-            <TabsTrigger className={"lg:grow-0 grow"} value="properties">
-              مشخصات
-            </TabsTrigger>
-            <TabsTrigger className={"lg:grow-0 grow"} value="comments">
-              دیدگاه ها
-            </TabsTrigger>
+      {productSet?.productSetItems?.length ? (
+        <div>
+          <div className="flex items-center gap-x-2 mb-3 px-2">
+            <span className="relative w-7 h-7 shrink-0">
+              <span className="absolute inset-0 rounded-full border-2 border-[var(--color-gold)]"></span>
+              <span className="absolute inset-[6px] rounded-full border-2 border-[var(--color-yellow)]"></span>
+            </span>
+            <h3 className="text-lg font-semibold text-[var(--color-white)]">اجزای سرویس</h3>
+          </div>
+          <HorizentalProductList products={productSet?.productSetItems?.map((item) => item.plate)}></HorizentalProductList>
+        </div>
+      ) : (
+        <></>
+      )}
+
+      <div className="flex w-100 glass rounded-3xl p-4">
+        <Tabs activationMode={"manual"} defaultValue="properties" orientation="vertical" className="grow ">
+          <TabsList className={"w-100 lg:justify-start justify-around sticky top-[96px] mb-8 border-b border-[var(--glass-border)] "}>
+            <TabsTrigger className={"lg:grow-0 grow"} value="introduction">معرفی</TabsTrigger>
+            <TabsTrigger className={"lg:grow-0 grow"} value="properties">مشخصات</TabsTrigger>
+            <TabsTrigger className={"lg:grow-0 grow"} value="comments">دیدگاه ها</TabsTrigger>
           </TabsList>
           <TabsContent data-state="active" value="introduction">
-            <div className=" text-neutral-600 text-justify lg:text-base lg:leading-8 text-sm   !leading-6 font-medium mx-5">
+            <div className="text-[var(--sub-text-color)] text-justify lg:text-base lg:leading-8 text-sm !leading-6 font-medium mx-5">
               {product?.description}
             </div>
           </TabsContent>
           <TabsContent data-state="active" value="properties">
             <div className="flex lg:gap-x-72 lg:flex-row flex-col mx-10 ">
-              <div className=" lg:text-xl text-base font-medium text-neutral-700 mb-5">
-                مشخصات
-              </div>
-              <div className="flex flex-col gap-y-8 ">
-                {schema[product?.type].map((attr) => {
-                  return (
-                    <div className="flex lg:text-base text-xs lg:justify-normal justify-between ">
-                      <span className=" text-neutral-400 font-semibold w-36  ">
-                        {attr.value}
-                      </span>
-                      <span>{product[attr.key]}</span>
-                    </div>
-                  );
-                })}
+              <div className="lg:text-xl text-base font-semibold text-[var(--color-white)] mb-5">مشخصات</div>
+              <div className="flex flex-col gap-y-5 ">
+                {schema[product?.type]?.map((attr, i) => (
+                  <div key={i} className="flex lg:text-base text-xs lg:justify-normal justify-between border-b border-dashed border-[var(--glass-border)] pb-2">
+                    <span className="text-[var(--sub-text-color)] font-semibold w-36">{attr.value}</span>
+                    <span className="text-[var(--color-white)]">{product[attr.key]}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </TabsContent>
@@ -102,22 +108,20 @@ const ProductLowerSection = ({
             <Comments
               product={product}
               setCommentModalActive={setCommentModalActive}
+              setToastList={setToastList}
+              refreshKey={commentsRefreshKey}
             />
           </TabsContent>
         </Tabs>
         <div>
-          <div className="w-[333px] xl:block hidden mr-10">
-            <AddToCart
-              inventory={selectedSize?.value}
-              product={product}
-            ></AddToCart>
-          </div>
+          <div className="w-[333px] xl:block hidden mr-10">{addToCartBox}</div>
         </div>
       </div>
-      <HorizentalProductList
-        title={"محصولات مرتبط"}
-        product={relatedProducts}
-      ></HorizentalProductList>
+      <HorizentalProductList title={"محصولات مرتبط"} products={relatedProducts}></HorizentalProductList>
+
+      {/* mobile footer-style purchase bar; portaled to body so no ancestor
+          (glass/backdrop-filter) can re-anchor the fixed element */}
+      {createPortal(<div className="lg:hidden">{addToCartBox}</div>, document.body)}
     </div>
   );
 };

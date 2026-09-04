@@ -7,14 +7,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn, } from "typeorm";
+import { Column, Entity, OneToOne, } from "typeorm";
 import { User } from "./User.js";
-let Person = class Person {
+import { Base } from "./Base.js";
+let Person = class Person extends Base {
 };
-__decorate([
-    PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Person.prototype, "id", void 0);
 __decorate([
     Column({ length: 20, nullable: false }),
     __metadata("design:type", String)

@@ -1,23 +1,21 @@
-import { useState } from "react"
+import { useState } from "react";
 
-const Badge=(props)=>{
-    
-    return(
-        <div className="relative  flex ">
-            {/* todo dynamic position */}
-            <div style={{transform:'translate(-50%, -50%)'}} className={"absolute inline-block "+(props.position?props.position:'top-0 left-0')}>
+const Badge = (props) => {
+  return (
+    <div className="relative  flex ">
+      {/* todo dynamic position */}
+      <div
+        style={{ transform: "translate(-50%, -50%)" }}
+        className={
+          "absolute inline-block " +
+          (props.position ? props.position : "top-0 left-0")
+        }
+      >
+        {props.content}
+      </div>
 
-                    {props.content}
-
-      
-
-            </div>
-         
-            {props.children}
-
-            
-            
-        </div>
-    )
-}
-export default Badge
+      {props.children}
+    </div>
+  );
+};
+export default Badge;

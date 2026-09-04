@@ -1,9 +1,11 @@
 export type ProductFilter = {
   categoryId?: number;
-  brand?: string;
   name?: string;
   minPrice?: number;
   maxPrice?: number;
-  enableOff?: Boolean;
+  enableOff?: string;
   pageNumber?: number;
+  // when "plate": return flat plate cards only (real product ids, no pattern
+  // grouping, no sets) — used by pickers like the set member selector
+  type?: string;
 };

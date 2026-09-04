@@ -9,8 +9,8 @@ const Loading = (props) => {
     <div role="status" className={color}>
       <svg
         aria-hidden="true"
-        class={
-          " text-gray-400 animate-spin dark:text-gray-600  fill-red-500 " +
+        className={
+          " text-[var(--color-gold)] animate-spin fill-[var(--color-gold)] " +
           props.className
         }
         viewBox="0 0 100 101"
@@ -26,7 +26,7 @@ const Loading = (props) => {
           fill="currentFill"
         />
       </svg>
-      <span class="sr-only">Loading...</span>
+      <span className="sr-only">Loading...</span>
     </div>
   );
 };

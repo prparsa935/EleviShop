@@ -1,0 +1,1 @@
+import{a as l,s as c}from"./index-FG6dcKRk.js";const i=async(e,t,r,a)=>{try{console.log("hello");const s=await l.get(c+e+t);if(s.status===200){const o=await s.data;r(o)}}catch{}finally{a&&a(!1)}};export{i as f};

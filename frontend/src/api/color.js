@@ -54,4 +54,15 @@ const findColorByNamePaging = async (
     }
   }
 };
-export { findColorByName, findColorByNamePaging };
+const findColorById = async (colorId) => {
+  try {
+    const res = await axios.get(serverAddress + "color/id/" + colorId);
+    if (res.status === 200) {
+      return res.data;
+    }
+  } catch (error) {
+    return null;
+  }
+};
+
+export { findColorByName, findColorByNamePaging, findColorById };

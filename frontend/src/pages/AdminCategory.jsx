@@ -1,6 +1,5 @@
 import { useSearchParams } from "react-router-dom";
 import deleteItem from "../api/delete";
-import AdminBrandC from "../components/Adminbrandc/AdminBrandC";
 import AdminCategoryC from "../components/admincategoryc/AdminCategoryC";
 import AdminColorC from "../components/admincolorc/AdminColorC";
 
@@ -17,12 +16,14 @@ const AdminCategory = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [toastList, setToastList] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const handleDeleteConfirm = () => {
     deleteItem(
       "category/admin/delete/",
       searchParams.get("categoryId"),
-      setToastList
+      setToastList,
+      setErrors
     );
   };
   return (
@@ -34,8 +35,8 @@ const AdminCategory = () => {
         deleteModalActive={deleteModalActive}
         onDelete={handleDeleteConfirm}
       ></DeleteModal>
-      <ToastList toastList={toastList} />;
-      <div className="mx-auto max-w-screen-xl grid grid-cols-7  mt-10">
+      <ToastList toastList={toastList} />
+      <div className="mx-auto max-w-screen-xl grid grid-cols-7 mt-10">
         <div className="lg:col-span-2 lg:order-1 col-span-12 order-2">
           <AdminSideBar />
         </div>

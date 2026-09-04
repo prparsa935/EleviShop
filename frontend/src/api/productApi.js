@@ -21,7 +21,6 @@ const searchProducts = async (
   setHasMore
 ) => {
   try {
-   
     const res = await Axios.get(serverAddress + "product", {
       params: { ...searchParams, pageNumber: page },
     });
@@ -49,17 +48,36 @@ const searchProducts = async (
     }
   }
 };
+// options for the set-member picker: only real plates (flat product ids),
+// otherwise pattern/set cards leak in and the backend rejects those ids
+const searchProducByNametWithCallback = async (name, callback) => {
+  try {
+    const res = await Axios.get(serverAddress + "product", {
+      params: { name: name, page: 1, type: "plate" },
+    });
+    if (res.status === 200) {
+      const resData = await res.data;
+      const formattedOptions = resData.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+      callback(formattedOptions);
+    }
+  } catch (error) {
+    callback([]);
+  }
+};
 const fetchSingleProduct = async (productId, setProduct, setLoading) => {
   try {
     const res = await Axios.get(serverAddress + "product/id/" + productId);
     if (res.status === 200) {
-      const resData = await res.data;
-   
-      setProduct(resData);
+      setProduct(res.data);
     }
   } catch (error) {
   } finally {
-    setLoading(false);
+    if (typeof setLoading === "function") {
+      setLoading(false);
+    }
   }
 };
 const fetchRelatedProducts = async (productId, productCode, setProducts) => {
@@ -74,9 +92,146 @@ const fetchRelatedProducts = async (productId, productCode, setProducts) => {
   } catch (error) {}
 };
 
+const fetchSetAvailableColors = async (productSetId, callback) => {
+  try {
+    const res = await Axios.get(
+      serverAddress + "product/set/" + productSetId + "/available-colors"
+    );
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback({ colors: [], hasNoCommonColor: true });
+  }
+};
+const fetchSetAvailability = async (productSetId, colorId, callback) => {
+  try {
+    const res = await Axios.get(
+      serverAddress + "product/set/" + productSetId + "/availability",
+      { params: { colorId: colorId } }
+    );
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+const fetchMoldPatternDetail = async (moldPatternId, setProduct, setLoading) => {
+  try {
+    const res = await Axios.get(
+      serverAddress + "product/pattern/" + moldPatternId
+    );
+    if (res.status === 200) {
+      setProduct(res.data);
+    }
+  } catch (error) {
+  } finally {
+    if (typeof setLoading === "function") {
+      setLoading(false);
+    }
+  }
+};
+
+const fetchMolds = async (callback) => {
+  try {
+    const res = await Axios.get(serverAddress + "mold");
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback([]);
+  }
+};
+
+const fetchPatterns = async (callback) => {
+  try {
+    const res = await Axios.get(serverAddress + "mold/patterns");
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback([]);
+  }
+};
+
+const createMold = async (payload, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "mold/admin/save", payload);
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
+const createMoldSize = async (payload, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "mold/admin/size", payload);
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
+const createPattern = async (name, previewImageId, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "mold/admin/pattern", {
+      name: name,
+      previewImageId: previewImageId,
+    });
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
+const createMoldPatternLink = async (payload, callback) => {
+  try {
+    const res = await Axios.post(
+      serverAddress + "mold/admin/mold-pattern",
+      payload
+    );
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
+const calcSetPricePreview = async (items, callback) => {
+  try {
+    const res = await Axios.post(serverAddress + "product/set/calc-price", {
+      items: items,
+    });
+    if (res.status === 200) {
+      callback(res.data);
+    }
+  } catch (error) {
+    callback(null);
+  }
+};
+
 export {
   searchProducts,
   fetchSingleProduct,
   fetchRelatedProducts,
   fetchOffProducts,
+  searchProducByNametWithCallback,
+  fetchSetAvailableColors,
+  fetchSetAvailability,
+  calcSetPricePreview,
+  fetchMoldPatternDetail,
+  fetchMolds,
+  fetchPatterns,
+  createMold,
+  createMoldSize,
+  createPattern,
+  createMoldPatternLink,
 };

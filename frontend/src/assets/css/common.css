@@ -1,9 +1,38 @@
-/* size */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 html{
     font-family:var(--font-family)
+}
+body {
+    font-family: var(--font-family);
+    background-color: var(--tp-b-color);
+    color: var(--color-white);
+}
+input,
+textarea,
+button,
+select {
+    font-family: inherit;
+}
+.aselect,
+.aselect * {
+    font-family: var(--font-family);
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(43,33,25,0.25);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #6B5540;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #8A6A50;
 }
 ::-webkit-scrollbar {
     width: 3px;
@@ -720,6 +749,58 @@ input[type=number] {
 .line-through {
     text-decoration-line: line-through;
 }
+
+/* ============================================================
+   Liquid Glass — shared utility classes
+   ============================================================ */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.glass-strong {
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px));
+  backdrop-filter: blur(calc(var(--glass-blur) + 6px));
+  border: 1px solid var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+}
+.glass-hover {
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.glass-hover:hover {
+  box-shadow: var(--glass-shadow-hover);
+  border-color: var(--color-gold-glow);
+  transform: translateY(-2px);
+}
+.gold-text {
+  color: var(--color-gold);
+}
+.gold-bg {
+  background: var(--color-gold);
+}
+.gold-soft-bg {
+  background: var(--color-gold-soft);
+}
+
+/* Page background — soft warm gradient with faint glass sheen */
+.app-bg {
+  background: var(--bg-main);
+  min-height: 100vh;
+}
+
+/* Reduced-motion respect (UI/UX Pro Max checklist) */
+@media (prefers-reduced-motion: reduce) {
+  .glass-hover:hover {
+    transform: none;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
 @media only screen and (max-width:700px){
     .outside-shadow-box{
         box-shadow: none;
@@ -734,4 +815,18 @@ input[type=number] {
         font-size: .9rem;
     } */
 
+}
+
+/* ===== Optimized image loading (SmartImage) ===== */
+.smart-img {
+  opacity: 0;
+  transition: opacity 320ms ease;
+  background-color: var(--skeleton-color, #e7e5e4);
+}
+.smart-img.is-loaded {
+  opacity: 1;
+}
+.smart-img.is-errored {
+  opacity: 1;
+  object-fit: contain;
 }

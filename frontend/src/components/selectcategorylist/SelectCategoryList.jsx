@@ -8,7 +8,11 @@ const SelectCategoryList = ({ categories, active, allwaysActive }) => {
     >
       {categories?.map((category) => {
         return (
-          <SelectCategory category={category} allwaysActive={allwaysActive} />
+          <SelectCategory
+            key={category.id}
+            category={category}
+            allwaysActive={allwaysActive}
+          />
         );
       })}
     </ul>

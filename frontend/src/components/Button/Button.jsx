@@ -1,74 +1,80 @@
-import { useEffect, useState } from "react";
-
 const Button = (props) => {
+  const {
+    size,
+    shape,
+    border,
+    hoverClass,
+    bgColor,
+    txtColor,
+    col,
+    moreCss,
+    icon,
+    leftIcon,
+    disabled,
+    type,
+    onClick,
+    children,
+    ...rest
+  } = props;
   const sizeSetter = () => {
-    if (props.shape === "rounded-full") {
+    if (shape === "rounded-full") {
       return "h6 p-2";
     }
-    if (props.size) {
-      const size = props.size;
-
+    if (size) {
       if (size === "lg") {
         return "px-8 py-3 text-base font-bold ";
       } else if (size === "md") {
-
         return "px-6 py-2 text-sm font-semibold";
       } else if (size === "sm") {
         return "px-4  py-2 text-sm font-medium";
       } else if (size === "xs") {
         return "px-4  py-1 text-xs font-normal ";
       }
-    } else {
-      return "px-6 py-2 text-sm font-semibold";
     }
+    return "px-6 py-2 text-sm font-semibold";
   };
   const shapeSetter = () => {
-    if (props.shape) {
-      return props.shape;
-    } else {
-      return " rounded ";
+    if (shape) {
+      return shape;
     }
+    return " rounded ";
   };
-  const [sizeCss, setSizeCss] = useState(sizeSetter());
-  const [shapeCss, setShapeCss] = useState(shapeSetter());
+  const sizeCss = sizeSetter();
+  const shapeCss = shapeSetter();
 
   return (
     <button
-      {...props}
-      disabled={props.disabled}
-      type={props.type}
-      onClick={props.onClick}
+      {...rest}
+      disabled={disabled}
+      type={type}
+      onClick={onClick}
       className={
         "   duration-100   button flex items-center justify-center" +
         " " +
-        (props.border ? props.border : "border") +
+        (border ? border : "border") +
         " " +
-        props.hoverClass +
+        (hoverClass || "") +
         " " +
         sizeCss +
         " " +
         shapeCss +
         " " +
-        props.bgColor +
+        (bgColor || "") +
         " " +
-        props.txtColor +
+        (txtColor || "") +
         " " +
-        (props.disabled ? " text-slate-500" : "") +
+        (disabled ? " text-[var(--sub-text-color)] opacity-50" : "") +
         " " +
-        (props.col ? "flex-col" : "") +
+        (col ? "flex-col" : "") +
         " " +
-        props.moreCss
+        (moreCss || "")
       }
     >
-      {props.icon ? (
-        <div className={props.col ? "mb-1" : "ml-1"}>{props.icon}</div>
-      ) : (
-        <></>
-      )}
+      {icon ? <div className={col ? "mb-1" : "ml-1"}>{icon}</div> : <></>}
 
-      {props.children}
-      {props.leftIcon ? (
-        <div className={props.col ? "mb-1" : "mr-1"}>{props.leftIcon}</div>
+      {children}
+      {leftIcon ? (
+        <div className={col ? "mb-1" : "mr-1"}>{leftIcon}</div>
       ) : (
         <></>
       )}

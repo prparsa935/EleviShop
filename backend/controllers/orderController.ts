@@ -13,9 +13,22 @@ class OrderController {
   async findCurrentOrders(req: Request, res: Response) {
     try {
       const user: User = req["user"];
+      const pageNumber = Number(req.query.pageNumber ?? 1);
       return res
         .status(200)
-        .json(await orderService.findOrderByCurrentStatus(user));
+        .json(await orderService.findOrderByCurrentStatus(user, pageNumber));
+    } catch (error) {
+      return res
+        .status(500)
+        .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
+    }
+  }
+  async orderCounts(req: Request, res: Response) {
+    try {
+      const user: User = req["user"];
+      return res
+        .status(200)
+        .json(await orderService.getOrderCounts(user));
     } catch (error) {
       return res
         .status(500)
@@ -25,9 +38,10 @@ class OrderController {
   async findDeliveredOrders(req: Request, res: Response) {
     try {
       const user: User = req["user"];
+      const pageNumber = Number(req.query.pageNumber ?? 1);
       return res
         .status(200)
-        .json(await orderService.findOrderByDeliveredStatus(user));
+        .json(await orderService.findOrderByDeliveredStatus(user, pageNumber));
     } catch (error) {
       return res
         .status(500)
@@ -37,9 +51,10 @@ class OrderController {
   async findCanceledOrders(req: Request, res: Response) {
     try {
       const user: User = req["user"];
+      const pageNumber = Number(req.query.pageNumber ?? 1);
       return res
         .status(200)
-        .json(await orderService.findOrderByCancledStatus(user));
+        .json(await orderService.findOrderByCancledStatus(user, pageNumber));
     } catch (error) {
       return res
         .status(500)
@@ -65,6 +80,25 @@ class OrderController {
         .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
     }
   }
+  // async saveOrder(req: Request, res: Response) {
+  //   try {
+  //     const { id } = req.params;
+  //     const user: User = req["user"];
+  //     if (!isNumberString(id))
+  //       return res
+  //         .status(500)
+  //         .json(
+  //           new ResponseDTO({}, { message: "سفارش مورد نظر یافت نشد" }, false)
+  //         );
+  //     return res
+  //       .status(200)
+  //       .json(await orderService.findOrderById(Number(id), user));
+  //   } catch (error) {
+  //     return res
+  //       .status(500)
+  //       .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
+  //   }
+  // }
 
   async saveOrder(req: Request, res: Response, next: NextFunction) {
     try {

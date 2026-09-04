@@ -7,22 +7,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, ManyToOne, JoinColumn, TableInheritance, } from "typeorm";
+import { Entity, Column, Index, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne, JoinColumn, TableInheritance, } from "typeorm";
 import { Image } from "./Image.js";
-import { Comment } from "./Comment.js";
-import { Color } from "./Color.js";
 import { Category } from "./Category.js";
+import { MoldPattern } from "./MoldPattern.js";
 import { Inventory } from "./Inventory.js";
+import { Base } from "./Base.js";
 // export enum color {
 //     yellow = 'yellow',
 //     red = 'red',
 //   }
-let Product = class Product {
+let Product = class Product extends Base {
 };
 __decorate([
     PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
 ], Product.prototype, "id", void 0);
+__decorate([
+    Index(),
+    Column({ type: "varchar", name: "type", default: "plate", length: 10 }),
+    __metadata("design:type", String)
+], Product.prototype, "type", void 0);
 __decorate([
     OneToMany(() => Image, (image) => image.product),
     __metadata("design:type", Array)
@@ -40,18 +45,10 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
 __decorate([
-    OneToOne(() => Image, { nullable: false }),
+    ManyToOne(() => Image, { nullable: false }),
     JoinColumn(),
     __metadata("design:type", Image)
 ], Product.prototype, "mainImage", void 0);
-__decorate([
-    Column({ nullable: true }),
-    __metadata("design:type", Number)
-], Product.prototype, "ratio", void 0);
-__decorate([
-    Column({ nullable: false }),
-    __metadata("design:type", Number)
-], Product.prototype, "price", void 0);
 __decorate([
     Column({ length: 10, nullable: false }),
     __metadata("design:type", String)
@@ -61,28 +58,40 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "offPercent", void 0);
 __decorate([
+    Column({ default: 1 }),
+    __metadata("design:type", Number)
+], Product.prototype, "countPerProduct", void 0);
+__decorate([
     Column({ nullable: false }),
     __metadata("design:type", String)
 ], Product.prototype, "material", void 0);
 __decorate([
-    Column({ nullable: true }),
+    Column({ nullable: true, default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "rate", void 0);
 __decorate([
-    OneToOne(() => Color),
-    JoinColumn(),
-    __metadata("design:type", Color)
-], Product.prototype, "color", void 0);
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "rateScore", void 0);
 __decorate([
-    OneToMany(() => Comment, (comment) => comment.product, { cascade: true }),
-    __metadata("design:type", Array)
-], Product.prototype, "comments", void 0);
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "rateCount", void 0);
+__decorate([
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "buyerCount", void 0);
+__decorate([
+    Column({ nullable: true, default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "commentCount", void 0);
 __decorate([
     JoinTable(),
     ManyToMany(() => Category),
     __metadata("design:type", Array)
 ], Product.prototype, "categories", void 0);
 __decorate([
+    Index(),
     ManyToOne(() => Category),
     __metadata("design:type", Category)
 ], Product.prototype, "mainCategory", void 0);
@@ -90,10 +99,19 @@ __decorate([
     OneToMany(() => Inventory, (inventory) => inventory.product),
     __metadata("design:type", Array)
 ], Product.prototype, "inventories", void 0);
+__decorate([
+    Column({ type: "int", nullable: true, default: null }),
+    __metadata("design:type", Number)
+], Product.prototype, "moldPatternId", void 0);
+__decorate([
+    ManyToOne(() => MoldPattern, { nullable: true }),
+    JoinColumn({ name: "moldPatternId" }),
+    __metadata("design:type", Object)
+], Product.prototype, "moldPattern", void 0);
 Product = __decorate([
     Entity(),
     TableInheritance({
-        column: { type: "varchar", name: "type", default: "plate" },
+        column: { type: "varchar", name: "type", default: "plate", length: 10 },
     })
 ], Product);
 export { Product };

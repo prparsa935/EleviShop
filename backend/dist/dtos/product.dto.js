@@ -7,23 +7,46 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsArray, IsEnum, IsNotEmpty, IsNumber, Matches, Max, Min, ValidateNested, } from "class-validator";
-import { enumSize } from "../models/Inventory.js";
+import { ArrayNotEmpty, IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, Matches, Max, Min, ValidateNested, } from "class-validator";
 import { Type } from "class-transformer";
 export class InventorySaveDto {
 }
 __decorate([
-    IsEnum(enumSize, { message: "سایز انتخابی وجود ندارد" }),
-    __metadata("design:type", String)
-], InventorySaveDto.prototype, "size", void 0);
-__decorate([
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
     Min(0, { message: "حداقل 0 " }),
     Max(100, { message: "حداکثر ۹۹ " }),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], InventorySaveDto.prototype, "quantity", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    __metadata("design:type", Number)
+], InventorySaveDto.prototype, "price", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], InventorySaveDto.prototype, "colorId", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا شناسه سایز را به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], InventorySaveDto.prototype, "sizeId", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], InventorySaveDto.prototype, "id", void 0);
+var typeEnum;
+(function (typeEnum) {
+    typeEnum["plate"] = "plate";
+    typeEnum["productSet"] = "productSet";
+})(typeEnum || (typeEnum = {}));
 export class ProductSaveDto {
 }
+__decorate([
+    IsEnum(typeEnum, { message: "نوع محصول درست مشخص نشده است" }),
+    __metadata("design:type", String)
+], ProductSaveDto.prototype, "type", void 0);
 __decorate([
     ValidateNested({ each: true }),
     Type(() => InventorySaveDto),
@@ -42,17 +65,11 @@ __decorate([
     __metadata("design:type", String)
 ], ProductSaveDto.prototype, "productName", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{10,50}$"), {
+    Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
         message: "لطفا توضیخات محصول را درست واردکنید",
     }),
     __metadata("design:type", String)
 ], ProductSaveDto.prototype, "description", void 0);
-__decorate([
-    IsNumber({}, { message: "لطفا قیمت را به صورت عدد وارد کنید" }),
-    Min(9999, { message: "حداقل 5 رقم" }),
-    Max(99999999, { message: "حداکثر ۸ رقم" }),
-    __metadata("design:type", Number)
-], ProductSaveDto.prototype, "price", void 0);
 __decorate([
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
     Min(0, { message: "حداقل 0 درصد" }),
@@ -69,30 +86,160 @@ __decorate([
     Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
         message: "لطفا طرح محصول را درست واردکنید",
     }),
+    IsOptional(),
     __metadata("design:type", String)
 ], ProductSaveDto.prototype, "pattern", void 0);
 __decorate([
-    IsNotEmpty({ message: "لطفا خالی نگذارید" }),
-    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
-    __metadata("design:type", Number)
-], ProductSaveDto.prototype, "height", void 0);
-__decorate([
+    IsNotEmpty({ message: "لطفا دسته‌بندی را انتخاب کنید" }),
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
     __metadata("design:type", Number)
 ], ProductSaveDto.prototype, "categoryId", void 0);
 __decorate([
-    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
-    __metadata("design:type", Number)
-], ProductSaveDto.prototype, "brandId", void 0);
-__decorate([
-    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
-    __metadata("design:type", Number)
-], ProductSaveDto.prototype, "colorId", void 0);
-__decorate([
+    IsNotEmpty({ message: "لطفا تصویر اصلی را انتخاب کنید" }),
     IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
     __metadata("design:type", Number)
 ], ProductSaveDto.prototype, "mainImageId", void 0);
 __decorate([
+    ArrayNotEmpty({ message: "حداقل یک تصویر لازم است" }),
     IsArray(),
+    IsNumber({}, { each: true }),
     __metadata("design:type", Array)
 ], ProductSaveDto.prototype, "imageIds", void 0);
+export class PlateSaveDto extends ProductSaveDto {
+}
+__decorate([
+    IsNotEmpty({ message: "لطفا طرح را انتخاب کنید" }),
+    IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" }),
+    __metadata("design:type", Number)
+], PlateSaveDto.prototype, "moldPatternId", void 0);
+export class ProductSetItemSaveDto {
+}
+__decorate([
+    IsNotEmpty({ message: "لطفا بشقاب را انتخاب کنید" }),
+    IsInt({ message: "لطفا شناسه بشقاب را به صورت عدد وارد کنید" }),
+    Min(1, { message: "شناسه بشقاب نامعتبر است" }),
+    __metadata("design:type", Number)
+], ProductSetItemSaveDto.prototype, "plateId", void 0);
+__decorate([
+    IsInt({ message: "لطفا تعداد را به عدد وارد کنید" }),
+    Min(1, { message: "حداقل تعداد 1" }),
+    Max(99, { message: "حداکثر تعداد 99" }),
+    __metadata("design:type", Number)
+], ProductSetItemSaveDto.prototype, "quantity", void 0);
+export class ProductSetSaveDto extends ProductSaveDto {
+}
+__decorate([
+    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+        message: "لطفا کالا های سرویس را درست وارد کنید",
+    }),
+    __metadata("design:type", String)
+], ProductSetSaveDto.prototype, "contain", void 0);
+__decorate([
+    ArrayNotEmpty({ message: "حداقل یک آیتم لازم است" }),
+    IsArray(),
+    ValidateNested({ each: true }),
+    Type(() => ProductSetItemSaveDto),
+    __metadata("design:type", Array)
+], ProductSetSaveDto.prototype, "items", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا قیمت دستی را به صورت عدد وارد کنید" }),
+    Min(0, { message: "حداقل مقدار 0" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], ProductSetSaveDto.prototype, "manualPriceOverride", void 0);
+export class UpdateProductDto {
+}
+__decorate([
+    IsEnum(typeEnum, { message: "نوع محصول درست مشخص نشده است" }),
+    IsOptional(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "type", void 0);
+__decorate([
+    ValidateNested({ each: true }),
+    Type(() => InventorySaveDto),
+    IsOptional(),
+    __metadata("design:type", Array)
+], UpdateProductDto.prototype, "inventories", void 0);
+__decorate([
+    Matches(RegExp("^[0-9]{5,8}$"), {
+        message: "لطفا کد محصول را با فرمت درست وارد کنید",
+    }),
+    IsOptional(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "code", void 0);
+__decorate([
+    Matches(RegExp("^[A-Za-zآ-ی ]{3,15}$"), {
+        message: "لطفا نام محصول را درست واردکنید",
+    }),
+    IsOptional(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "productName", void 0);
+__decorate([
+    Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
+        message: "لطفا توضیخات محصول را درست واردکنید",
+    }),
+    IsOptional(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "description", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    Min(0, { message: "حداقل 0 درصد" }),
+    Max(99, { message: "حداکثر ۹۹ درصد" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "offPercent", void 0);
+__decorate([
+    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+        message: "لطفا جنس محصول را درست واردکنید",
+    }),
+    IsOptional(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "material", void 0);
+__decorate([
+    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+        message: "لطفا طرح محصول را درست واردکنید",
+    }),
+    IsOptional(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "pattern", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "categoryId", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "mainImageId", void 0);
+__decorate([
+    IsArray(),
+    IsNumber({}, { each: true }),
+    IsOptional(),
+    __metadata("design:type", Array)
+], UpdateProductDto.prototype, "imageIds", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا شناسه طرح را به صورت عدد وارد کنید" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "moldPatternId", void 0);
+__decorate([
+    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+        message: "لطفا کالا های سرویس را درست وارد کنید",
+    }),
+    IsOptional(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "contain", void 0);
+__decorate([
+    IsArray(),
+    ValidateNested({ each: true }),
+    Type(() => ProductSetItemSaveDto),
+    IsOptional(),
+    __metadata("design:type", Array)
+], UpdateProductDto.prototype, "items", void 0);
+__decorate([
+    IsNumber({}, { message: "لطفا قیمت دستی را به صورت عدد وارد کنید" }),
+    Min(0, { message: "حداقل مقدار 0" }),
+    IsOptional(),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "manualPriceOverride", void 0);

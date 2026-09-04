@@ -20,9 +20,7 @@ const Tag = (props) => {
   };
   const [sizeCss, setSizeCss] = useState(sizeSetter());
 
-  useEffect(() => {
-  
-  }, []);
+  useEffect(() => {}, []);
   return (
     <div className="inline-block">
       <div

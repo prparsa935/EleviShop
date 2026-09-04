@@ -7,11 +7,10 @@ import {
   Relation,
 } from "typeorm";
 import { User } from "./User.js";
+import { Base } from "./Base.js";
 
 @Entity()
-export class Person {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Person extends Base {
   @Column({ length: 20, nullable: false })
   firstName: string;
   @Column({ length: 20, nullable: false })

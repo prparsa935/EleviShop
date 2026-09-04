@@ -1,5 +1,6 @@
 import { imageServerAddress } from "../../App";
 import slidebarImages from "../../jsons/slidebarimages.json";
+import SmartImage from "../smartimage/SmartImage";
 import {
   Carousel,
   CarouselContent,
@@ -25,10 +26,13 @@ const AdSlider = () => {
             key={index}
             className={"basis-[60rem] md:basis-full flex justify-center "}
           >
-            <img
+            <SmartImage
               className="h-100 self-center"
               src={imageServerAddress + src}
-            ></img>
+              alt=""
+              eager={index === 0}
+              ratio="16/5"
+            />
           </CarouselItem>
         ))}
       </CarouselContent>
@@ -36,13 +40,13 @@ const AdSlider = () => {
         moreCss={"absolute top-1/2  right-2"}
         shape={"rounded-full"}
         size="lg"
-        bgColor={"bg-white"}
+        bgColor={"bg-[var(--glass-bg-strong)]"}
       />
       <CarouselNext
         moreCss={"absolute top-1/2  left-2"}
         shape={"rounded-full"}
         size="lg"
-        bgColor={"bg-white"}
+        bgColor={"bg-[var(--glass-bg-strong)]"}
       />
     </Carousel>
   );

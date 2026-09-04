@@ -14,7 +14,7 @@ export class UserCommentLikes {
   id: number;
 
   @ManyToOne(() => User)
-  user: User;
+  user: Relation<User>;
 
   @ManyToOne(() => Comment, (comment) => comment.likes)
   comment: Relation<Comment>;

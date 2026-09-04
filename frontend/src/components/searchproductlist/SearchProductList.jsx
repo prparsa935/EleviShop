@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import productImageTest from "../../assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp";
 import { searchProducts } from "../../api/productApi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Loading from "../icons/Loading";
 import SearchSkeleton from "../searchskeleton/SearchSkeleton";
 import { imageServerAddress } from "../../App";
+import { formatNumber } from "../../utils/helperMehods";
+import SmartImage from "../smartimage/SmartImage";
+import Tag from "../tag/Tag";
+import { trackEvent } from "../../hooks/useAnalytics";
 
 const SearchProductList = () => {
   const navigate = useNavigate();
@@ -14,7 +16,14 @@ const SearchProductList = () => {
   const [productList, setProductList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
-   
+    const categoryId = searchParams.get("categoryId");
+    const query = searchParams.get("name");
+    if (categoryId) {
+      trackEvent("CATEGORY_VIEW", { categoryId: Number(categoryId) });
+    }
+    if (query) {
+      trackEvent("SEARCH", { searchQuery: query });
+    }
     searchProducts(
       Object.fromEntries([...searchParams]),
       [],
@@ -24,6 +33,7 @@ const SearchProductList = () => {
       setHasMore
     );
   }, [searchParams]);
+
   return (
     <div className="grow">
       <InfiniteScroll
@@ -44,35 +54,73 @@ const SearchProductList = () => {
       >
         {productList?.map((product, index) => (
           <div
-            onClick={() => navigate("/product/" + product.id)}
-            className="flex flex-col p-3 gap-y-3 border border-slate-200  hover:shadow-lg cursor-pointer"
+            key={
+              product?.cardType === "pattern"
+                ? "pattern-" + product.id
+                : "product-" + (product.productId || product.id)
+            }
+            onClick={() =>
+              navigate(
+                product?.cardType === "pattern"
+                  ? "/pattern/" + product.id
+                  : "/product/" + (product.productId || product.id)
+              )
+            }
+            className="flex flex-col p-3 gap-y-3 glass glass-hover rounded-2xl cursor-pointer"
           >
             <div className="mx-auto mt-4">
-              <img
-                className="h-[240px] w-[240px]"
+              <SmartImage
+                className="h-[240px] w-[240px] object-cover rounded-xl"
                 src={imageServerAddress + product?.mainImage?.filePath}
+                alt={product?.name}
+                ratio="1/1"
               />
             </div>
-            <div className="h-[72px] overflow-hidden font-medium  text-xs text-slate-700 !leading-7 ">
+            <div className="h-[72px] overflow-hidden font-medium  text-xs text-[var(--sub-text-color)] !leading-7 ">
               {product?.name}
             </div>
             <div className="flex justify-between items-center ">
-              {/* {product?.inventories[0]?.quantity < 5 ? (
-                <div className="text-red-600 text-xs font-medium ">
-                  تنها {product?.inventories[0]?.quantity} عدد در انبار باقی مانده
-                </div>
-              ) : (
-                ""
-              )} */}
 
               <div className="text-xs">
-                <span className="mx-2 font-bold text-slate-800">۴.۴</span>
-                <i class="fa-duotone fa-star text-amber-600"></i>
+                <span className="mx-2 font-bold text-[var(--color-white)]">۴.۴</span>
+                <i class="fa-solid fa-star text-[var(--color-yellow)]"></i>
               </div>
             </div>
-            <div className="flex justify-end text-base font-bold text-slate-600 mb-2">
-              <span className="mx-1">۶۴,۰۰۰,۰۰۰</span>
-              <span>تومان</span>
+            <div className="flex flex-col  text-base font-bold text-[var(--color-white)] mb-2 h-10">
+              <div className="flex justify-end items-center">
+                {product?.offPercent ? (
+                  <Tag size="xs" txtColor="text-white" bgColor={"bg-[var(--bf-red)]"}>
+                    {formatNumber(product?.offPercent) + "%"}
+                  </Tag>
+                ) : (
+                  <></>
+                )}
+
+                <div
+                  className="data-[off=true]:line-through"
+                  data-off={product?.offPercent !== 0}
+                >
+                  <span className="mx-1">
+                    {formatNumber(product?.inventories?.[0]?.price)}
+                  </span>
+                  <span>تومان</span>
+                </div>
+              </div>
+              {product?.offPercent !== 0 ? (
+                <div className="flex justify-end ">
+                  <span className="mx-1">
+                    {formatNumber(
+                      product?.inventories?.[0]?.price -
+                        (product?.offPercent *
+                          product?.inventories?.[0]?.price) /
+                          100
+                    )}
+                  </span>
+                  <span>تومان</span>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         ))}

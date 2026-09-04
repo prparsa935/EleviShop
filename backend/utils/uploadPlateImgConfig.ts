@@ -1,7 +1,6 @@
 import { diskStorage } from "multer";
 import multer from "multer";
 import { mainDir } from "../server.js";
-import fs from "fs";
 const storage = diskStorage({
   destination: (req, file, cb) => {
     cb(null, mainDir + "/public/");
@@ -17,22 +16,16 @@ const storage = diskStorage({
   },
 });
 
-// set sizefilter later
+const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1 * 1024 * 1024 },
-  // add filesize filter later
-
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    // file.mimetype.split('/')[0] == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"
-    if (file.mimetype.split("/")[0] == "image") {
+    if (ALLOWED_IMAGE_MIME_TYPES.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      fs.unlink(file.path, (error) => {
-        if (error) {
-        }
-        cb(null, false);
-      });
+      cb(null, false);
     }
   },
 });

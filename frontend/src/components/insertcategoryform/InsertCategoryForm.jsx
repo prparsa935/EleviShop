@@ -1,15 +1,13 @@
-import SelectCategoryList from "../selectcategorylist/SelectCategoryList";
-import categories from "../../jsons/categories.json";
 import Input from "../input/Input";
-
 import Button from "../Button/Button";
-import { useSearchParams } from "react-router-dom";
 import formApiHandler from "../../api/form";
 import Loading from "../icons/Loading";
 import { useEffect, useRef, useState } from "react";
 import useDidUpdateEffect from "../../hooks/useDidUpdateEffect";
 import fetchSingleItem from "../../api/fetchSingleItem";
+import { useSearchParams } from "react-router-dom";
 import SelectCategories from "../selectcategories/SelectCategories";
+
 const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -31,17 +29,16 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
   const submitFormHandler = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
-    const categoryId = searchParams.get("categoryId");
+    const parentCategoryId = searchParams.get("categoryId");
 
-    // todo validation
     setLoading(true);
     formApiHandler(
       searchParams.get("eCategoryId")
         ? "category/admin/update/" + searchParams.get("eCategoryId")
         : "category/admin/save",
       {
-        name: name,
-        parentId: categoryId,
+        categoryname: name,
+        parentCatId: parentCategoryId,
       },
       setToastList,
       setErrors,
@@ -54,47 +51,52 @@ const InsertCategoryForm = ({ errors, setToastList, setErrors }) => {
       searchParams.get("eCategoryId"),
       setExistingCategory
     );
-    // todo declear product state and use useeffect([product])
   }, [searchParams.get("eCategoryId")]);
   useDidUpdateEffect(existingCategoryFormSetter, [existingCategory]);
   return (
     <form
       ref={form}
       onSubmit={submitFormHandler}
-      className="insert-product-form flex flex-col gap-y-10"
+      className="flex flex-col gap-y-6"
     >
-      <div className="flex ">
-        <div className="mx-2 self-start">
-          <i class="fa-solid fa-2x fa-square-plus text-sky-400"></i>
-        </div>
-
-        <div className="grow flex flex-col gap-y-3">
-          <div className=" text-lg font-semibold">انتخاب گروه پدر</div>
-          <div className="mx-3">
-            <SelectCategories allwaysActive={true} />
+      <div className="glass rounded-2xl p-5 flex flex-col gap-y-4">
+        <div className="flex gap-x-4">
+          <div className="self-start mt-1">
+            <i className="fa-solid fa-2x fa-square-plus text-sky-400"></i>
           </div>
-          {errors["parentId"] ? (
-            errors["parentId"]
-          ) : (
-            <span className=" text-red-600 text-sm"></span>
-          )}
+          <div className="grow flex flex-col gap-y-3">
+            <div className="text-lg font-bold text-[var(--color-white)]">انتخاب گروه پدر</div>
+            <div className="mx-1">
+              <SelectCategories allwaysActive={true} />
+            </div>
+            {errors?.["parentId"] ? (
+              <span className="text-red-600 text-sm">{errors["parentId"]}</span>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       </div>
-      <div className="flex flex-col col-span-6 ">
-        <div className="mb-2 font-medium text-sm !leading-3 ">
-          <span className=" text-red-500 text-lg !leading-3 ">*</span>
-          <span className="!leading-3">نام گروه کالایی</span>
+
+      <div className="glass rounded-2xl p-5 flex flex-col gap-y-4">
+        <h2 className="text-lg font-bold text-[var(--color-white)]">نام گروه کالایی</h2>
+        <div className="flex flex-col">
+          <div className="mb-2 font-medium text-sm">
+            <span className="text-red-500 text-lg">*</span>
+            نام گروه کالایی
+          </div>
+          <Input name="name" iMessage={errors?.name} />
         </div>
-        <Input name="name" iMessage={errors?.name} />
       </div>
 
       <Button
-        bgColor="bg-rose-500"
+        bgColor="bg-[var(--color-gold)]"
         txtColor="text-white"
         shape="rounded-lg"
         disabled={loading}
+        moreCss="cursor-pointer"
       >
-        {loading ? <Loading className="w-6 h-6"></Loading> : " ثبت گروه کالایی"}
+        {loading ? <Loading className="w-6 h-6" /> : "ثبت گروه کالایی"}
       </Button>
     </form>
   );

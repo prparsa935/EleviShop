@@ -1,7 +1,9 @@
 import { Type } from "class-transformer";
 import {
+  IsIn,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   Max,
   Min,
   ValidateNested,
@@ -13,7 +15,7 @@ export class OrderInventorySaveDto {
 }
 
 export class OrderSaveDto {
-  @IsNotEmpty({ message: "محصول انتخابی اشتباه است" })
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => OrderInventorySaveDto)
   inventory: OrderInventorySaveDto;
@@ -22,4 +24,13 @@ export class OrderSaveDto {
   @Min(0)
   @Max(20)
   quantity: number;
+  @IsOptional()
+  @IsIn(["SIMPLE", "SET"])
+  itemType: string;
+  @IsOptional()
+  @IsNumber()
+  productSetId: number;
+  @IsOptional()
+  @IsNumber()
+  colorId: number;
 }

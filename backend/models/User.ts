@@ -7,11 +7,13 @@ import {
   ManyToOne,
   OneToOne,
   JoinColumn,
+  Relation,
 } from "typeorm";
 
 import { Comment } from "./Comment.js";
 import { TfLogin } from "./TfLogin.js";
 import { Person } from "./Person.js";
+import { ShoppingCartItem } from "./ShoppingCartItem.js";
 
 @Entity()
 export class User {
@@ -28,12 +30,17 @@ export class User {
 
   @JoinColumn()
   @OneToOne(() => Person, (person) => person.user)
-  person: Person;
+  person: Relation<Person>;
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
   @JoinColumn()
   @OneToOne(() => TfLogin)
-  tfLogin: TfLogin;
+  tfLogin: Relation<TfLogin>;
+  @OneToMany(
+    () => ShoppingCartItem,
+    (shoppingCartItem) => shoppingCartItem.user
+  )
+  shoppingCartItems: Relation<ShoppingCartItem[]>;
   get isIdentified(): boolean {
     return this.person ? true : false;
   }

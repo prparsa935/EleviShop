@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { imageServerAddress } from "../../App";
 import { formatNumber } from "../../utils/helperMehods";
+import SmartImage from "../smartimage/SmartImage";
 
 const ProductInOrderBox = ({ orderInventory }) => {
   const navigate = useNavigate();
@@ -13,13 +14,15 @@ const ProductInOrderBox = ({ orderInventory }) => {
     >
       <div className="flex">
         <div className="flex flex-col items-center">
-          <img
-            className="w-[114px] h-[114px] mb-3"
+          <SmartImage
+            className="w-[114px] h-[114px] mb-3 rounded-xl"
             src={
               imageServerAddress +
               orderInventory?.inventory?.product?.mainImage?.filePath
             }
-          ></img>
+            alt={orderInventory?.inventory?.product?.name}
+            ratio="1/1"
+          />
           {/* <img className="w-[60px] " src={specialSellImage}></img> */}
           <span></span>
         </div>
@@ -31,7 +34,9 @@ const ProductInOrderBox = ({ orderInventory }) => {
           </span>
           <div className="flex flex-col text-sm font-medium text-neutral-500">
             <span>گارانتی اصالت و سلامت فیزیکی کالا</span>
-            <span>سایز {orderInventory?.inventory?.size}</span>
+            {orderInventory?.inventory?.size?.sizeLabel ? (
+              <span>سایز {orderInventory?.inventory?.size?.sizeLabel}</span>
+            ) : null}
             <div className="flex items-center gap-x-2">
               <span
                 className=" w-5 h-5 rounded-full"
@@ -44,11 +49,18 @@ const ProductInOrderBox = ({ orderInventory }) => {
             </div>
           </div>
           <div>
-            <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
-              <span>{formatNumber(orderInventory?.singleProductOffPercent)}</span>
-              <span>%</span>
-              <span>تخفیف</span>
-            </div>
+            {orderInventory?.singleProductOffPercent ? (
+              <div className="gap-x-1 flex  text-xs text-rose-600 mt-3 font-medium">
+                <span>
+                  {formatNumber(orderInventory?.singleProductOffPercent)}
+                </span>
+                <span>%</span>
+                <span>تخفیف</span>
+              </div>
+            ) : (
+              ""
+            )}
+
             <div className=" flex text-lg gap-x-1  mt-3 font-semibold">
               <span>{formatNumber(orderInventory?.singleProductPrice)}</span>
               <span>تومان</span>

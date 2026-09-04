@@ -28,19 +28,18 @@ const Cart = () => {
     return <PageLoading></PageLoading>;
   }
   return (
-    <div className="cart-page">
+    <div className="cart-page app-bg min-h-screen">
       <NavBar />
       <MobileFooter />
-      <div className="mx-auto max-w-screen-xl">
-        <div className="flex mt-10">
+      <div className="mx-auto max-w-screen-xl px-3">
+        <div className="flex mt-10 flex-col lg:flex-row">
           {/* all cart products box */}
-          <div className="grow flex flex-col border rounded-md ml-3 px-7 py-3">
+          <div className="grow flex flex-col glass rounded-2xl ml-3 px-7 py-3">
             <div className="flex flex-col">
               <div className="flex justify-between">
-                <span className=" font-semibold text-lg">سبد خرید شما</span>
-           
+                <span className=" font-semibold text-lg text-[var(--color-white)]">سبد خرید شما</span>
               </div>
-              <span className=" text-neutral-500 text-sm">
+              <span className=" text-[var(--sub-text-color)] text-sm">
                 {shoppingCart.length} کالا
               </span>
             </div>

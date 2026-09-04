@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from "../icons/Loading";
 import OrderBox from "../orderBox/OrderBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ordertab/OrderTab";
-import { findOrderByState } from "../../api/order";
+import { transformToPersianNumber } from "../../utils/helperMehods";
 
-const OrdersTabBox = ({ currentOrders, deliveredOrders, canceledOrders }) => {
+const OrdersTabBox = ({ tabsData, loadMore }) => {
+  const tabs = [
+    { state: "current", title: "جاری", tabState: tabsData?.current },
+    { state: "delivered", title: "تحویل شده", tabState: tabsData?.delivered },
+    { state: "canceled", title: "لغو شده", tabState: tabsData?.canceled },
+  ];
   return (
-    <div className="border p-4 flex flex-col">
+    <div className="glass p-4 rounded-2xl flex flex-col">
       <div className="mb-10">
-        <span className="font-semibold lg:text-lg">تاریخچه سفارشات</span>
+        <span className="font-semibold lg:text-lg text-[var(--color-white)]">تاریخچه سفارشات</span>
       </div>
       <Tabs
         activationMode={"manual"}
@@ -20,48 +26,35 @@ const OrdersTabBox = ({ currentOrders, deliveredOrders, canceledOrders }) => {
             "w-100 lg:justify-start justify-around sticky top-[96px] mb-8 z-20  "
           }
         >
-          <TabsTrigger className={"lg:grow-0 grow "} value="current">
-            <span className="ml-1 lg:text-base text-sm">جاری</span>
-
-            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
-              {currentOrders?.length}
-            </span>
-          </TabsTrigger>
-          <TabsTrigger className={"lg:grow-0 grow"} value="delivered">
-            <span className="ml-1 lg:text-base text-sm ">تحویل شده</span>
-            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
-              {deliveredOrders?.length}
-            </span>
-          </TabsTrigger>
-          <TabsTrigger className={"lg:grow-0 grow"} value="canceled">
-            <span className="ml-1 lg:text-base text-sm">لغو شده</span>
-            <span className="bg-slate-400 !text-white w-5 h-5 rounded ">
-              {canceledOrders?.length}
-            </span>
-          </TabsTrigger>
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.state} className={"lg:grow-0 grow "} value={tab.state}>
+              <span className="ml-1 lg:text-base text-sm">{tab.title}</span>
+              <span className="gold-bg !text-white min-w-[1.75rem] h-7 px-2 rounded-full text-xs font-semibold flex items-center justify-center">
+                {transformToPersianNumber(String(tab.tabState?.total ?? 0))}
+              </span>
+            </TabsTrigger>
+          ))}
         </TabsList>
-        <TabsContent data-state="active" value="current">
-          <div className="flex flex-col gap-y-3 lg:mx-5">
-            {currentOrders?.map((order) => {
-              return <OrderBox order={order} />;
-            })}
-          </div>
-        </TabsContent>
-        <TabsContent data-state="active" value="delivered">
-          <div className="flex flex-col gap-y-3 lg:mx-5">
-            {deliveredOrders?.map((order) => {
-              return <OrderBox order={order} />;
-            })}
-            <OrderBox />
-          </div>
-        </TabsContent>
-        <TabsContent data-state="active" value="canceled">
-          <div className="flex flex-col gap-y-3 lg:mx-5">
-            {canceledOrders?.map((order) => {
-              return <OrderBox order={order} />;
-            })}
-          </div>
-        </TabsContent>
+        {tabs.map((tab) => (
+          <TabsContent key={tab.state} data-state="active" value={tab.state}>
+            <InfiniteScroll
+              dataLength={tab.tabState?.orders?.length ?? 0}
+              next={() => loadMore?.[tab.state]?.()}
+              hasMore={tab.tabState?.hasMore ?? false}
+              loader={
+                <div className="w-100 flex justify-center overflow-hidden py-4">
+                  <Loading className="w-5 h-5" />
+                </div>
+              }
+            >
+              <div className="flex flex-col gap-y-3 lg:mx-5">
+                {tab.tabState?.orders?.map((order) => (
+                  <OrderBox key={order?.id} order={order} />
+                ))}
+              </div>
+            </InfiniteScroll>
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

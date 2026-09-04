@@ -7,8 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, } from "typeorm";
 import { Product } from "./product.js";
+import { Color } from "./Color.js";
+import { MoldSize } from "./MoldSize.js";
 export var enumSize;
 (function (enumSize) {
     enumSize["sm"] = "\u06A9\u0648\u0686\u06A9";
@@ -26,13 +28,35 @@ __decorate([
     __metadata("design:type", Number)
 ], Inventory.prototype, "quantity", void 0);
 __decorate([
-    Column({ type: "enum", enum: enumSize }),
-    __metadata("design:type", String)
-], Inventory.prototype, "size", void 0);
-__decorate([
     ManyToOne(() => Product),
     __metadata("design:type", Object)
 ], Inventory.prototype, "product", void 0);
+__decorate([
+    Column({ nullable: false }),
+    __metadata("design:type", Number)
+], Inventory.prototype, "price", void 0);
+__decorate([
+    Column({ type: "int", nullable: true, default: null }),
+    __metadata("design:type", Number)
+], Inventory.prototype, "colorId", void 0);
+__decorate([
+    ManyToOne(() => Color, { nullable: true }),
+    JoinColumn({ name: "colorId" }),
+    __metadata("design:type", Object)
+], Inventory.prototype, "color", void 0);
+__decorate([
+    Column({ type: "int", nullable: true, default: null }),
+    __metadata("design:type", Number)
+], Inventory.prototype, "sizeId", void 0);
+__decorate([
+    ManyToOne(() => MoldSize, { nullable: true }),
+    JoinColumn({ name: "sizeId" }),
+    __metadata("design:type", Object)
+], Inventory.prototype, "size", void 0);
+__decorate([
+    Column({ default: 5 }),
+    __metadata("design:type", Number)
+], Inventory.prototype, "lowStockThreshold", void 0);
 Inventory = __decorate([
     Entity()
 ], Inventory);

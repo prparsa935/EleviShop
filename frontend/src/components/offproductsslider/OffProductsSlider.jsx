@@ -1,4 +1,4 @@
-import image from "../../assets/img/Amazings.svg";
+import image from "../../assets/img/Amazings.png";
 import productImageTest from "../../assets/img/0a099b45d73a6607595ec7f1e39c5d3f1a08a2e6_1620035268.webp";
 import Card from "../card/Card";
 import Tag from "../tag/Tag";
@@ -13,20 +13,21 @@ import { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/helperMehods";
 import { imageServerAddress } from "../../App";
 import { useNavigate } from "react-router";
+import SmartImage from "../smartimage/SmartImage";
 const OffProductsSlider = ({ offProducts }) => {
   const navigate=useNavigate()
   return (
     <div className=" mx-auto container max-w-screen-xl ">
       <Carousel
         opts={{ direction: "rtl", dragFree: true }}
-        className=" w-full bg-rose-500  lg:rounded-2xl  "
+        className=" w-full glass lg:rounded-2xl  "
       >
         <CarouselContent className={" h-100 py-4 pr-4"}>
           <CarouselItem
             className={"w-[114px] h-[114px] md:w-[132px] md:h-[132px] "}
           >
             <div className="">
-              <img src={image}></img>
+              <SmartImage src={image} alt="" ratio="1/1" />
             </div>
           </CarouselItem>
           {offProducts?.map((product, index) => (
@@ -34,30 +35,33 @@ const OffProductsSlider = ({ offProducts }) => {
               onClick={()=>navigate(`/product/${product?.id}`)}
               key={index}
               className={
-                " p-3  flex flex-col gap-y-2 bg-white cursor-pointer" +
+                " p-3  flex flex-col gap-y-2 glass glass-hover cursor-pointer rounded-2xl" +
                 " " +
                 (index === 0 ? " rounded-r-2xl" : "")
               }
             >
               <div className={" w-[114px] h-[114px] md:w-[132px] md:h-[132px]"}>
-                <img
+                <SmartImage
+                  className="w-full h-full object-cover rounded-xl"
                   src={imageServerAddress + product?.mainImage?.filePath}
-                ></img>
+                  alt={product?.name}
+                  ratio="1/1"
+                />
               </div>
-              <div className="w-[114px]  md:w-[132px] h-[42px] overflow-hidden text-xs text-slate-500 font-semibold">
+              <div className="w-[114px]  md:w-[132px] h-[42px] overflow-hidden text-xs text-[var(--sub-text-color)] font-semibold">
                 {product?.name}
               </div>
               <div className="flex justify-between items-center mb-3">
                 <Tag
-                  bgColor="bg-red-600"
+                  bgColor="bg-[var(--bf-red)]"
                   txtColor="text-white"
                   morCss="text-sm font-basic"
                   size="xs"
                 >
                   {formatNumber(product?.offPercent)}%
                 </Tag>
-                <div className=" font-bold text-xs">
-                  {formatNumber(product?.price)} تومان
+                <div className=" font-bold text-xs text-[var(--color-white)]">
+                  {formatNumber(product?.inventories?.[0]?.price)} تومان
                 </div>
               </div>
             </CarouselItem>

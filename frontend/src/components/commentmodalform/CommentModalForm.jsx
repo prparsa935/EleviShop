@@ -6,80 +6,58 @@ import RateStar from "../ratestar/RateStar";
 import formApiHandler from "../../api/form";
 import Loading from "../icons/Loading";
 
-const CommentModalForm = ({
-  commentModalActive,
-  setCommentModalActive,
-  setToastList,
-  setErrors,
-  product,
-}) => {
+const CommentModalForm = ({ commentModalActive, setCommentModalActive, setToastList, setErrors, errors, product, onCommentSaved }) => {
   const [commentStarsRate, setCommentStartRate] = useState(5);
   const [loading, setLoading] = useState(false);
-  const changeCommentRateHandler = (rate) => {
-    setCommentStartRate(rate);
-  };
+  const changeCommentRateHandler = (rate) => setCommentStartRate(rate);
   const commentFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    await formApiHandler(
+    const ok = await formApiHandler(
       `comment/product/${product?.id}/save`,
-      {
-        content: e.target.content.value,
-        rate: commentStarsRate,
-      },
+      { content: e.target.content.value, rate: commentStarsRate },
       setToastList,
       setErrors,
       setLoading
     );
-    setCommentModalActive(false);
+    if (ok) {
+      // keep the modal open on validation errors so the user can fix them
+      e.target.reset();
+      setCommentStartRate(5);
+      setCommentModalActive(false);
+      onCommentSaved?.();
+    }
   };
 
   return (
     <Modal
       enable={commentModalActive}
       setModalActive={setCommentModalActive}
-      className=" md:h-[300px] h-100 md:w-[460px] w-100  p-5 rounded-xl"
+      className="md:h-[300px] h-100 md:w-[460px] w-100 p-6 rounded-3xl glass-strong"
     >
-      <form
-        onSubmit={commentFormSubmit}
-        className="flex flex-col md:gap-y-4 gap-y-8 "
-      >
-        <h3 className=" text-lg text-slate-800">ثبت دیدگاه</h3>
-        <div className="flex gap-x-2">
-          <label className=" text-sm">امتیاز ثبت شده</label>
-          <RateStar
-            currentRate={commentStarsRate}
-            starRate={1}
-            onClick={() => changeCommentRateHandler(1)}
-          />
-          <RateStar
-            currentRate={commentStarsRate}
-            starRate={2}
-            onClick={() => changeCommentRateHandler(2)}
-          />
-          <RateStar
-            currentRate={commentStarsRate}
-            starRate={3}
-            onClick={() => changeCommentRateHandler(3)}
-          />
-          <RateStar
-            currentRate={commentStarsRate}
-            starRate={4}
-            onClick={() => changeCommentRateHandler(4)}
-          />
-          <RateStar
-            currentRate={commentStarsRate}
-            starRate={5}
-            onClick={() => changeCommentRateHandler(5)}
-          />
+      <form onSubmit={commentFormSubmit} className="flex flex-col md:gap-y-4 gap-y-8 ">
+        <h3 className="text-lg font-semibold text-[var(--color-white)]">ثبت دیدگاه</h3>
+        <div className="flex items-center gap-x-2">
+          <label className="text-sm text-[var(--sub-text-color)]">امتیاز ثبت شده</label>
+          <div className="flex gap-x-1 text-[var(--color-yellow)]">
+            <RateStar currentRate={commentStarsRate} starRate={1} onClick={() => changeCommentRateHandler(1)} />
+            <RateStar currentRate={commentStarsRate} starRate={2} onClick={() => changeCommentRateHandler(2)} />
+            <RateStar currentRate={commentStarsRate} starRate={3} onClick={() => changeCommentRateHandler(3)} />
+            <RateStar currentRate={commentStarsRate} starRate={4} onClick={() => changeCommentRateHandler(4)} />
+            <RateStar currentRate={commentStarsRate} starRate={5} onClick={() => changeCommentRateHandler(5)} />
+          </div>
         </div>
         <div>
-          <label>متن دیدگاه</label>
-          <Input name="content" type="textarea" />
+          <label className="text-sm text-[var(--sub-text-color)]">متن دیدگاه</label>
+          <Input
+            name="content"
+            type="textarea"
+            iMessage={errors?.content}
+            inputclassName="bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--color-white)] rounded-xl focus:ring-2 focus:ring-[var(--color-gold)]/40"
+          />
         </div>
-        <Button size="lg" bgColor="bg-rose-500" txtColor="text-white">
-          {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت کالا"}
+        <Button size="lg" bgColor="bg-[var(--color-gold)]" txtColor="text-white" shape="rounded-xl" hoverClass="hover:brightness-105">
+          {loading ? <Loading className="w-6 h-6"></Loading> : "ثبت دیدگاه"}
         </Button>
       </form>
     </Modal>

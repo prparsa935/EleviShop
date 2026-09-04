@@ -1,0 +1,52 @@
+import { Router } from "express";
+import moldController from "../controllers/moldController.js";
+import authController from "../controllers/authController.js";
+import { overallErrorHandler } from "../middlewares/errorHandler.js";
+
+const moldApi = Router();
+moldApi.get("", moldController.findMolds);
+moldApi.get("/patterns", moldController.findPatterns);
+moldApi.get("/id/:id", moldController.findMold, overallErrorHandler);
+moldApi.post(
+  "/admin/save",
+  authController.authorizeUser,
+  authController.isAdmin,
+  moldController.createMold,
+  overallErrorHandler
+);
+moldApi.post(
+  "/admin/size",
+  authController.authorizeUser,
+  authController.isAdmin,
+  moldController.createMoldSize,
+  overallErrorHandler
+);
+moldApi.post(
+  "/admin/pattern",
+  authController.authorizeUser,
+  authController.isAdmin,
+  moldController.createPattern,
+  overallErrorHandler
+);
+moldApi.post(
+  "/admin/mold-pattern",
+  authController.authorizeUser,
+  authController.isAdmin,
+  moldController.createMoldPattern,
+  overallErrorHandler
+);
+moldApi.put(
+  "/admin/update/:id",
+  authController.authorizeUser,
+  authController.isAdmin,
+  moldController.updateMold,
+  overallErrorHandler
+);
+moldApi.delete(
+  "/admin/delete/:id",
+  authController.authorizeUser,
+  authController.isAdmin,
+  moldController.deleteMold,
+  overallErrorHandler
+);
+export default moldApi;

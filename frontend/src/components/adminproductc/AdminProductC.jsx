@@ -2,15 +2,15 @@ import { useNavigate } from "react-router";
 import Button from "../Button/Button";
 import Input from "../input/Input";
 import AdminItemBox from "../adminitembox/AdminItemBox";
-import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
 import SearchFilter from "../searchfilter/SearchFilter";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { searchProducts } from "../../api/productApi";
-import SearchSkeleton from "../searchskeleton/SearchSkeleton";
 import Loading from "../icons/Loading";
 import { imageServerAddress } from "../../App";
+import SmartImage from "../smartimage/SmartImage";
+
 const AdminProductC = ({ handleDeleteItem }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -18,7 +18,6 @@ const AdminProductC = ({ handleDeleteItem }) => {
   const [productList, setProductList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
-
     searchProducts(
       Object.fromEntries([...searchParams]),
       [],
@@ -29,21 +28,10 @@ const AdminProductC = ({ handleDeleteItem }) => {
     );
   }, [searchParams]);
   return (
-    <div className="flex flex-col border ">
-      {/* header */}
-      <div className=" m-5 p-2 border-b flex flex-col  ">
-        <div className="flex justify-between items-center">
-          <div>
-            <Button
-              onClick={() => navigate("/admin/product/save")}
-              size="xs"
-              bgColor="bg-green-100"
-              txtColor="text-green-800"
-            >
-              افزودن +
-            </Button>
-          </div>
-
+    <div className="glass rounded-2xl p-5 flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-3 pb-4 border-b border-[var(--glass-border)]">
+        <div className="flex flex-wrap justify-between items-center gap-y-3">
+          <h2 className="text-lg font-bold text-[var(--color-white)]">مدیریت کالاها</h2>
           <div className="flex items-stretch">
             <div className="h-[30px]">
               <Input
@@ -54,27 +42,34 @@ const AdminProductC = ({ handleDeleteItem }) => {
                   })
                 }
                 height="30px"
-                inputclassName=""
-              ></Input>
+                placeHolder="نام کالا"
+              />
             </div>
-
-            <div>
-              <Button
-                moreCss="border-r-0 rounded-r-none h-[30px] "
-                bgColor="bg-sky-100"
-                size="sm"
-              >
-                جست و جو
-              </Button>
-            </div>
+            <Button
+              moreCss="border-r-0 rounded-r-none h-[30px] cursor-pointer"
+              bgColor="bg-[var(--color-gold-light)]"
+              txtColor="gold-text"
+              size="sm"
+            >
+              جست و جو
+            </Button>
           </div>
         </div>
-
-        <div className="flex w-100 ">
-          <SearchFilter></SearchFilter>
+        <div className="flex flex-wrap items-center justify-between gap-y-3">
+          <Button
+            onClick={() => navigate("/admin/product/save")}
+            size="sm"
+            bgColor="bg-bf-lighter-green"
+            txtColor="text-bf-green"
+            moreCss="cursor-pointer"
+          >
+            <i className="fa-solid fa-plus ml-1"></i>
+            افزودن کالا
+          </Button>
+          <SearchFilter />
         </div>
       </div>
-      <div className="">
+      <div>
         <InfiniteScroll
           dataLength={productList.length}
           next={() =>
@@ -89,28 +84,33 @@ const AdminProductC = ({ handleDeleteItem }) => {
           }
           hasMore={hasMore}
           loader={
-            <div className="flex justify-center w-full">
+            <div className="flex justify-center w-full py-4">
               <Loading className="w-8 h-8"></Loading>
             </div>
           }
         >
-          {productList?.map((product,index) => {
+          {productList?.map((product, index) => {
             return (
               <AdminItemBox
                 key={index}
-                onDelete={() => handleDeleteItem(product?.id)}
+                // pattern cards carry the moldPattern id in `id`; the real
+                // product id lives in `productId` — deleting with `id` used to
+                // 404 with «محصول مورد نظر یافت نشد»
+                onDelete={() => handleDeleteItem(product?.productId || product?.id)}
                 onEdit={() =>
-                  navigate(`/admin/product/save?productId=${product?.id}`)
+                  navigate(
+                    `/admin/product/save?productId=${product?.productId || product?.id}`
+                  )
                 }
               >
-                <div className="flex items-center">
-                  <div>
-                    <img
-                      className="w-[80px]"
-                      src={imageServerAddress + product?.mainImage.filePath}
-                    ></img>
-                  </div>
-                  <h3 className=" lg:font-semibold">{product?.name}</h3>
+                <div className="flex items-center gap-x-3">
+                  <SmartImage
+                    className="w-[60px] rounded-lg"
+                    src={imageServerAddress + product?.mainImage.filePath}
+                    alt={product?.name}
+                    ratio="1/1"
+                  />
+                  <h3 className="font-semibold text-[var(--color-white)]">{product?.name}</h3>
                 </div>
               </AdminItemBox>
             );

@@ -17,6 +17,7 @@ import { User } from "./User.js";
 import { OrderInventory } from "./OrderInventory.js";
 import { Person } from "./Person.js";
 import { Expose } from "class-transformer";
+import { Base } from "./Base.js";
 export enum orderStatus {
   waitingForPayment = "در انتظار پرداخت",
   successfulPayOrValidated = "پرداخت تایید شده",
@@ -33,54 +34,23 @@ export enum orderStatus {
 // invalidAuth = "invalidAuth",
 
 @Entity()
-export class Order {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Order extends Base {
   @Column({ unique: true })
   trackingCode: string;
   @OneToMany(() => OrderInventory, (orderInventory) => orderInventory.order, {
     nullable: false,
   })
   orderInventories: OrderInventory[];
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-  })
-  dateCreated: Date;
+
   @ManyToOne(() => User)
   user: User;
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-    onUpdate: "CURRENT_TIMESTAMP(6)",
-  })
-  updated_at: Date;
+
   @ManyToOne(() => Person, { nullable: true })
   person: Person;
 
   @Column({ type: "enum", enum: orderStatus, nullable: false })
   orderStatus: orderStatus;
 
-  // @Column()
-  // bankCode: number;
-
-  // @Column()
-  // bankMessage: string;
-  // // @OneToOne(()=>User)
-  // // @JoinColumn()
-  // // user:User;
-
-  // @Column({ unique: true })
-  // authority: string;
-
-  // @Column({ nullable: true })
-  // cardHash: string;
-  // @Column({ nullable: true })
-  // refId: number;
-  // @Column({ nullable: true })
-  // cardPan: string;
-  // @Column({ nullable: true })
-  // errors: string;
   @BeforeInsert()
   generateTrackingCode() {
     const date = new Date();

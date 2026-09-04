@@ -1,87 +1,146 @@
-:root{
-    --skeleton-color:rgb(229 231 235 );
-    --border-color:rgb(209 213 219 );
-    --sub-text-color:rgb(107 114 128) ;
-    --bf-red:rgb(225 29 72 );
-    --bf-lighter-red:rgb(254 226 226);
-    --bf-orange:rgb(234 88 12 );
-    --bf-lighter-orange:rgb(255 247 237 );
-    --bf-green:rgb(5 150 105 );
-    --bf-lighter-green:rgb(236 253 245 );
-    --bf-sky:rgb(7 89 133);
-    --bf-lighter-sky:rgb(240 249 255 );
-    --font-family:'BYekan'!important;
-    --tp-b-color:#080808;
-    --color-lightblack-border:#0505052e;
-    --color-white:rgb(247, 247, 247);
-    --nav-b-color:linear-gradient(185deg, rgb(78 67 67) 0%, rgb(7 6 6) 51%, rgb(29 30 36) 100%);
-    --color-383946:rgb(38 39 46);
-    --color-gray707071:rgb(70 70 71);
-    --color-navyblue:#1f2027;
-    --color-darknavyblue:#171717;
-    --color-skyblue:#4ea5ff;
-    --color-Turquoiseblue:#037577;
-    --color-red-error:#f15454a6;
-    --color-green-success:#2f8946;
-    /* --color-green:#58ae6e; */
-    --color-green:#2fb96c;
-    --color-yellow:#ffff00fc;
-    --color-gray353030:#353030;
-    --color-main-dark:#171717;
-    --color-darkblue1:#3a48972b;
-    --color-productcolor:#212023;
+/* ============================================================
+   EleviShop — Liquid Glass Design System
+   Light-first · Gold accent (#A16207) · BYekan font (kept)
+   Subtle glass intensity: light blur + translucent surfaces
+   ============================================================ */
 
-    --color-bordercolorwhite:#ffffff1c;
-    --color-lightblack:#000000bb;
-    --color-heavywhite:rgb(4, 2, 2);
-    --color-footernavydark:#171717;
-    --color-navbar:linear-gradient(185deg, rgb(0 0 0) 0%, rgb(7 6 6) 51%, rgb(29 30 36) 100%);
-    --color-lightpurple1:#7c4dff;
-    --color-light-black-footer:rgba(0, 0, 0, 0.2);
-    --color-profile-box:linear-gradient(187deg, rgb(0 0 0) 0%, rgb(21 20 20) 51%, rgb(15 15 15) 100%);
-    --bg-main:linear-gradient(185deg, rgb(37 37 37) 0%, rgb(7 6 6) 51%, rgb(60 60 60) 100%);
-    --product-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    --product-box-color:linear-gradient(185deg, rgb(40 40 40) 0%, rgb(26 26 26) 51%, rgb(29 30 36) 100%);
+:root {
+  /* ---------- Brand / semantic colors (kept names) ---------- */
+  --bf-red: rgb(220 38 38); /* errors, out-of-stock, favorite */
+  --bf-lighter-red: rgb(254 242 242);
+  --bf-orange: rgb(217 119 6); /* sale / discount accents */
+  --bf-lighter-orange: rgb(255 247 237);
+  --bf-green: rgb(63 122 90); /* secondary success green */
+  --bf-lighter-green: rgb(236 247 240);
+  --bf-sky: rgb(14 116 144);
+  --bf-lighter-sky: rgb(236 245 248);
+
+  /* Primary accent = GOLD (Liquid Glass signature) */
+  --color-gold: #a16207;
+  --color-gold-soft: #b45309;
+  --color-gold-light: #fef3c7;
+  --color-gold-glow: rgba(161, 98, 7, 0.18);
+
+  /* ---------- Text ---------- */
+  --color-white: #1c1917; /* on light bg = near-black ink */
+  --sub-text-color: #78716c; /* muted stone text */
+  --color-gray707071: #a8a29e;
+
+  /* ---------- Surfaces (light glass) ---------- */
+  --tp-b-color: #fafaf9; /* page base */
+  --color-productcolor: #ffffff; /* card solid base */
+  --color-383946: #f5f5f4; /* soft panel */
+  --color-gray353030: #e7e5e4;
+  --color-navyblue: #f0ede9;
+  --color-darknavyblue: #e7e5e4;
+  --color-skyblue: #a16207;
+  --color-Turquoiseblue: #b45309;
+
+  /* Glass tokens */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(28, 25, 23, 0.08);
+  --glass-border-strong: rgba(28, 25, 23, 0.12);
+  --glass-shadow: 0 8px 32px rgba(28, 25, 23, 0.08);
+  --glass-shadow-hover: 0 12px 40px rgba(161, 98, 7, 0.14);
+  --glass-blur: 14px;
+
+  /* ---------- Borders / lines ---------- */
+  --border-color: rgba(28, 25, 23, 0.1);
+  --color-bordercolorwhite: rgba(28, 25, 23, 0.08);
+  --color-lightblack-border: rgba(28, 25, 23, 0.06);
+
+  /* ---------- Status colors ---------- */
+  --color-red-error: #dc2626;
+  --color-green-success: #3f7a5a;
+  --color-green: #3f7a5a;
+  --color-yellow: #d4a84a;
+  --color-lightpurple1: #b45309;
+  --color-b-purple: #8c5e63;
+  --color-darkblue1: #b5502f2b;
+
+  /* ---------- Backgrounds / gradients ---------- */
+  --color-main-dark: #ffffff;
+  --color-heavywhite: #ffffff;
+  --color-lightblack: rgba(28, 25, 23, 0.45);
+  --color-footernavydark: #1c1917;
+  --bg-main: linear-gradient(180deg, #fafaf9 0%, #f5f3ef 100%);
+  --nav-b-color: rgba(255, 255, 255, 0.65);
+  --color-navbar: rgba(255, 255, 255, 0.7);
+  --color-profile-box: rgba(255, 255, 255, 0.6);
+
+  /* ---------- Product card ---------- */
+  --product-box-color: rgba(255, 255, 255, 0.6);
+  --product-box-shadow: 0 8px 32px rgba(28, 25, 23, 0.08);
+  --color-light-black-footer: rgba(255, 255, 255, 0.25);
+
+  /* ---------- Skeleton / misc ---------- */
+  --skeleton-color: #e7e5e4;
+  --font-family: "BYekan", "Vazirmatn", sans-serif !important;
 }
-:root[data-theme="light"] {
-    --skeleton-color:rgb(44 52 67);
-    --tp-b-color:#ffffff;
-    --color-white:rgb(0, 0, 0);
-    --nav-b-color:linear-gradient(185deg, rgb(251, 251, 251) 0%, rgb(255, 255, 255) 51%, rgb(254, 254, 254) 100%);
-    --color-383946:rgb(239 238 238);
-    --color-gray707071:rgb(166, 166, 166);
-    --color-navyblue:#d5d5d58f;
-    --color-darknavyblue:#e2e2e2;
-    --color-skyblue:#4ea5ff;
-    --color-Turquoiseblue:#037577;
-    --color-red-error:#f15454a6;
-    --color-green-success:#2f8946;
-    /* --color-green:#58ae6e; */
-    --color-green:#2fb96c;
-    --color-yellow:#ffff00fc;
-    --color-gray353030:#cfcfcf;
-    --color-main-dark:#ffffff;
-    --color-darkblue1:#566be22b;
-    --color-productcolor:#ececec;
-    --color-bordercolorwhite:#0000001c;
-    --color-lightblack:#ffffffbb;
-    --color-heavywhite:rgb(255, 255, 255);
-    --color-footernavydark:#171717;
-    --color-navbar:linear-gradient(185deg, rgb(251, 251, 251) 0%, rgb(252, 252, 252) 51%, rgb(255, 255, 255) 100%);
-    --color-lightpurple1:#7c4dff;
-    --color-light-black-footer:rgba(255, 255, 255, 0.2);
-    --color-profile-box:rgb(204, 204, 204);
-    --color-b-purple:#999cff;
-    --bg-main:linear-gradient(185deg, rgb(255 255 255) 0%, rgb(255 255 255) 51%, rgb(255 255 255) 100%);
-    --product-box-shadow: 0px 0px 2rem 4px #000000;
-    --product-box-color:linear-gradient(185deg, rgb(40 40 40) 0%, rgb(26 26 26) 51%, rgb(29 30 36) 100%);
-  }
+
+/* Dark variant kept reachable via ThemeToggle (subtle glass on dark) */
+:root[data-theme="dark"] {
+  --color-white: #f5f3ef;
+  --sub-text-color: #a8a29e;
+  --color-gray707071: #78716c;
+
+  --tp-b-color: #16130f;
+  --color-productcolor: #1f1b16;
+  --color-383946: #211c17;
+  --color-gray353030: #2c2620;
+  --color-navyblue: #1a1612;
+  --color-darknavyblue: #14110d;
+  --color-skyblue: #d4a84a;
+  --color-Turquoiseblue: #c2691f;
+
+  --glass-bg: rgba(31, 27, 22, 0.55);
+  --glass-bg-strong: rgba(31, 27, 22, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-strong: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glass-shadow-hover: 0 12px 40px rgba(212, 168, 74, 0.18);
+
+  --border-color: rgba(255, 255, 255, 0.1);
+  --color-bordercolorwhite: rgba(255, 255, 255, 0.08);
+  --color-lightblack-border: rgba(255, 255, 255, 0.06);
+
+  --color-red-error: #f87171;
+  --color-green-success: #4ade80;
+  --color-green: #4ade80;
+  --color-lightpurple1: #d4a84a;
+  --color-b-purple: #c08497;
+  --color-darkblue1: #d4a84a2b;
+
+  --color-main-dark: #0f0d0a;
+  --color-heavywhite: #0f0d0a;
+  --color-lightblack: rgba(0, 0, 0, 0.55);
+  --color-footernavydark: #0f0d0a;
+  --bg-main: linear-gradient(180deg, #16130f 0%, #0f0d0a 100%);
+  --nav-b-color: rgba(31, 27, 22, 0.65);
+  --color-navbar: rgba(31, 27, 22, 0.7);
+  --color-profile-box: rgba(31, 27, 22, 0.6);
+
+  --product-box-color: rgba(31, 27, 22, 0.6);
+  --product-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --color-light-black-footer: rgba(0, 0, 0, 0.3);
+
+  --skeleton-color: #2c2620;
+  --bf-red: rgb(248 113 113);
+  --bf-lighter-red: rgb(60 20 28);
+  --color-gold: #d4a84a;
+  --color-gold-soft: #e0b454;
+  --color-gold-light: #3a2e15;
+  --color-gold-glow: rgba(212, 168, 74, 0.2);
+}
 
 @font-face {
-    font-family:'BYekan' ;
-    src: url('../BYekan/BYekan+.ttf');
+  font-family: "BYekan";
+  src: url("../BYekan/BYekan+.ttf");
+  font-display: swap;
 }
 @font-face {
-    font-family:'IranianSans';
-    src: url('../IRANSansRegular.ttf/IRANSansRegular.ttf');
+  font-family: "IranianSans";
+  src: url("../IRANSansRegular.ttf/IRANSansRegular.ttf");
+  font-display: swap;
 }

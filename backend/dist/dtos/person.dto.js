@@ -11,13 +11,13 @@ import { Matches } from "class-validator";
 export class PersonSaveDto {
 }
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,20}$"), {
+    Matches(RegExp("^[A-Za-zآ-ی\u200c ]{3,20}$"), {
         message: "لطفا نام خانوادگی را درست وارد کنید",
     }),
     __metadata("design:type", String)
 ], PersonSaveDto.prototype, "firstName", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,20}$"), {
+    Matches(RegExp("^[A-Za-zآ-ی\u200c ]{3,20}$"), {
         message: "لطفا نام خانوادگی را درست وارد کنید",
     }),
     __metadata("design:type", String)
@@ -35,6 +35,6 @@ __decorate([
     __metadata("design:type", String)
 ], PersonSaveDto.prototype, "postalCode", void 0);
 __decorate([
-    Matches(RegExp("^[0-9-A-Za-zآ-ی ]{10,50}$"), { message: "آدرس نادرست است." }),
+    Matches(RegExp("^[0-9۰-۹٠-٩A-Za-zآ-ی\u200c\\s\\-\\/_.,،؛:()+]{10,200}$"), { message: "ادرس صحیح نیست" }),
     __metadata("design:type", String)
 ], PersonSaveDto.prototype, "addressLine", void 0);

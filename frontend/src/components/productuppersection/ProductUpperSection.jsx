@@ -1,142 +1,222 @@
-import { useEffect, useState } from "react";
-
-import productImageTest from "../../assets/img/a649d7004b7f54e113e5aa2130a7440d2e8c509d_1669105811.webp";
+import { useState } from "react";
 import Button from "../Button/Button";
 import AddToCart from "../addtocart/AddToCart";
-import SelectBox from "../selectbox/SelectBox";
 import { imageServerAddress } from "../../App";
+import SmartImage from "../smartimage/SmartImage";
 import schema from "../../schema/schema";
+
 const ProductUpperSection = ({
   setImageSiderActive,
   product,
   selectedSize,
-  setSelectedSize,
+  colorOptions,
+  selectedSetColor,
+  setSelectedSetColor,
+  moldSizeOptions,
+  selectedMoldSize,
+  onMoldSizeChange,
+  inventoryColorOptions,
+  selectedColorInv,
+  onColorInvChange,
 }) => {
   const [liked, setLiked] = useState(false);
+  const isPatternCard = product?.type === "patternCard";
+  const isSetProduct = product?.type === "productSet";
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between">
-      {/* right side */}
+    <div className="flex flex-col lg:flex-row justify-between glass rounded-3xl p-4">
       <div className="lg:w-6/12 w-100 flex flex-col gap-y-3 lg:px-4">
-        <div className="p-3 bg-rose-100 text-rose-600 text-base font-semibold order-3 lg:order-1 ">
-          فروش ویژه
-        </div>
-        {/* main photo and stuff like favarite btn */}
-        <div className="flex flex-col lg:flex-row gap-y-4 mt-3 order-1 lg:order-2">
-          {/* favorite btn and ... */}
-          <div className="flex lg:flex-col px-3 text-xl lg:w-14 lg:gap-y-5 gap-x-5 ">
-            {liked ? (
-              <i class="fa-solid fa-heart text-red-600"></i>
-            ) : (
-              <i class="fa-regular fa-heart"></i>
-            )}
-            <i class="fa-light fa-share-nodes"></i>
-            <i class="fa-regular fa-bell"></i>
+        {product?.offPercent >= 25 ? (
+          <div className="w-fit px-4 py-1.5 rounded-full bg-[var(--bf-lighter-red)] text-[var(--bf-red)] text-sm font-semibold order-3 lg:order-1 ">
+            فروش ویژه
           </div>
-          <div className="mx-auto ">
-            <img
-              className="h-[250px] lg:h-auto"
-              src={imageServerAddress + product?.mainImage.filePath}
-            ></img>
-          </div>
-        </div>
-        {/* other photoes */}
+        ) : (
+          <></>
+        )}
 
-        <div className="lg:order-3 order-2 flex   ">
+        <div className="flex flex-col lg:flex-row gap-y-4 mt-3 order-1 lg:order-2">
+          <div className="flex lg:flex-col px-3 text-lg lg:w-14 lg:gap-y-5 gap-x-5 text-[var(--sub-text-color)]">
+            {liked ? (
+              <i className="fa-solid fa-heart text-[var(--bf-red)]"></i>
+            ) : (
+              <i className="fa-regular fa-heart"></i>
+            )}
+            <i className="fa-light fa-share-nodes"></i>
+            <i className="fa-regular fa-bell"></i>
+          </div>
+           <div className="mx-auto ">
+             <SmartImage
+               className="h-[250px] lg:h-auto rounded-2xl"
+               src={imageServerAddress + product?.mainImage?.filePath}
+               alt={product?.name}
+               eager
+               ratio="1/1"
+             />
+           </div>
+        </div>
+
+        <div className="lg:order-3 order-2 flex flex-wrap gap-2">
           {product?.images?.map((image, index) => (
-            <img
-              onClick={() => {
-                setImageSiderActive(true);
-              }}
-              className="ml-2 w-[72px] border-2 p-1 cursor-pointer "
+            <SmartImage
+              key={index}
+              onClick={() => setImageSiderActive(true)}
+              className="w-[72px] h-[72px] object-cover rounded-xl border-2 border-[var(--glass-border)] p-1 cursor-pointer hover:border-[var(--color-gold)] transition-colors"
               src={imageServerAddress + image.filePath}
+              alt=""
+              ratio="1/1"
             />
           ))}
         </div>
       </div>
-      {/* (detail)leftside */}
       <div className="flex flex-col w-100">
-        {/* title */}
-        <div className="p-3  ">
-          <p className=" font-medium  sm:text-xl text-base  ">
+        <div className="p-3">
+          <p className="font-semibold sm:text-xl text-base text-[var(--color-white)]">
             {product?.name}
           </p>
         </div>
-        {/* detail and add to cart */}
+        {isPatternCard ? (
+          <div className="flex flex-col gap-y-4 px-3 pb-1">
+            {(moldSizeOptions || []).length > 0 ? (
+              <div className="flex flex-col gap-y-2">
+                <span className="text-sm font-medium text-[var(--sub-text-color)]">
+                  سایز
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {moldSizeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => onMoldSizeChange(option.size)}
+                      className={`px-3 py-1.5 rounded-xl text-sm border transition-colors ${
+                        selectedMoldSize?.sizeId === option.value
+                          ? "border-[var(--color-gold)] text-[var(--color-gold)]"
+                          : "border-[var(--glass-border)] text-[var(--sub-text-color)]"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+            {(inventoryColorOptions || []).length > 0 ? (
+              <div className="flex flex-col gap-y-2">
+                <span className="text-sm font-medium text-[var(--sub-text-color)]">
+                  رنگ
+                </span>
+                <div className="flex flex-wrap gap-x-2 gap-y-2">
+                  {inventoryColorOptions.map((option) => (
+                    <button
+                      key={option.colorId}
+                      type="button"
+                      onClick={() => onColorInvChange(option)}
+                      title={option.name}
+                      className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                        selectedColorInv?.colorId === option.colorId
+                          ? "border-[var(--color-gold)] scale-110"
+                          : "border-[var(--glass-border)]"
+                      }`}
+                      style={{ backgroundColor: option.hexCode }}
+                    ></button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
+        {isSetProduct ? (
+          <div className="flex flex-col gap-y-2 px-3 pb-1">
+            {(colorOptions?.colors || []).length > 0 ? (
+              <>
+                <span className="text-sm font-medium text-[var(--sub-text-color)]">
+                  رنگ
+                </span>
+                <div className="flex flex-wrap gap-x-2 gap-y-2">
+                  {colorOptions.colors.map((color) => (
+                    <button
+                      key={color.colorId}
+                      type="button"
+                      onClick={() => setSelectedSetColor(color)}
+                      title={color.name}
+                      className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                        selectedSetColor?.colorId === color.colorId
+                          ? "border-[var(--color-gold)] scale-110"
+                          : "border-[var(--glass-border)]"
+                      }`}
+                      style={{ backgroundColor: color.hexCode }}
+                    ></button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+            {colorOptions?.hasNoCommonColor ? (
+              <div className="text-xs text-[var(--bf-red)]">
+                این سرویس رنگ مشترکی بین قطعاتش ندارد و در حال حاضر قابل سفارش نیست
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex lg:flex-row flex-col w-100">
-          {/* detail */}
-          <div className="grow flex flex-col gap-y-4  mt-2 border-t-1 pt-1 mx-5  ">
-            {/* rate */}
-            <div className="flex items-center text-xs   ">
-              <div className="gap-x-1 flex items-center ml-3    ">
-                <i class="fa-duotone fa-star text-amber-600"></i>
-                <span className="">۴.۲</span>
-                <span className=" text-slate-400 ">(امتیاز ۲۷ خریدار)</span>
+          <div className="grow flex flex-col gap-y-4 mt-2 border-t border-[var(--glass-border)] pt-3 mx-5 ">
+            <div className="flex items-center text-xs ">
+              <div className="gap-x-1 flex items-center ml-3 ">
+                <i className="fa-solid fa-star text-[var(--color-yellow)]"></i>
+                <span className="font-medium text-[var(--color-white)]">{product?.rate}</span>
+                <span className="text-[var(--sub-text-color)]">(امتیاز)</span>
               </div>
-              <div className="gap-x-1 flex  items-center text-xs    ">
-                <span className=" text-sky-400 ">18 دیدگاه</span>
-              </div>
+              <div className="gap-x-1 flex items-center text-xs ">
+                <span className="text-[var(--bf-sky)]">{product?.commentCount} دیدگاه</span>
+                </div>
             </div>
-            {/* size selection */}
-            <div className="flex flex-col gap-y-3">
-              <h3 className=" font-medium text-lg">
-                <span className="">اندازه:</span>
-                <span>{selectedSize?.label}</span>
-              </h3>
-              <div className=" w-40">
-                <SelectBox
-                  isClearable={false}
-                  defaultValue={selectedSize}
-                  isSearchable={false}
-                  options={product?.inventories?.map((inventory) => ({
-                    label: inventory.size,
-                    value: inventory,
-                  }))}
-                  value={selectedSize}
-                  onChange={setSelectedSize}
-                ></SelectBox>
-              </div>
-            </div>
-            {/* features */}
-            <div className="flex flex-col ">
-              <h3 className="text-xl mb-2">ویژگی ها</h3>
-              {/* product feature card */}
+
+            <div className="flex flex-col mt-10 ">
+              <h3 className="text-xl mb-3 font-semibold text-[var(--color-white)]">ویژگی ها</h3>
               <div className="grid grid-cols-3">
-                {/* {Array.from({ length: 6 }).map((_, index) => (
-                  <div className="p-3 flex flex-col bg-neutral-100 rounded-xl m-1 text-sm font-semidbold">
-                    <h5 className=" text-slate-400  ">جنس</h5>
-                    <p className="  text-neutral-700">پشم، پلی استر، نخ</p>
+                {schema[product?.type]?.map((attr, i) => (
+                  <div key={i} className="p-3 flex flex-col glass rounded-2xl m-1 text-sm">
+                    <h5 className="text-[var(--sub-text-color)]">{attr.value}</h5>
+                    <p className="text-[var(--color-white)] font-medium">{product?.[attr.key]}</p>
                   </div>
-                ))} */}
-     
-                <div className="p-3 flex flex-col bg-neutral-100 rounded-xl m-1 text-sm font-semidbold">
-                  <h5 className=" text-slate-400  ">جنس</h5>
-                  <p className="  text-neutral-700">{product?.material}</p>
-                </div>
-                <div className="p-3 flex flex-col bg-neutral-100 rounded-xl m-1 text-sm font-semidbold">
-                  <h5 className=" text-slate-400  ">طرح</h5>
-                  <p className="  text-neutral-700">{product?.pattern}</p>
-                </div>
-                <div className="p-3 flex flex-col bg-neutral-100 rounded-xl m-1 text-sm font-semidbold">
-                  <h5 className=" text-slate-400  ">قد</h5>
-                  <p className="  text-neutral-700">{product?.height}</p>
-                </div>
+                ))}
               </div>
               <div className="flex justify-between items-center mt-3">
-                <div className="bg-slate-300 h-[1px] grow"></div>
+                <div className="bg-[var(--glass-border)] h-[1px] grow"></div>
                 <Button
                   size="sm"
+                  bgColor="bg-transparent"
+                  txtColor="text-[var(--color-gold)]"
                   moreCss="w-98 mx-5"
-                  leftIcon={<i class="fa-solid fa-angle-left"></i>}
+                  leftIcon={<i className="fa-solid fa-angle-left"></i>}
                 >
                   مشاهده همه ویژگی ها
                 </Button>
-                <div className="bg-slate-300 h-[1px] grow"></div>
+                <div className="bg-[var(--glass-border)] h-[1px] grow"></div>
               </div>
             </div>
           </div>
-          {/* add to cart */}
-          <AddToCart inventory={selectedSize?.value} product={product} />
+          {/* desktop upper purchase box; on mobile the single fixed footer
+              bar (portaled from ProductLowerSection) replaces it */}
+          <div className="hidden lg:block lg:w-[333px] lg:shrink-0">
+            <AddToCart
+              inventory={selectedSize?.value}
+              product={product}
+              colorOptions={colorOptions}
+              selectedSetColor={selectedSetColor}
+              setSelectedSetColor={setSelectedSetColor}
+            />
+          </div>
         </div>
       </div>
     </div>

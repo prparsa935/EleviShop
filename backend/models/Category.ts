@@ -5,11 +5,11 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Base } from "./Base.js";
 
 @Entity()
-export class Category {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Category extends Base {
+ 
   @Column({ unique: true, length: 20, nullable: false })
   name: string;
   @ManyToOne(() => Category)

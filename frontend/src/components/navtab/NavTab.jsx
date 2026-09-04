@@ -24,12 +24,12 @@ const NavTab = (props) => {
       <Border
         data-active="false"
         moreCss=" w-full duration-500 data-[active=false]:w-0 "
-        border="border-b-2 border-red-500"
+        border="border-b-2 border-[var(--color-gold)]"
       ></Border>
       {props.children}
       <div
         data-active="false"
-        className="absolute top-full right-0 data-[active=false]:hidden z-40  bg-white rounded-b-lg shadow-2xl"
+        className="absolute top-full right-0 data-[active=false]:hidden z-40 glass-strong rounded-b-lg shadow-2xl"
       >
         {props.menu}
       </div>

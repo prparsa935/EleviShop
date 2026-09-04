@@ -48,9 +48,21 @@ class AuthController {
                 .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
         }
     }
+    static extractAccessToken(req) {
+        const header = req.headers.authorization;
+        if (!header || typeof header !== "string")
+            return null;
+        const parts = header.split(" ");
+        return parts.length === 2 && parts[1] ? parts[1] : null;
+    }
     async authorizeUser(req, res, next) {
         try {
-            const accessToken = req.headers.authorization.split(" ")[1];
+            const accessToken = AuthController.extractAccessToken(req);
+            if (!accessToken) {
+                return res
+                    .status(403)
+                    .json(new ResponseDTO({}, { message: "لطفا وارد اکانت خود شوید" }));
+            }
             const user = authService.verifyToken(accessToken);
             if (!user)
                 return res
@@ -72,7 +84,10 @@ class AuthController {
     }
     async authorizeUserWithoutErr(req, res, next) {
         try {
-            const accessToken = req.headers.authorization.split(" ")[1];
+            const accessToken = AuthController.extractAccessToken(req);
+            // no token / broken token: continue as anonymous user
+            if (!accessToken)
+                return next();
             const user = authService.verifyToken(accessToken);
             // todo need test
             if (!user)
@@ -84,9 +99,8 @@ class AuthController {
             next();
         }
         catch (error) {
-            return res
-                .status(403)
-                .json(new ResponseDTO({}, { message: "خطای درون سروری" }, false));
+            // auth is optional here: fall back to anonymous instead of failing
+            return next();
         }
     }
     async isAdmin(req, res, next) {

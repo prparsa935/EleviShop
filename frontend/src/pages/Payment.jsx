@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 
 import ProductInCartBox from "../components/productincartbox/ProductInCartBox";
+import NavBar from "../components/navbar/NavBar";
+import MobileFooter from "../components/mobilefooter/MobileFooter";
 
 import AuthContext from "../context/AuthContext";
 
@@ -8,11 +10,13 @@ import digiImg from "../assets/img/digi.png";
 import { useNavigate } from "react-router";
 import SubmitOrderBox from "../components/submitorderbox/SubmitOrderBox";
 import AddressInOrder from "../components/addressinorder/AddressInOrder";
+import SmartImage from "../components/smartimage/SmartImage";
 
 import Alert from "../components/alert/Alert";
 import PersonInformaionForm from "../components/personinformationform/PersonInformaionForm";
 import { getPerson } from "../api/personApi";
 import PageLoading from "../components/pageloading/PageLoading";
+import { trackEvent } from "../hooks/useAnalytics";
 const Payment = () => {
   const { access } = useContext(AuthContext);
   const [person, setPerson] = useState(null);
@@ -34,6 +38,7 @@ const Payment = () => {
   useEffect(() => {
     setLoading(true);
     updateShoppingCart(setLoading);
+    trackEvent("CHECKOUT_START");
   }, []);
   useEffect(() => {
     getPerson(setPerson, setToastList);
@@ -45,9 +50,11 @@ const Payment = () => {
     return <PageLoading></PageLoading>;
   }
   return (
-    <div className="payment-page ">
+    <div className="payment-page app-bg min-h-screen">
+      <NavBar />
+      <MobileFooter />
       {/* alerts container */}
-      <div className=" absolute w-100">
+      <div className="absolute w-100 pointer-events-none">
         {toastList?.map((toast) => {
           return (
             <Alert duration={5000} type={toast.type}>
@@ -65,12 +72,12 @@ const Payment = () => {
       />
       <div className="mx-auto max-w-screen-xl mt-10 border relative ">
         <div className="flex justify-center p-4  ">
-          <img className="w-24" src={digiImg}></img>
+          <SmartImage className="w-24" src={digiImg} alt="" ratio="3/1" />
         </div>
         <div className=" lg:absolute right-0 top-0 p-4 flex items-center font-semibold text-lg ">
           <i
             onClick={() => navigate("/cart")}
-            class="fa-regular fa-arrow-right ml-2 cursor-pointer "
+            className="fa-regular fa-arrow-right ml-2 cursor-pointer"
           ></i>
           <span>تکمیل سفارش</span>
         </div>

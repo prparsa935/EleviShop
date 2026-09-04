@@ -1,5 +1,8 @@
 import express from "express";
 import cors from "cors";
+import compression from "compression";
+import helmet from "helmet";
+import { authLimiter, generalLimiter } from "./middlewares/rateLimit.js";
 const app = express();
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -11,10 +14,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: __dirname + "/.env" });
 import apiRouter from "./routes/api.js";
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 app.use(cookieParser());
+app.use(compression());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static("public"));
+const imageCacheHeaders = (res, path) => {
+    if (/\.(png|jpe?g|webp|gif|svg|avif|ico)$/i.test(path)) {
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    }
+};
+app.use(express.static("public", { setHeaders: imageCacheHeaders }));
 app.use(express.static("build"));
 app.use(express.static("adminpanelbuild"));
 dataSource
@@ -26,7 +38,8 @@ dataSource
     .catch((err) => {
     console.error("Error during Data Source initialization:", err);
 });
-app.use(cors());
+const allowedOrigin = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "");
+app.use(cors({ origin: allowedOrigin, credentials: true }));
 // white list pages
 app.use((req, res, next) => {
     if (!req.path.startsWith("/admin") &&
@@ -38,6 +51,8 @@ app.use((req, res, next) => {
         next(); // Pass control to the next middleware or route handler
     }
 });
+app.use("/api/auth", authLimiter);
+app.use("/api", generalLimiter);
 app.use("/api", apiRouter);
 // app.get('/admin',(req,res)=>{
 //     // res.json({dadassd:"dadadas"})

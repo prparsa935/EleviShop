@@ -8,7 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, Max, Min, ValidateNested, } from "class-validator";
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, Max, Min, ValidateNested, } from "class-validator";
 export class OrderInventorySaveDto {
 }
 __decorate([
@@ -19,7 +19,7 @@ __decorate([
 export class OrderSaveDto {
 }
 __decorate([
-    IsNotEmpty({ message: "محصول انتخابی اشتباه است" }),
+    IsOptional(),
     ValidateNested({ each: true }),
     Type(() => OrderInventorySaveDto),
     __metadata("design:type", OrderInventorySaveDto)
@@ -31,3 +31,18 @@ __decorate([
     Max(20),
     __metadata("design:type", Number)
 ], OrderSaveDto.prototype, "quantity", void 0);
+__decorate([
+    IsOptional(),
+    IsIn(["SIMPLE", "SET"]),
+    __metadata("design:type", String)
+], OrderSaveDto.prototype, "itemType", void 0);
+__decorate([
+    IsOptional(),
+    IsNumber(),
+    __metadata("design:type", Number)
+], OrderSaveDto.prototype, "productSetId", void 0);
+__decorate([
+    IsOptional(),
+    IsNumber(),
+    __metadata("design:type", Number)
+], OrderSaveDto.prototype, "colorId", void 0);

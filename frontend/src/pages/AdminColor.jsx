@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AdminBrandC from "../components/Adminbrandc/AdminBrandC";
 import AdminColorC from "../components/admincolorc/AdminColorC";
 
 import AdminSideBar from "../components/adminsidebar/AdminSideBar";
@@ -15,13 +14,14 @@ const AdminColor = () => {
   const [itemSelectedForDelete, setItemSelectedForDelete] = useState(null);
 
   const [toastList, setToastList] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const handleDeleteItem = (itemId) => {
     setDeleteModalActive(true);
     setItemSelectedForDelete(itemId);
   };
   const handleDeleteConfirm = () => {
-    deleteItem("color/admin/delete/", itemSelectedForDelete, setToastList);
+    deleteItem("color/admin/delete/", itemSelectedForDelete, setToastList, setErrors);
   };
   return (
     <div className="profile-page">
@@ -32,8 +32,8 @@ const AdminColor = () => {
         deleteModalActive={deleteModalActive}
         onDelete={handleDeleteConfirm}
       ></DeleteModal>
-      <ToastList toastList={toastList} />;
-      <div className="mx-auto max-w-screen-xl grid grid-cols-7  mt-10">
+      <ToastList toastList={toastList} />
+      <div className="mx-auto max-w-screen-xl grid grid-cols-7 mt-10">
         <div className="lg:col-span-2 lg:order-1 col-span-12 order-2">
           <AdminSideBar />
         </div>

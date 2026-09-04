@@ -5,6 +5,8 @@ import commentController from "../controllers/commentController.js";
 const commentApi = Router();
 // check user with identify
 commentApi.get("/product/:productId", authController.authorizeUserWithoutErr, commentController.findProductComments, overallErrorHandler);
+commentApi.get("/product/:productId/stats", authController.authorizeUserWithoutErr, commentController.getProductCommentStats, overallErrorHandler);
+commentApi.post("/:commentId/reaction", authController.authorizeUser, commentController.setCommentReaction, overallErrorHandler);
 commentApi.post("/product/:productId/save", authController.authorizeUser, authController.isIdentified, commentController.CreateProductComment, overallErrorHandler);
 // commentApi.post("/add/:id",,overallErrorHandler);
 export default commentApi;

@@ -25,9 +25,31 @@ const overallErrorHandler = (error, req, res, next) => {
             .json(new ResponseDTO(null, { message: error.message }, false));
     }
     else if (error instanceof FieldErrors) {
+        // nested validators (items / inventories) leave the parent error without
+        // constraints, so walk the children and report under the root property —
+        // Object.values on the bare parent used to throw here and turn the whole
+        // request into a content-less 500
         const fieldErrors = {};
-        error.validationErrors.forEach((error) => {
-            fieldErrors[error.property] = Object.values(error.constraints)[0];
+        const flatten = (errs, parent) => {
+            errs.forEach((err) => {
+                const property = parent ? `${parent}.${err.property}` : err.property;
+                if (err.constraints) {
+                    const root = property.split(".")[0];
+                    if (!fieldErrors[root]) {
+                        fieldErrors[root] = Object.values(err.constraints)[0];
+                    }
+                }
+                if (err.children && err.children.length > 0) {
+                    flatten(err.children, property);
+                }
+            });
+        };
+        flatten(error.validationErrors);
+        // a failing parent may carry no constraints and message-less children
+        error.validationErrors.forEach((err) => {
+            if (!fieldErrors[err.property]) {
+                fieldErrors[err.property] = "مقدار وارد شده معتبر نیست";
+            }
         });
         return res.status(400).json(new ResponseDTO(fieldErrors, null, false));
     }

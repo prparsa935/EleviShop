@@ -33,7 +33,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Product.prototype, "images", void 0);
 __decorate([
-    Column({ nullable: false, length: 20 }),
+    Column({ nullable: false, length: 100 }),
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
 __decorate([
@@ -41,7 +41,7 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "code", void 0);
 __decorate([
-    Column({ length: 50 }),
+    Column({ length: 1000 }),
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
 __decorate([
@@ -50,7 +50,7 @@ __decorate([
     __metadata("design:type", Image)
 ], Product.prototype, "mainImage", void 0);
 __decorate([
-    Column({ length: 10, nullable: false }),
+    Column({ length: 50, nullable: false }),
     __metadata("design:type", String)
 ], Product.prototype, "pattern", void 0);
 __decorate([
@@ -62,7 +62,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "countPerProduct", void 0);
 __decorate([
-    Column({ nullable: false }),
+    Column({ length: 50, nullable: false }),
     __metadata("design:type", String)
 ], Product.prototype, "material", void 0);
 __decorate([

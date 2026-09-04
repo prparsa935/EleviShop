@@ -41,6 +41,10 @@ var typeEnum;
     typeEnum["plate"] = "plate";
     typeEnum["productSet"] = "productSet";
 })(typeEnum || (typeEnum = {}));
+// Persian/Arabic block (\u0600-\u06FF covers پ چ ژ گ, Persian digits and ،),
+// ZWNJ (\u200C), ASCII letters/digits, spaces and light punctuation — the
+// seeded catalogue and realistic Persian copy all contain these
+const FA_TEXT = "A-Za-z0-9\\u0600-\\u06FF\\u200C";
 export class ProductSaveDto {
 }
 __decorate([
@@ -53,19 +57,19 @@ __decorate([
     __metadata("design:type", Array)
 ], ProductSaveDto.prototype, "inventories", void 0);
 __decorate([
-    Matches(RegExp("^[0-9]{5,8}$"), {
+    Matches(RegExp(`^[A-Za-z0-9][A-Za-z0-9\\-]{2,19}$`), {
         message: "لطفا کد محصول را با فرمت درست وارد کنید",
     }),
     __metadata("design:type", String)
 ], ProductSaveDto.prototype, "code", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,15}$"), {
+    Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,60}$`), {
         message: "لطفا نام محصول را درست واردکنید",
     }),
     __metadata("design:type", String)
 ], ProductSaveDto.prototype, "productName", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
+    Matches(RegExp(`^[${FA_TEXT}\\s\\-()،.:؛!؟?%]{10,800}$`), {
         message: "لطفا توضیخات محصول را درست واردکنید",
     }),
     __metadata("design:type", String)
@@ -77,13 +81,13 @@ __decorate([
     __metadata("design:type", Number)
 ], ProductSaveDto.prototype, "offPercent", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    Matches(RegExp(`^[${FA_TEXT} \\-]{2,40}$`), {
         message: "لطفا جنس محصول را درست واردکنید",
     }),
     __metadata("design:type", String)
 ], ProductSaveDto.prototype, "material", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,50}$`), {
         message: "لطفا طرح محصول را درست واردکنید",
     }),
     IsOptional(),
@@ -129,7 +133,7 @@ __decorate([
 export class ProductSetSaveDto extends ProductSaveDto {
 }
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,120}$`), {
         message: "لطفا کالا های سرویس را درست وارد کنید",
     }),
     __metadata("design:type", String)
@@ -161,21 +165,21 @@ __decorate([
     __metadata("design:type", Array)
 ], UpdateProductDto.prototype, "inventories", void 0);
 __decorate([
-    Matches(RegExp("^[0-9]{5,8}$"), {
+    Matches(RegExp(`^[A-Za-z0-9][A-Za-z0-9\\-]{2,19}$`), {
         message: "لطفا کد محصول را با فرمت درست وارد کنید",
     }),
     IsOptional(),
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "code", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,15}$"), {
+    Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,60}$`), {
         message: "لطفا نام محصول را درست واردکنید",
     }),
     IsOptional(),
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "productName", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
+    Matches(RegExp(`^[${FA_TEXT}\\s\\-()،.:؛!؟?%]{10,800}$`), {
         message: "لطفا توضیخات محصول را درست واردکنید",
     }),
     IsOptional(),
@@ -189,14 +193,14 @@ __decorate([
     __metadata("design:type", Number)
 ], UpdateProductDto.prototype, "offPercent", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    Matches(RegExp(`^[${FA_TEXT} \\-]{2,40}$`), {
         message: "لطفا جنس محصول را درست واردکنید",
     }),
     IsOptional(),
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "material", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,50}$`), {
         message: "لطفا طرح محصول را درست واردکنید",
     }),
     IsOptional(),
@@ -224,7 +228,7 @@ __decorate([
     __metadata("design:type", Number)
 ], UpdateProductDto.prototype, "moldPatternId", void 0);
 __decorate([
-    Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+    Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,120}$`), {
         message: "لطفا کالا های سرویس را درست وارد کنید",
     }),
     IsOptional(),

@@ -15,7 +15,7 @@ let Plate = class Plate extends Product {
 __decorate([
     OneToMany(() => ProductSetItem, (item) => item.plate),
     __metadata("design:type", Array)
-], Plate.prototype, "productSetItems", void 0);
+], Plate.prototype, "plateSetItems", void 0);
 Plate = __decorate([
     ChildEntity("plate")
 ], Plate);

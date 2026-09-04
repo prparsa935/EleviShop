@@ -40,8 +40,11 @@ class ProductService {
             types: ["plate", "productSet"],
         });
         if (filter.categoryId) {
-            query.andWhere("product.mainCategoryId = :categoryId", {
-                categoryId: filter.categoryId,
+            // selecting a parent category must also match products of its whole
+            // subtree, not only products directly assigned to that exact category
+            const categoryIds = await this.collectCategoryAndDescendantIds(filter.categoryId);
+            query.andWhere("product.mainCategoryId IN (:...categoryIds)", {
+                categoryIds: categoryIds.length > 0 ? categoryIds : [filter.categoryId],
             });
         }
         if (filter.enableOff === "true") {
@@ -127,6 +130,25 @@ class ProductService {
             });
         }
         return cards.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    }
+    async collectCategoryAndDescendantIds(categoryId) {
+        const categoryRepo = dataSource.getRepository(Category);
+        const ids = [];
+        const walk = async (id) => {
+            const category = await categoryRepo.findOne({
+                where: { id },
+                relations: ["childCategories"],
+            });
+            if (!category || ids.includes(category.id)) {
+                return;
+            }
+            ids.push(category.id);
+            for (const child of category.childCategories ?? []) {
+                await walk(child.id);
+            }
+        };
+        await walk(categoryId);
+        return ids;
     }
     buildPatternCard(moldPatternId, group) {
         const moldPattern = group[0].moldPattern;
@@ -254,6 +276,10 @@ class ProductService {
                 "productSetItems",
                 "productSetItems.plate",
                 "productSetItems.productSet",
+                "plateSetItems",
+                "plateSetItems.productSet",
+                "plateSetItems.productSet.mainImage",
+                "plateSetItems.productSet.inventories",
             ],
         });
     }
@@ -263,6 +289,32 @@ class ProductService {
         });
     }
     async findRelatedProducts(id, code) {
+        const current = await this.productRepo.findOne({
+            where: { id },
+            relations: ["mainCategory"],
+        });
+        if (!current) {
+            return [];
+        }
+        // products of the same kind in the same category first (codes are unique
+        // per product now, so the legacy same-code match usually returns nothing)
+        if (current.mainCategory?.id) {
+            const related = await this.productRepo.find({
+                where: {
+                    id: Not(id),
+                    type: current.type,
+                    mainCategory: { id: current.mainCategory.id },
+                },
+                relations: ["mainImage", "inventories"],
+                take: 10,
+            });
+            if (related.length > 0) {
+                return related;
+            }
+        }
+        if (!code) {
+            return [];
+        }
         return await this.productRepo.find({
             where: { code: code, id: Not(id) },
             relations: ["mainImage", "inventories"],

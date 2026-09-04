@@ -12,7 +12,28 @@ dist
 dist-ssr
 build
 *.local
-src/assets/FontAwesome.Pro.6.5.2
+# Font Awesome Pro: track only what the app imports (css/all.css) plus the
+# webfonts it references; the rest (~145MB of svgs/js/sprites) stays local-only.
+src/assets/FontAwesome.Pro.6.5.2/*
+!src/assets/FontAwesome.Pro.6.5.2/css/
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/
+src/assets/FontAwesome.Pro.6.5.2/css/*
+!src/assets/FontAwesome.Pro.6.5.2/css/all.css
+src/assets/FontAwesome.Pro.6.5.2/webfonts/*
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-brands-400.ttf
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-brands-400.woff2
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-duotone-900.ttf
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-duotone-900.woff2
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-light-300.ttf
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-light-300.woff2
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-regular-400.ttf
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-regular-400.woff2
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-solid-900.ttf
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-solid-900.woff2
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-thin-100.ttf
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-thin-100.woff2
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-v4compatibility.ttf
+!src/assets/FontAwesome.Pro.6.5.2/webfonts/fa-v4compatibility.woff2
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

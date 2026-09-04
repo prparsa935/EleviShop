@@ -34,6 +34,11 @@ enum typeEnum {
   plate = "plate",
   productSet = "productSet",
 }
+// Persian/Arabic block (\u0600-\u06FF covers پ چ ژ گ, Persian digits and ،),
+// ZWNJ (\u200C), ASCII letters/digits, spaces and light punctuation — the
+// seeded catalogue and realistic Persian copy all contain these
+const FA_TEXT = "A-Za-z0-9\\u0600-\\u06FF\\u200C";
+
 export class ProductSaveDto {
   @IsEnum(typeEnum, { message: "نوع محصول درست مشخص نشده است" })
   type: string;
@@ -43,15 +48,16 @@ export class ProductSaveDto {
   // @IsNumber({}, { message: "لطفا تعداد را به عدد وارد کنید" })
   // quantity: number;
 
-  @Matches(RegExp("^[0-9]{5,8}$"), {
+  // alphanumeric codes like "EL-1026" are valid
+  @Matches(RegExp(`^[A-Za-z0-9][A-Za-z0-9\\-]{2,19}$`), {
     message: "لطفا کد محصول را با فرمت درست وارد کنید",
   })
   code: string;
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,15}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,60}$`), {
     message: "لطفا نام محصول را درست واردکنید",
   })
   productName: string;
-  @Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
+  @Matches(RegExp(`^[${FA_TEXT}\\s\\-()،.:؛!؟?%]{10,800}$`), {
     message: "لطفا توضیخات محصول را درست واردکنید",
   })
   description: string;
@@ -63,11 +69,11 @@ export class ProductSaveDto {
   @Min(0, { message: "حداقل 0 درصد" })
   @Max(99, { message: "حداکثر ۹۹ درصد" })
   offPercent: number;
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} \\-]{2,40}$`), {
     message: "لطفا جنس محصول را درست واردکنید",
   })
   material: string;
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,50}$`), {
     message: "لطفا طرح محصول را درست واردکنید",
   })
   @IsOptional()
@@ -104,7 +110,7 @@ export class ProductSetItemSaveDto {
 }
 
 export class ProductSetSaveDto extends ProductSaveDto {
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,120}$`), {
     message: "لطفا کالا های سرویس را درست وارد کنید",
   })
   contain: string;
@@ -129,19 +135,19 @@ export class UpdateProductDto {
   @IsOptional()
   inventories?: InventorySaveDto[];
 
-  @Matches(RegExp("^[0-9]{5,8}$"), {
+  @Matches(RegExp(`^[A-Za-z0-9][A-Za-z0-9\\-]{2,19}$`), {
     message: "لطفا کد محصول را با فرمت درست وارد کنید",
   })
   @IsOptional()
   code?: string;
 
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,15}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,60}$`), {
     message: "لطفا نام محصول را درست واردکنید",
   })
   @IsOptional()
   productName?: string;
 
-  @Matches(RegExp("^[A-Za-zآ-ی ]{10,200}$"), {
+  @Matches(RegExp(`^[${FA_TEXT}\\s\\-()،.:؛!؟?%]{10,800}$`), {
     message: "لطفا توضیخات محصول را درست واردکنید",
   })
   @IsOptional()
@@ -153,13 +159,13 @@ export class UpdateProductDto {
   @IsOptional()
   offPercent?: number;
 
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} \\-]{2,40}$`), {
     message: "لطفا جنس محصول را درست واردکنید",
   })
   @IsOptional()
   material?: string;
 
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,50}$`), {
     message: "لطفا طرح محصول را درست واردکنید",
   })
   @IsOptional()
@@ -182,7 +188,7 @@ export class UpdateProductDto {
   @IsOptional()
   moldPatternId?: number;
 
-  @Matches(RegExp("^[A-Za-zآ-ی ]{3,10}$"), {
+  @Matches(RegExp(`^[${FA_TEXT} ()\\-،.]{3,120}$`), {
     message: "لطفا کالا های سرویس را درست وارد کنید",
   })
   @IsOptional()

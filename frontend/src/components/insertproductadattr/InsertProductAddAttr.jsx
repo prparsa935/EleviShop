@@ -26,7 +26,9 @@ const InsertProductAddAttr = ({
     setSetItems((prev) =>
       (prev || []).map((item) =>
         item.value === plateId
-          ? { ...item, quantity: quantity >= 1 ? quantity : 1 }
+          ? // quantities must be whole pieces; decimals would fail the
+            // backend IsInt rule
+            { ...item, quantity: Math.max(1, Math.round(Number(quantity) || 1)) }
           : item
       )
     );

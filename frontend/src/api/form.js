@@ -26,18 +26,25 @@ const formApiHandler = async (
   } catch (error) {
     console.log(error)
     if (error.response) {
-      setErrors(() => {
-        return error.response.data.fieldErrors;
-      });
-      setToastList((prev) => {
-        return [
-          ...prev,
-          {
-            type: "danger",
-            message: error.response.data?.overallError?.message,
-          },
-        ];
-      });
+      const fieldErrors = error.response.data?.fieldErrors;
+      setErrors(() => fieldErrors);
+      const overallMessage = error.response.data?.overallError?.message;
+      const hasFieldErrors =
+        fieldErrors && Object.keys(fieldErrors).length > 0;
+      const message =
+        overallMessage ||
+        (hasFieldErrors ? "لطفا خطاهای مشخص شده در فرم را برطرف کنید" : null);
+      if (message) {
+        setToastList((prev) => {
+          return [
+            ...prev,
+            {
+              type: "danger",
+              message: message,
+            },
+          ];
+        });
+      }
     } else {
       setToastList((prev) => {
         return [

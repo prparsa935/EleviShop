@@ -13,6 +13,16 @@ import {
 } from "../dtos/product.dto.js";
 // import { ProductSaveDto } from "../dtos/product.dto.js";
 
+// the saved entity holds back-references (set items -> set, inventories ->
+// product) that make res.json throw a circular-structure TypeError AFTER the
+// transaction already committed — the caller then saw a 500 and treated a
+// successful save as failed. Module-level because route handlers are passed
+// as bare function references, so class methods would lose their `this`.
+const saveResult = (product: { id: number; type: string }) => ({
+  id: product.id,
+  type: product.type,
+});
+
 class ProductController {
   async findProducts(req: Request, res: Response) {
     try {
@@ -110,7 +120,13 @@ class ProductController {
       }
       const product = await ProductService.saveProduct(productSaveDto);
       return res.json(
-        new ResponseDTO(null, null, true, "محصول با موفقیت ثبت شد", product)
+        new ResponseDTO(
+          null,
+          null,
+          true,
+          "محصول با موفقیت ثبت شد",
+          saveResult(product)
+        )
       );
     } catch (error) {
       console.log(error);
@@ -154,7 +170,13 @@ class ProductController {
       }
       const product = await ProductService.updateProduct(productId, updateDto);
       return res.json(
-        new ResponseDTO(null, null, true, "محصول با موفقیت به‌روزرسانی شد", product)
+        new ResponseDTO(
+          null,
+          null,
+          true,
+          "محصول با موفقیت به‌روزرسانی شد",
+          saveResult(product)
+        )
       );
     } catch (error) {
       console.error("Update product error:", error);

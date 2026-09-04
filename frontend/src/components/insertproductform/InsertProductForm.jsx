@@ -292,15 +292,20 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
   };
 
   const getFormValues = () => {
-    const priceValues = inventoryRows
-      .filter((row) => Number(row.price) > 0 && Number(row.quantity) > 0)
-      .map((row) => ({
-        id: row.id ?? undefined,
-        colorId: row.colorId ? Number(row.colorId) : undefined,
-        sizeId: row.sizeId ? Number(row.sizeId) : undefined,
-        price: Number(row.price),
-        quantity: Number(row.quantity),
-      }));
+    // inventory rows belong to plates only; a set gets its price/stock from
+    // its member plates, so leftover rows must never leak into a set payload
+    const priceValues =
+      typeSelect.value === "plate"
+        ? inventoryRows
+            .filter((row) => Number(row.price) > 0 && Number(row.quantity) > 0)
+            .map((row) => ({
+              id: row.id ?? undefined,
+              colorId: row.colorId ? Number(row.colorId) : undefined,
+              sizeId: row.sizeId ? Number(row.sizeId) : undefined,
+              price: Number(row.price),
+              quantity: Number(row.quantity),
+            }))
+        : [];
     let values = {
       code: form.current.code.value,
       productName: form.current.productName.value,
@@ -865,6 +870,13 @@ const InsertProductForm = ({ errors, setErrors, setToastList }) => {
               >
                 + افزودن ردیف سایز × رنگ
               </button>
+              {errors?.inventories ? (
+                <div className="text-sm font-semibold text-[var(--bf-red)]">
+                  {errors.inventories}
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           ) : typeSelect.value === "productSet" ? (
             <div className="grid grid-cols-12 gap-x-3 gap-y-4 items-center">
